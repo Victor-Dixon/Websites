@@ -71,11 +71,15 @@ function swarm_enqueue_assets() {
 add_action('wp_enqueue_scripts', 'swarm_enqueue_assets');
 
 /**
- * Agent Data
+ * Agent Data - Mode-Aware (4-Agent Mode)
+ * Returns only active agents based on current mode configuration
  */
 function get_swarm_agents() {
-    return array(
-        array(
+    // Current mode: 4-agent mode (Agent-1, Agent-2, Agent-3, Agent-4)
+    // Agents 5-8 are paused but can be reactivated when switching modes
+    
+    $all_agents = array(
+        'agent-1' => array(
             'id' => 'agent-1',
             'name' => 'Agent-1',
             'role' => 'Integration & Core Systems',
@@ -84,8 +88,9 @@ function get_swarm_agents() {
             'points' => 8500,
             'coordinates' => '(-1269, 481)',
             'specialties' => array('Integration', 'Core Systems', 'Runtime Logic'),
+            'mode' => '4-agent',
         ),
-        array(
+        'agent-2' => array(
             'id' => 'agent-2',
             'name' => 'Agent-2',
             'role' => 'Architecture & Design',
@@ -94,8 +99,9 @@ function get_swarm_agents() {
             'points' => 10600,
             'coordinates' => '(-308, 480)',
             'specialties' => array('Architecture', 'V2 Compliance', 'Strategic Analysis'),
+            'mode' => '4-agent',
         ),
-        array(
+        'agent-3' => array(
             'id' => 'agent-3',
             'name' => 'Agent-3',
             'role' => 'Infrastructure & DevOps',
@@ -104,58 +110,80 @@ function get_swarm_agents() {
             'points' => 7200,
             'coordinates' => '(-1269, 1001)',
             'specialties' => array('DevOps', 'Validation', 'Infrastructure'),
+            'mode' => '4-agent',
         ),
-        array(
-            'id' => 'agent-5',
-            'name' => 'Agent-5',
-            'role' => 'Business Intelligence',
-            'description' => 'BI specialist handling analytics, decision logic, and pattern optimization.',
-            'status' => 'active',
-            'points' => 6800,
-            'coordinates' => '(652, 421)',
-            'specialties' => array('Analytics', 'Business Logic', 'Optimization'),
-        ),
-        array(
-            'id' => 'agent-6',
-            'name' => 'Agent-6',
-            'role' => 'Coordination & Communication (Co-Captain)',
-            'description' => 'Co-Captain specializing in swarm coordination, messaging, and team synchronization.',
-            'status' => 'active',
-            'points' => 9400,
-            'coordinates' => '(1612, 419)',
-            'specialties' => array('Coordination', 'Communication', 'Leadership'),
-        ),
-        array(
-            'id' => 'agent-7',
-            'name' => 'Agent-7',
-            'role' => 'Web Development',
-            'description' => 'Web specialist focused on front-end, WordPress, and web integrations.',
-            'status' => 'active',
-            'points' => 5900,
-            'coordinates' => '(920, 851)',
-            'specialties' => array('Web Development', 'WordPress', 'Front-End'),
-        ),
-        array(
-            'id' => 'agent-8',
-            'name' => 'Agent-8',
-            'role' => 'SSOT & System Integration',
-            'description' => 'Single Source of Truth specialist ensuring consistency across all systems.',
-            'status' => 'active',
-            'points' => 7100,
-            'coordinates' => '(1611, 941)',
-            'specialties' => array('SSOT', 'Integration', 'Consistency'),
-        ),
-        array(
-            'id' => 'captain',
+        'agent-4' => array(
+            'id' => 'agent-4',
             'name' => 'Captain Agent-4',
-            'role' => 'Mission Commander',
-            'description' => 'Strategic mission commander overseeing all swarm operations and coordination.',
+            'role' => 'Strategic Oversight (Captain)',
+            'description' => 'Strategic mission commander overseeing all swarm operations, coordination, gatekeeping, and force multiplier monitoring.',
             'status' => 'active',
             'points' => 15000,
             'coordinates' => '(-308, 1000)',
-            'specialties' => array('Strategy', 'Command', 'Coordination'),
+            'specialties' => array('Strategy', 'Command', 'Coordination', 'Gatekeeping'),
+            'mode' => '4-agent',
+        ),
+        // Paused agents (can be reactivated in other modes)
+        'agent-5' => array(
+            'id' => 'agent-5',
+            'name' => 'Agent-5',
+            'role' => 'Business Intelligence',
+            'description' => 'BI specialist handling analytics, decision logic, and pattern optimization. [Currently Paused - 5/6/8-Agent Mode]',
+            'status' => 'paused',
+            'points' => 6800,
+            'coordinates' => '(652, 421)',
+            'specialties' => array('Analytics', 'Business Logic', 'Optimization'),
+            'mode' => '5-agent',
+        ),
+        'agent-6' => array(
+            'id' => 'agent-6',
+            'name' => 'Agent-6',
+            'role' => 'Coordination & Communication',
+            'description' => 'Specialist in swarm coordination, messaging, and team synchronization. [Currently Paused - 6/8-Agent Mode]',
+            'status' => 'paused',
+            'points' => 9400,
+            'coordinates' => '(1612, 419)',
+            'specialties' => array('Coordination', 'Communication', 'Leadership'),
+            'mode' => '6-agent',
+        ),
+        'agent-7' => array(
+            'id' => 'agent-7',
+            'name' => 'Agent-7',
+            'role' => 'Web Development',
+            'description' => 'Web specialist focused on front-end, WordPress, and web integrations. [Currently Paused - 8-Agent Mode]',
+            'status' => 'paused',
+            'points' => 5900,
+            'coordinates' => '(653, 940)',
+            'specialties' => array('Web Development', 'WordPress', 'Front-End'),
+            'mode' => '8-agent',
+        ),
+        'agent-8' => array(
+            'id' => 'agent-8',
+            'name' => 'Agent-8',
+            'role' => 'SSOT & System Integration',
+            'description' => 'Single Source of Truth specialist ensuring consistency across all systems. [Currently Paused - 8-Agent Mode]',
+            'status' => 'paused',
+            'points' => 7100,
+            'coordinates' => '(1611, 941)',
+            'specialties' => array('SSOT', 'Integration', 'Consistency'),
+            'mode' => '8-agent',
         ),
     );
+    
+    // Filter to show only active agents in current mode (4-agent mode)
+    // Optionally show paused agents with different styling
+    $current_mode = '4-agent';
+    $active_agent_ids = array('agent-1', 'agent-2', 'agent-3', 'agent-4');
+    
+    $active_agents = array();
+    foreach ($active_agent_ids as $agent_id) {
+        if (isset($all_agents[$agent_id])) {
+            $active_agents[] = $all_agents[$agent_id];
+        }
+    }
+    
+    // Return active agents only (can modify to include paused agents for display)
+    return $active_agents;
 }
 
 /**
