@@ -593,9 +593,8 @@ get_header();
 
             <!-- Guestbook Form -->
             <div class="guestbook-form-container">
-                <form id="guestbook-form" class="guestbook-form" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                <form id="guestbook-form" class="guestbook-form" method="post">
                     <?php wp_nonce_field('guestbook_submit', 'guestbook_nonce'); ?>
-                    <input type="hidden" name="action" value="submit_guestbook_entry">
                     
                     <div class="form-group">
                         <label for="guest_name" class="carmyn-text">Your Name *</label>
@@ -811,14 +810,16 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             
             const formData = new FormData(form);
+            formData.append('action', 'prismblossom_submit_guestbook');
+            formData.append('nonce', '<?php echo wp_create_nonce('guestbook_submit'); ?>');
             
-            fetch('<?php echo esc_url(admin_url('admin-post.php')); ?>', {
+            fetch('<?php echo esc_url(admin_url('admin-ajax.php')); ?>', {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.text())
+            .then(response => response.json())
             .then(data => {
-                if (data.includes('success')) {
+                if (data.success) {
                     messageDiv.className = 'form-message success';
                     messageDiv.textContent = 'Thank you! Your message has been submitted and will appear after approval.';
                     form.reset();
@@ -829,7 +830,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     }, 2000);
                 } else {
                     messageDiv.className = 'form-message error';
-                    messageDiv.textContent = 'There was an error submitting your message. Please try again.';
+                    // Fix error message text rendering
+                    const errorMsg = data.data || 'There was an error submitting your message. Please try again.';
+                    messageDiv.textContent = errorMsg.replace(/\s+/g, ' ').trim();
                 }
             })
             .catch(error => {

@@ -15,12 +15,17 @@
     </button>
     
     <?php 
-      wp_nav_menu([
-        'theme_location' => 'primary',
-        'container' => '',
-        'menu_class' => 'nav-list',
-        'menu_id' => 'primary-menu'
-      ]); 
+      $has_menu = has_nav_menu('primary');
+      if ($has_menu) {
+        wp_nav_menu([
+          'theme_location' => 'primary',
+          'container' => '',
+          'menu_class' => 'nav-list',
+          'menu_id' => 'primary-menu'
+        ]); 
+      } else {
+        echo '<ul class="nav-list"><li><a href="/">Home</a></li></ul>';
+      }
     ?>
   </nav>
 </header>

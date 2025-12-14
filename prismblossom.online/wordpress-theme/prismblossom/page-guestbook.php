@@ -12,11 +12,11 @@ get_header();
 
 <section class="guestbook-section">
     <div class="container">
-        <h1 class="section-title">
+        <h1 class="section-title" style="color: #FFD700; text-shadow: 0 0 10px #FFD700;">
             <span class="graffiti-sub">BIRTHDAY</span>
             <span class="bubble-sub">GUESTBOOK</span>
         </h1>
-        <p class="section-description">Leave a birthday message! Your message will appear after approval.</p>
+        <p class="section-description" style="color: #FFD700; text-shadow: 0 0 5px #FFD700;">Leave a birthday message! Your message will appear after approval.</p>
 
         <!-- Guestbook Form -->
         <div class="guestbook-form-container">
@@ -36,7 +36,7 @@ get_header();
                 </div>
                 
                 <div class="form-group">
-                    <button type="submit" class="btn-primary">Submit Message</button>
+                    <button type="submit" class="btn-primary" style="background: rgba(0, 0, 0, 0.6); border: 2px solid #FFD700; color: #FFD700; text-shadow: 0 0 5px #FFD700; box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); padding: 12px 30px; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.3s ease;">Submit Message</button>
                 </div>
                 
                 <div id="form-message" class="form-message"></div>
@@ -69,7 +69,24 @@ get_header();
                         echo '</div>';
                     }
                 } else {
-                    echo '<p class="no-messages">No messages yet. Be the first to leave a birthday wish!</p>';
+                    // Placeholder entries for visitors to see
+                    $placeholder_entries = [
+                        ['name' => 'Sarah M.', 'date' => 'Jan 25, 2025', 'message' => 'Happy Birthday Carmyn! 🎉 Wishing you an amazing year ahead filled with music and joy!'],
+                        ['name' => 'Mike T.', 'date' => 'Jan 24, 2025', 'message' => 'Have a fantastic birthday! Your DJ skills are incredible! 🎵'],
+                        ['name' => 'Jessica L.', 'date' => 'Jan 23, 2025', 'message' => 'Happy Birthday! 🎂 Can\'t wait to hear your next mix!']
+                    ];
+                    
+                    foreach ($placeholder_entries as $placeholder) {
+                        echo '<div class="message-card">';
+                        echo '<div class="message-header">';
+                        echo '<span class="message-name">' . esc_html($placeholder['name']) . '</span>';
+                        echo '<span class="message-date">' . esc_html($placeholder['date']) . '</span>';
+                        echo '</div>';
+                        echo '<div class="message-content">' . esc_html($placeholder['message']) . '</div>';
+                        echo '</div>';
+                    }
+                    
+                    echo '<p class="no-messages" style="margin-top: 30px;">Leave your own birthday message above! 🎈</p>';
                 }
                 ?>
             </div>
@@ -81,15 +98,16 @@ get_header();
 .guestbook-section {
     padding: 120px 0 60px;
     min-height: 100vh;
+    background: #000000;
 }
 
 .guestbook-form-container {
-    background: rgba(0, 0, 0, 0.6);
-    border: 2px solid var(--primary-color);
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #FFD700;
     border-radius: 15px;
     padding: 40px;
     margin-bottom: 60px;
-    box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
 }
 
 .guestbook-form .form-group {
@@ -98,21 +116,22 @@ get_header();
 
 .guestbook-form label {
     display: block;
-    color: var(--text-light);
+    color: #FFD700;
     margin-bottom: 8px;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 1px;
+    text-shadow: 0 0 5px #FFD700;
 }
 
 .guestbook-form input[type="text"],
 .guestbook-form textarea {
     width: 100%;
     padding: 12px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid var(--secondary-color);
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid #FFD700;
     border-radius: 5px;
-    color: var(--text-light);
+    color: #FFD700;
     font-family: inherit;
     font-size: 1rem;
     transition: all 0.3s ease;
@@ -121,9 +140,9 @@ get_header();
 .guestbook-form input[type="text"]:focus,
 .guestbook-form textarea:focus {
     outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
-    background: rgba(255, 255, 255, 0.15);
+    border-color: #FFD700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    background: rgba(0, 0, 0, 0.8);
 }
 
 .guestbook-form textarea {
@@ -133,10 +152,11 @@ get_header();
 
 .char-count {
     display: block;
-    color: var(--text-gray);
+    color: #FFD700;
     font-size: 0.85rem;
     margin-top: 5px;
     text-align: right;
+    opacity: 0.7;
 }
 
 .form-message {
@@ -168,7 +188,8 @@ get_header();
     text-align: center;
     margin-bottom: 40px;
     font-size: 2.5rem;
-    color: var(--text-light);
+    color: #FFD700;
+    text-shadow: 0 0 10px #FFD700;
 }
 
 .messages-grid {
@@ -178,8 +199,8 @@ get_header();
 }
 
 .message-card {
-    background: rgba(0, 0, 0, 0.6);
-    border: 1px solid var(--secondary-color);
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid #FFD700;
     border-radius: 10px;
     padding: 20px;
     transition: all 0.3s ease;
@@ -187,8 +208,8 @@ get_header();
 
 .message-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 20px rgba(0, 255, 255, 0.3);
-    border-color: var(--primary-color);
+    box-shadow: 0 5px 20px rgba(255, 215, 0, 0.5);
+    border-color: #FFD700;
 }
 
 .message-header {
@@ -202,27 +223,32 @@ get_header();
 
 .message-name {
     font-weight: bold;
-    color: var(--primary-color);
+    color: #FFD700;
     font-size: 1.1rem;
+    text-shadow: 0 0 5px #FFD700;
 }
 
 .message-date {
-    color: var(--text-gray);
+    color: #FFD700;
     font-size: 0.9rem;
+    opacity: 0.7;
 }
 
 .message-content {
-    color: var(--text-light);
+    color: #FFD700;
     line-height: 1.6;
+    text-shadow: 0 0 3px rgba(255, 215, 0, 0.5);
 }
 
 .no-messages {
     text-align: center;
-    color: var(--text-gray);
+    color: #FFD700;
     font-size: 1.2rem;
     padding: 40px;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.6);
     border-radius: 10px;
+    border: 1px solid #FFD700;
+    text-shadow: 0 0 5px #FFD700;
 }
 
 @media (max-width: 768px) {

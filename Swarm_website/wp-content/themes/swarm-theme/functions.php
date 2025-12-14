@@ -287,3 +287,96 @@ function get_swarm_stats() {
     );
 }
 
+/**
+ * Remove Restaurant Menu Items
+ * Filters out Flavio restaurant menu items and replaces with Swarm navigation
+ */
+function swarm_remove_restaurant_menu_items($items, $args) {
+    if (!isset($args->theme_location) || $args->theme_location !== 'primary') {
+        return $items;
+    }
+    
+    // Restaurant menu items to remove
+    $restaurant_items = array(
+        'Our Menu',
+        'Hi tory',
+        'History',
+        'Make Reservation',
+        'Reservation',
+        'Contact',
+        'About Us',
+        'Menu'
+    );
+    
+    // Filter out restaurant items
+    $filtered_items = array();
+    foreach ($items as $item) {
+        $title = strtolower($item->title);
+        $url = strtolower($item->url);
+        
+        $is_restaurant_item = false;
+        foreach ($restaurant_items as $restaurant_item) {
+            if (stripos($title, strtolower($restaurant_item)) !== false ||
+                stripos($url, 'menu') !== false ||
+                stripos($url, 'reservation') !== false ||
+                stripos($url, 'flavio') !== false) {
+                $is_restaurant_item = true;
+                break;
+            }
+        }
+        
+        if (!$is_restaurant_item) {
+            $filtered_items[] = $item;
+        }
+    }
+    
+    // If menu is empty or only has restaurant items, use fallback Swarm menu
+    if (empty($filtered_items)) {
+        return array(); // Let fallback_cb handle it
+    }
+    
+    return $filtered_items;
+}
+add_filter('wp_nav_menu_objects', 'swarm_remove_restaurant_menu_items', 999, 2);
+
+/**
+ * Create Default Swarm Menu
+ * Creates a default menu if none exists
+ */
+function swarm_create_default_menu() {
+    // Check if menu already exists
+    $menu_name = 'Swarm Primary';
+    $menu_exists = wp_get_nav_menu_object($menu_name);
+    
+    if (!$menu_exists) {
+        $menu_id = wp_create_nav_menu($menu_name);
+        
+        if (!is_wp_error($menu_id)) {
+            // Add menu items
+            wp_update_nav_menu_item($menu_id, 0, array(
+                'menu-item-title' => 'Capabilities',
+                'menu-item-url' => home_url('/#capabilities'),
+                'menu-item-status' => 'publish',
+            ));
+            
+            wp_update_nav_menu_item($menu_id, 0, array(
+                'menu-item-title' => 'Live Activity',
+                'menu-item-url' => home_url('/#activity'),
+                'menu-item-status' => 'publish',
+            ));
+            
+            wp_update_nav_menu_item($menu_id, 0, array(
+                'menu-item-title' => 'Agents',
+                'menu-item-url' => home_url('/#agents'),
+                'menu-item-status' => 'publish',
+            ));
+            
+            // Assign to primary location
+            $locations = get_theme_mod('nav_menu_locations');
+            $locations['primary'] = $menu_id;
+            set_theme_mod('nav_menu_locations', $locations);
+        }
+    }
+}
+add_action('after_setup_theme', 'swarm_create_default_menu', 20);
+

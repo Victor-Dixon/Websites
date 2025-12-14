@@ -11,9 +11,9 @@ get_header();
 ?>
 
 <style>
-    /* Invitation Page Styles */
+    /* Invitation Page Styles - Black and Gold Theme */
     body {
-        background: #ff00ff;
+        background: #000000;
         min-height: 100vh;
         position: relative;
         overflow-x: hidden;
@@ -32,18 +32,18 @@ get_header();
     }
 
     .invitation-card {
-        background: rgba(255, 255, 255, 0.15);
+        background: rgba(0, 0, 0, 0.8);
         backdrop-filter: blur(10px);
-        border: 3px solid #ffffff;
-        box-shadow: 0 0 30px rgba(255, 255, 255, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1);
+        border: 3px solid #FFD700;
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.5), inset 0 0 20px rgba(255, 215, 0, 0.1);
         border-radius: 20px;
         padding: 60px 40px;
         margin-bottom: 40px;
     }
 
     .invitation-title {
-        color: #ffffff;
-        text-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff, 0 0 30px rgba(255, 255, 255, 0.8);
+        color: #FFD700;
+        text-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700, 0 0 30px rgba(255, 215, 0, 0.8);
         font-size: 3rem;
         margin-bottom: 30px;
         animation: glow 2s ease-in-out infinite;
@@ -51,39 +51,39 @@ get_header();
 
     @keyframes glow {
         0%, 100% {
-            text-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff, 0 0 30px rgba(255, 255, 255, 0.8);
+            text-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700, 0 0 30px rgba(255, 215, 0, 0.8);
         }
         50% {
-            text-shadow: 0 0 20px #ffffff, 0 0 40px #ffffff, 0 0 60px rgba(255, 255, 255, 0.8);
+            text-shadow: 0 0 20px #FFD700, 0 0 40px #FFD700, 0 0 60px rgba(255, 215, 0, 0.8);
         }
     }
 
     .invitation-text {
-        color: #ffffff;
-        text-shadow: 0 0 5px #ffffff, 0 0 10px rgba(255, 255, 255, 0.5);
+        color: #FFD700;
+        text-shadow: 0 0 5px #FFD700, 0 0 10px rgba(255, 215, 0, 0.5);
         font-size: 1.3rem;
         line-height: 1.8;
         margin-bottom: 30px;
     }
 
     .invitation-details {
-        background: rgba(255, 255, 255, 0.1);
-        border: 2px solid #ffffff;
+        background: rgba(0, 0, 0, 0.6);
+        border: 2px solid #FFD700;
         border-radius: 15px;
         padding: 30px;
         margin: 30px 0;
     }
 
     .invitation-details h3 {
-        color: #ffffff;
-        text-shadow: 0 0 10px #ffffff;
+        color: #FFD700;
+        text-shadow: 0 0 10px #FFD700;
         font-size: 1.8rem;
         margin-bottom: 20px;
     }
 
     .invitation-details p {
-        color: #ffffff;
-        text-shadow: 0 0 5px #ffffff;
+        color: #FFD700;
+        text-shadow: 0 0 5px #FFD700;
         font-size: 1.2rem;
         margin: 10px 0;
     }
@@ -97,11 +97,11 @@ get_header();
     }
 
     .btn-invitation {
-        background: rgba(255, 255, 255, 0.2);
-        border: 2px solid #ffffff;
-        color: #ffffff;
-        text-shadow: 0 0 5px #ffffff;
-        box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        background: rgba(0, 0, 0, 0.6);
+        border: 2px solid #FFD700;
+        color: #FFD700;
+        text-shadow: 0 0 5px #FFD700;
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         padding: 15px 30px;
         border-radius: 25px;
         cursor: pointer;
@@ -113,8 +113,8 @@ get_header();
     }
 
     .btn-invitation:hover {
-        background: rgba(255, 255, 255, 0.3);
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        background: rgba(255, 215, 0, 0.2);
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
         transform: translateY(-2px);
     }
 
@@ -122,6 +122,7 @@ get_header();
         font-size: 4rem;
         margin: 20px 0;
         animation: bounce 2s ease-in-out infinite;
+        filter: drop-shadow(0 0 10px #FFD700);
     }
 
     @keyframes bounce {

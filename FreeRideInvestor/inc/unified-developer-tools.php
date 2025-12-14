@@ -477,6 +477,6 @@ class Unified_Developer_Tools {
     }
 }
 
-// Initialize
-new Unified_Developer_Tools();
+// Initialize - DISABLED (not supposed to be on this website)
+// new Unified_Developer_Tools();
 

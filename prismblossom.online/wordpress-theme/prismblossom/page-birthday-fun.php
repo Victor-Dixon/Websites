@@ -12,11 +12,37 @@ get_header();
 
 <section class="birthday-fun-section">
     <div class="container">
-        <h1 class="section-title">
+        <h1 class="section-title" style="color: #FFD700; text-shadow: 0 0 10px #FFD700;">
             <span class="graffiti-sub">BIRTHDAY</span>
             <span class="bubble-sub">FUN</span>
         </h1>
-        <p class="section-description">Click or tap the birthday cat for some fun!</p>
+        <p class="section-description" style="color: #FFD700; text-shadow: 0 0 5px #FFD700;">Click or tap the birthday cat for some fun!</p>
+        
+        <!-- Interactive Mini-Games Section -->
+        <div class="mini-games-container" style="margin: 40px 0; padding: 30px; background: rgba(0, 0, 0, 0.8); border: 2px solid #FFD700; border-radius: 15px; box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);">
+            <h2 style="color: #FFD700; text-shadow: 0 0 10px #FFD700; margin-bottom: 20px;">🎮 Mini Games</h2>
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <button id="confetti-burst" style="background: rgba(0, 0, 0, 0.6); border: 2px solid #FFD700; color: #FFD700; padding: 15px 25px; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: bold; text-shadow: 0 0 5px #FFD700; box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); transition: all 0.3s ease;">🎉 Confetti Burst</button>
+                <button id="golden-sparkles" style="background: rgba(0, 0, 0, 0.6); border: 2px solid #FFD700; color: #FFD700; padding: 15px 25px; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: bold; text-shadow: 0 0 5px #FFD700; box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); transition: all 0.3s ease;">✨ Golden Sparkles</button>
+                <button id="birthday-song" style="background: rgba(0, 0, 0, 0.6); border: 2px solid #FFD700; color: #FFD700; padding: 15px 25px; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: bold; text-shadow: 0 0 5px #FFD700; box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); transition: all 0.3s ease;">🎵 Birthday Song</button>
+            </div>
+        </div>
+        
+        <!-- Birthday Images Gallery -->
+        <div class="birthday-gallery" style="margin: 40px 0; padding: 30px; background: rgba(0, 0, 0, 0.8); border: 2px solid #FFD700; border-radius: 15px; box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);">
+            <h2 style="color: #FFD700; text-shadow: 0 0 10px #FFD700; margin-bottom: 20px;">📸 Birthday Memories</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px;">
+                <div class="gallery-item" style="background: rgba(0, 0, 0, 0.6); border: 2px solid #FFD700; border-radius: 10px; padding: 20px; text-align: center; min-height: 200px; display: flex; align-items: center; justify-content: center;">
+                    <p style="color: #FFD700; text-shadow: 0 0 5px #FFD700;">[Birthday Image 1]<br><small style="opacity: 0.7;">Click to add image</small></p>
+                </div>
+                <div class="gallery-item" style="background: rgba(0, 0, 0, 0.6); border: 2px solid #FFD700; border-radius: 10px; padding: 20px; text-align: center; min-height: 200px; display: flex; align-items: center; justify-content: center;">
+                    <p style="color: #FFD700; text-shadow: 0 0 5px #FFD700;">[Birthday Image 2]<br><small style="opacity: 0.7;">Click to add image</small></p>
+                </div>
+                <div class="gallery-item" style="background: rgba(0, 0, 0, 0.6); border: 2px solid #FFD700; border-radius: 10px; padding: 20px; text-align: center; min-height: 200px; display: flex; align-items: center; justify-content: center;">
+                    <p style="color: #FFD700; text-shadow: 0 0 5px #FFD700;">[Birthday Image 3]<br><small style="opacity: 0.7;">Click to add image</small></p>
+                </div>
+            </div>
+        </div>
 
         <!-- Animated Cat Container -->
         <div class="cat-container">
@@ -72,6 +98,7 @@ get_header();
     padding: 120px 0 60px;
     min-height: 100vh;
     text-align: center;
+    background: #000000;
 }
 
 .cat-container {
@@ -229,17 +256,19 @@ get_header();
 .hat-top {
     width: 8px;
     height: 30px;
-    background: #ff00ff;
+    background: #FFD700;
     margin: 0 auto;
     border-radius: 4px 4px 0 0;
+    box-shadow: 0 0 5px #FFD700;
 }
 
 .hat-base {
     width: 50px;
     height: 15px;
-    background: #00ffff;
+    background: #FFD700;
     border-radius: 50%;
     margin-top: -5px;
+    box-shadow: 0 0 5px #FFD700;
 }
 
 .cat-body-main {
@@ -277,7 +306,8 @@ get_header();
     position: absolute;
     width: 10px;
     height: 10px;
-    background: var(--primary-color);
+    background: #FFD700;
+    box-shadow: 0 0 5px #FFD700;
     animation: confettiFall linear forwards;
 }
 
@@ -291,13 +321,15 @@ get_header();
 .click-counter {
     margin-top: 30px;
     font-size: 1.2rem;
-    color: var(--text-light);
+    color: #FFD700;
+    text-shadow: 0 0 5px #FFD700;
 }
 
 .click-counter span {
-    color: var(--primary-color);
+    color: #FFD700;
     font-weight: bold;
     font-size: 1.5rem;
+    text-shadow: 0 0 10px #FFD700;
 }
 
 .fun-messages {
@@ -306,13 +338,15 @@ get_header();
 }
 
 .fun-message {
-    background: rgba(255, 0, 255, 0.3);
-    border: 2px solid var(--primary-color);
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #FFD700;
     border-radius: 10px;
     padding: 15px;
     margin: 10px auto;
     max-width: 400px;
-    color: var(--text-light);
+    color: #FFD700;
+    text-shadow: 0 0 5px #FFD700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
     animation: messagePop 0.5s ease;
 }
 
@@ -354,7 +388,7 @@ document.addEventListener('DOMContentLoaded', function() {
     ];
     
     function createConfetti() {
-        const colors = ['#ff00ff', '#00ffff', '#ffff00', '#ff00ff', '#00ff00'];
+        const colors = ['#FFD700', '#FFA500', '#FFD700', '#FFA500', '#FFD700'];
         const confettiCount = 50;
         
         for (let i = 0; i < confettiCount; i++) {
@@ -435,6 +469,97 @@ document.addEventListener('DOMContentLoaded', function() {
             cat.click();
         });
     }
+    
+    // Mini-Games Interactive Features
+    const confettiBurstBtn = document.getElementById('confetti-burst');
+    const goldenSparklesBtn = document.getElementById('golden-sparkles');
+    const birthdaySongBtn = document.getElementById('birthday-song');
+    
+    if (confettiBurstBtn) {
+        confettiBurstBtn.addEventListener('click', function() {
+            // Create massive confetti burst
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    createConfetti();
+                }, i * 10);
+            }
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 100);
+        });
+    }
+    
+    if (goldenSparklesBtn) {
+        goldenSparklesBtn.addEventListener('click', function() {
+            // Create golden sparkles effect
+            const sparklesContainer = document.getElementById('confetti-container');
+            for (let i = 0; i < 30; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.style.position = 'absolute';
+                sparkle.style.width = '5px';
+                sparkle.style.height = '5px';
+                sparkle.style.background = '#FFD700';
+                sparkle.style.borderRadius = '50%';
+                sparkle.style.boxShadow = '0 0 10px #FFD700';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.animation = 'confettiFall 2s linear forwards';
+                sparklesContainer.appendChild(sparkle);
+                setTimeout(() => sparkle.remove(), 2000);
+            }
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 100);
+        });
+    }
+    
+    if (birthdaySongBtn) {
+        birthdaySongBtn.addEventListener('click', function() {
+            // Play birthday song notes
+            const notes = [523.25, 587.33, 659.25, 698.46, 783.99]; // C, D, E, F, G
+            notes.forEach((freq, index) => {
+                setTimeout(() => {
+                    try {
+                        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        
+                        oscillator.frequency.value = freq;
+                        oscillator.type = 'sine';
+                        
+                        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                        
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + 0.3);
+                    } catch (e) {
+                        console.log('Sound not available');
+                    }
+                }, index * 200);
+            });
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 100);
+        });
+    }
+    
+    // Gallery item click handlers
+    document.querySelectorAll('.gallery-item').forEach(item => {
+        item.addEventListener('click', function() {
+            this.style.borderColor = '#FFA500';
+            this.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.8)';
+            setTimeout(() => {
+                this.style.borderColor = '#FFD700';
+                this.style.boxShadow = 'none';
+            }, 500);
+        });
+    });
 });
 </script>
 

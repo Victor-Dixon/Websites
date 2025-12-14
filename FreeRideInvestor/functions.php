@@ -133,6 +133,11 @@ function generate_ai_recommendations($request) {
 add_action('template_redirect', __NAMESPACE__ . '\\restrict_access_and_premium_content', 5);
 
 function restrict_access_and_premium_content() {
+    // Allow wp-admin and wp-login.php access (fix redirect loop)
+    if (is_admin() || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/wp-admin') !== false) || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/wp-login.php') !== false)) {
+        return;
+    }
+    
     // Skip AJAX and REST requests
     if ((defined('DOING_AJAX') && DOING_AJAX) || (defined('REST_REQUEST') && REST_REQUEST)) {
         return;
@@ -248,30 +253,85 @@ add_action('after_setup_theme', __NAMESPACE__ . '\\theme_setup');
 
 /**
  * Strip any "Developer Tools" entries from the primary navigation entirely.
+ * Enhanced to remove ALL Developer Tool links with comprehensive matching.
  */
 function freeride_dedupe_developer_tools_menu(array $items, $args) {
     if (!isset($args->theme_location) || $args->theme_location !== 'primary') {
         return $items;
     }
 
-    $seen = false;
     $filtered_items = [];
 
     foreach ($items as $item) {
+        $should_skip = false;
+        
+        // Check URL for developer-tools path (multiple variations)
         if (isset($item->url)) {
+            $url_lower = strtolower($item->url);
             $path = parse_url($item->url, PHP_URL_PATH);
             $normalized_path = strtolower(untrailingslashit($path ?? ''));
-            if ($normalized_path !== '' && strpos($normalized_path, '/developer-tools') !== false) {
-                if ($seen) {
-                    continue;
-                }
-                $seen = true;
+            
+            // Check for various developer-tools URL patterns
+            if ($normalized_path !== '' && (
+                strpos($normalized_path, '/developer-tools') !== false ||
+                strpos($normalized_path, '/developer-tool') !== false ||
+                strpos($normalized_path, 'developer-tools') !== false ||
+                strpos($url_lower, 'developer-tools') !== false ||
+                strpos($url_lower, 'developer-tool') !== false
+            )) {
+                $should_skip = true;
             }
+        }
+        
+        // Check title for "Developer Tool" text (multiple variations)
+        if (isset($item->title)) {
+            $title_lower = strtolower(trim($item->title));
+            if (
+                strpos($title_lower, 'developer tool') !== false ||
+                strpos($title_lower, 'developer tools') !== false ||
+                $title_lower === 'developer tool' ||
+                $title_lower === 'developer tools' ||
+                strpos($title_lower, 'dev tool') !== false ||
+                strpos($title_lower, 'dev tools') !== false
+            ) {
+                $should_skip = true;
+            }
+        }
+        
+        // Check post name/slug
+        if (isset($item->post_name)) {
+            $post_name_lower = strtolower($item->post_name);
+            if (
+                strpos($post_name_lower, 'developer') !== false ||
+                strpos($post_name_lower, 'dev-tool') !== false ||
+                strpos($post_name_lower, 'dev-tools') !== false
+            ) {
+                $should_skip = true;
+            }
+        }
+        
+        // Check object type and ID for developer tools page
+        if (isset($item->object) && $item->object === 'page') {
+            if (isset($item->object_id)) {
+                $page_slug = get_post_field('post_name', $item->object_id);
+                if ($page_slug && (
+                    strpos(strtolower($page_slug), 'developer') !== false ||
+                    strpos(strtolower($page_slug), 'dev-tool') !== false
+                )) {
+                    $should_skip = true;
+                }
+            }
+        }
+        
+        // Skip this item if any match found
+        if ($should_skip) {
+            continue;
         }
 
         $filtered_items[] = $item;
     }
 
+    // Reorder menu items
     $menu_order = 1;
     foreach ($filtered_items as $filtered_item) {
         $filtered_item->menu_order = $menu_order++;
@@ -279,7 +339,65 @@ function freeride_dedupe_developer_tools_menu(array $items, $args) {
 
     return $filtered_items;
 }
-add_filter('wp_nav_menu_objects', __NAMESPACE__ . '\freeride_dedupe_developer_tools_menu', 10, 2);
+// Use higher priority to ensure it runs after other filters
+add_filter('wp_nav_menu_objects', __NAMESPACE__ . '\freeride_dedupe_developer_tools_menu', 999, 2);
+
+/**
+ * Comprehensive menu deduplication filter
+ * Removes ALL duplicate menu items (not just Developer Tools)
+ * Prevents any duplicate menu items from appearing in navigation
+ */
+function freeride_dedupe_all_menu_items(array $items, $args) {
+    if (!isset($args->theme_location) || $args->theme_location !== 'primary') {
+        return $items;
+    }
+    
+    $seen = [];
+    $filtered_items = [];
+    
+    foreach ($items as $item) {
+        // Create unique key from URL and title combination
+        $url = isset($item->url) ? strtolower(trim($item->url)) : '';
+        $title = isset($item->title) ? strtolower(trim($item->title)) : '';
+        $key = md5($url . '|' . $title);
+        
+        // Skip if we've seen this exact combination before
+        if (!isset($seen[$key])) {
+            $seen[$key] = true;
+            $filtered_items[] = $item;
+        }
+    }
+    
+    // Reorder menu items
+    $menu_order = 1;
+    foreach ($filtered_items as $filtered_item) {
+        $filtered_item->menu_order = $menu_order++;
+    }
+    
+    return $filtered_items;
+}
+// Use priority 1000 to run after developer tools filter
+add_filter('wp_nav_menu_objects', __NAMESPACE__ . '\freeride_dedupe_all_menu_items', 1000, 2);
+
+/**
+ * Additional filter to remove Developer Tools links from menu HTML output
+ * This catches any items that might slip through the objects filter
+ */
+function freeride_remove_developer_tools_from_menu_html($items, $args) {
+    if (!isset($args->theme_location) || $args->theme_location !== 'primary') {
+        return $items;
+    }
+    
+    // Remove any menu items containing "developer tool" in the HTML
+    $items = preg_replace(
+        '/<li[^>]*>.*?developer[^<]*tool[^<]*<\/li>/is',
+        '',
+        $items
+    );
+    
+    return $items;
+}
+add_filter('wp_nav_menu_items', __NAMESPACE__ . '\freeride_remove_developer_tools_from_menu_html', 999, 2);
 
 // Enqueue main theme assets
 function freeride_enqueue_assets() {
@@ -293,6 +411,33 @@ function freeride_enqueue_assets() {
             wp_get_theme()->get('Version')
         );
     }
+    
+    // Add inline CSS for text rendering fixes - Enhanced to fix spacing issues
+    $text_rendering_css = "
+        body, body * {
+            text-rendering: optimizeLegibility !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+            -webkit-text-size-adjust: 100% !important;
+            -ms-text-size-adjust: 100% !important;
+            text-size-adjust: 100% !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            font-feature-settings: normal !important;
+            font-variant: normal !important;
+        }
+        /* Fix for specific text rendering issues */
+        h1, h2, h3, h4, h5, h6, p, span, div, a, label, button, .entry-title, .post-title {
+            letter-spacing: 0 !important;
+            word-spacing: 0.1em !important;
+        }
+        /* Navigation menu text fix */
+        nav, .menu, .navigation {
+            letter-spacing: 0 !important;
+            word-spacing: normal !important;
+        }
+    ";
+    wp_add_inline_style('freeride-main-style', $text_rendering_css);
 
     // Conditionally enqueue scripts and styles for a page named "trade-journal"
     if (is_page('trade-journal')) {
@@ -1359,10 +1504,20 @@ add_action('admin_post_ebook_download_form', __NAMESPACE__ . '\\handle_ebook_dow
  * Optional: Restrict Non-Admins from Accessing WP Admin
  */
 function freeride_restrict_admin_access() {
-    if (is_admin() && !current_user_can('administrator') &&
-        !(defined('DOING_AJAX') && DOING_AJAX)) {
-        wp_redirect(home_url('/dashboard'));
-        exit;
+    // Allow wp-admin access for administrators and during login
+    if (current_user_can('administrator') || 
+        (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/wp-login.php') !== false) ||
+        (defined('DOING_AJAX') && DOING_AJAX)) {
+        return;
+    }
+    
+    // Only redirect non-admins trying to access wp-admin (not wp-login.php)
+    if (is_admin() && !current_user_can('administrator')) {
+        // Redirect to dashboard only if user is logged in, otherwise let them access wp-login
+        if (is_user_logged_in()) {
+            wp_redirect(home_url('/dashboard'));
+            exit;
+        }
     }
 }
 add_action('init', __NAMESPACE__ . '\\freeride_restrict_admin_access');
@@ -1420,5 +1575,5 @@ add_shortcode('test_shortcode', function() {
     return '<p>Shortcode is working!</p>';
 });
 
-// Developer Tool - Single Unified Tool
-require_once get_template_directory() . '/inc/developer-tool.php';
+// Developer Tool - REMOVED (not supposed to be on this website)
+// require_once get_template_directory() . '/inc/developer-tool.php';

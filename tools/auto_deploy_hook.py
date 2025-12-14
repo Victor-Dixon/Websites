@@ -23,11 +23,16 @@ if MAIN_REPO_TOOLS.exists():
     sys.path.insert(0, str(MAIN_REPO_TOOLS))
 
 try:
-    from wordpress_deployment_manager import WordPressDeploymentManager
+    from wordpress_manager import WordPressManager
+    # Backward compatibility alias
+    WordPressDeploymentManager = WordPressManager
 except ImportError:
-    print("❌ ERROR: WordPressDeploymentManager not found!")
-    print(f"   Expected at: {MAIN_REPO_TOOLS}/wordpress_deployment_manager.py")
-    sys.exit(1)
+    try:
+        from wordpress_deployment_manager import WordPressDeploymentManager
+    except ImportError:
+        print("❌ ERROR: WordPressManager not found!")
+        print(f"   Expected at: {MAIN_REPO_TOOLS}/wordpress_manager.py")
+        sys.exit(1)
 
 
 # Site mapping: local directory → site key
@@ -36,6 +41,7 @@ SITE_MAPPING = {
     "southwestsecret.com": "southwestsecret",
     "Swarm_website": "weareswarm",
     "TradingRobotPlugWeb": "tradingrobotplug",
+    "prismblossom.online": "prismblossom",
 }
 
 # File type mappings
@@ -169,50 +175,14 @@ def deploy_file_to_site(file_path: str, site_key: str) -> bool:
     """Deploy a single file to the appropriate site."""
     try:
         manager = WordPressDeploymentManager(site_key)
-        manager.connect()
         
         local_path = Path(__file__).parent.parent / file_path
         if not local_path.exists():
             print(f"⚠️  File not found: {local_path}")
             return False
         
-        # Determine if theme or plugin file
-        if is_theme_file(file_path):
-            relative_path = get_relative_theme_path(file_path, site_key)
-            if relative_path:
-                # Extract subdirectory if file is in a subdirectory
-                rel_path_obj = Path(relative_path)
-                if len(rel_path_obj.parts) > 1:
-                    # File is in a subdirectory (e.g., "js/main.js" -> subpath="js")
-                    remote_subpath = str(rel_path_obj.parent)
-                else:
-                    # File is in theme root
-                    remote_subpath = ""
-                success = manager.deploy_theme_file(local_path, remote_subpath, backup=False)
-            else:
-                # Fallback: deploy to theme root
-                success = manager.deploy_theme_file(local_path, "", backup=False)
-        elif is_plugin_file(file_path):
-            # Extract plugin name from path
-            parts = Path(file_path).parts
-            plugin_idx = None
-            for i, part in enumerate(parts):
-                if "plugin" in part.lower():
-                    plugin_idx = i
-                    break
-            
-            if plugin_idx and plugin_idx + 1 < len(parts):
-                plugin_name = parts[plugin_idx + 1]
-                remote_subpath = "/".join(parts[plugin_idx + 2:]) if plugin_idx + 2 < len(parts) else ""
-                success = manager.deploy_plugin_file(local_path, plugin_name, remote_subpath, backup=False)
-            else:
-                print(f"⚠️  Could not determine plugin name for: {file_path}")
-                success = False
-        else:
-            # Try theme file deployment as fallback
-            relative_path = get_relative_theme_path(file_path, site_key)
-            remote_subpath = str(Path(relative_path).parent) if relative_path and "/" in relative_path else ""
-            success = manager.deploy_theme_file(local_path, remote_subpath, backup=False)
+        # Use unified deploy_file method
+        success = manager.deploy_file(local_path)
         
         manager.close()
         return success

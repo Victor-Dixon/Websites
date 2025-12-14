@@ -26,11 +26,47 @@ function prismblossom_scripts() {
     // Main stylesheet
     wp_enqueue_style('southwestsecret-style', get_template_directory_uri() . '/css/style.css', array(), '1.0.0');
     
-    // Google Fonts
+    // Google Fonts with fallback
     wp_enqueue_style('southwestsecret-fonts', 'https://fonts.googleapis.com/css2?family=Rubik+Doodle+Shadow&family=Permanent+Marker&family=Rubik+Bubbles&display=swap', array(), null);
     
     // Main JavaScript
     wp_enqueue_script('southwestsecret-script', get_template_directory_uri() . '/js/script.js', array(), '1.0.0', true);
+    
+    // Localize script for AJAX
+    wp_localize_script('southwestsecret-script', 'prismblossomAjax', array(
+        'ajaxurl' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('prismblossom_nonce')
+    ));
+    
+    // Add inline CSS for text rendering fixes - Enhanced to fix spacing issues
+    $text_rendering_css = "
+        body, body * {
+            font-family: 'Rubik Bubbles', 'Arial', 'Helvetica Neue', 'Helvetica', sans-serif !important;
+            text-rendering: optimizeLegibility !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+            -webkit-text-size-adjust: 100% !important;
+            -ms-text-size-adjust: 100% !important;
+            text-size-adjust: 100% !important;
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            font-feature-settings: 'liga' 0 !important;
+            font-variant-ligatures: none !important;
+            font-variant: normal !important;
+        }
+        /* Fix for specific text rendering issues */
+        h1, h2, h3, h4, h5, h6, p, span, div, a, label, button {
+            letter-spacing: 0 !important;
+            word-spacing: 0.1em !important;
+            font-feature-settings: 'liga' 0 !important;
+            font-variant-ligatures: none !important;
+        }
+        /* Ensure no font loading causes spacing issues */
+        @font-face {
+            font-display: swap;
+        }
+    ";
+    wp_add_inline_style('southwestsecret-style', $text_rendering_css);
 }
 add_action('wp_enqueue_scripts', 'prismblossom_scripts');
 
@@ -249,6 +285,47 @@ function prismblossom_handle_guestbook_submission() {
 }
 add_action('admin_post_submit_guestbook_entry', 'prismblossom_handle_guestbook_submission');
 add_action('admin_post_nopriv_submit_guestbook_entry', 'prismblossom_handle_guestbook_submission');
+
+// AJAX handler for guestbook submission
+function prismblossom_ajax_guestbook_submission() {
+    // Verify nonce
+    if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'guestbook_submit')) {
+        wp_send_json_error('Security check failed');
+        return;
+    }
+    
+    // Sanitize input
+    $guest_name = isset($_POST['guest_name']) ? sanitize_text_field($_POST['guest_name']) : '';
+    $message = isset($_POST['guest_message']) ? sanitize_textarea_field($_POST['guest_message']) : '';
+    
+    // Validate input
+    if (empty($guest_name) || empty($message)) {
+        wp_send_json_error('Name and message are required');
+        return;
+    }
+    
+    // Insert into database
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'guestbook_entries';
+    
+    $result = $wpdb->insert(
+        $table_name,
+        array(
+            'guest_name' => $guest_name,
+            'message' => $message,
+            'status' => 'pending'
+        ),
+        array('%s', '%s', '%s')
+    );
+    
+    if ($result) {
+        wp_send_json_success('Message submitted successfully');
+    } else {
+        wp_send_json_error('Database error');
+    }
+}
+add_action('wp_ajax_prismblossom_submit_guestbook', 'prismblossom_ajax_guestbook_submission');
+add_action('wp_ajax_nopriv_prismblossom_submit_guestbook', 'prismblossom_ajax_guestbook_submission');
 
 // Add admin menu for guestbook management
 function prismblossom_guestbook_admin_menu() {

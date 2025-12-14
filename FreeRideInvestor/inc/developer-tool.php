@@ -1184,5 +1184,5 @@ class FRI_Developer_Tool
     }
 }
 
-// Initialize
-new FRI_Developer_Tool();
+// Initialize - DISABLED (not supposed to be on this website)
+// new FRI_Developer_Tool();

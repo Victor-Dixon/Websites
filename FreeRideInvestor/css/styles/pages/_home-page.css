@@ -10,7 +10,7 @@
   color: #f0f0f0; /* Light text for contrast */
   text-align: center;
   padding: 100px 40px; /* Increased padding for spacious feel */
-  background-image: url('../images/hero-bg.jpg'); /* Optional: Add a background image */
+  /* background-image: url('../images/hero-bg.jpg'); */ /* Image not found - commented out to prevent 404 */
   background-size: cover;
   background-position: center;
   position: relative;
