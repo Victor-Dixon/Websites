@@ -60,8 +60,11 @@ class Fri_Cron {
         global $wpdb;
         $table_name = $wpdb->prefix . 'fri_alerts';
 
-        // Fetch all active alerts
-        $alerts = $wpdb->get_results("SELECT * FROM $table_name WHERE active = 1", ARRAY_A);
+        // Fetch all active alerts (using prepared statement for security)
+        $alerts = $wpdb->get_results(
+            $wpdb->prepare("SELECT * FROM {$table_name} WHERE active = %d", 1),
+            ARRAY_A
+        );
 
         if (empty($alerts)) {
             $this->logger->log('INFO', 'No active alerts to process.');
