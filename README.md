@@ -1,58 +1,54 @@
-# Websites Repository
+# Websites Monorepo
 
-Unified repository for all WordPress themes, plugins, and static websites.
+This repository contains the source (themes/templates/content) for multiple small websites and WordPress-based sites, plus internal tooling for packaging and verifying changes.
 
-## Sites
+## What’s in this repo
 
-- **FreeRideInvestor** - Trading education platform
-- **Southwest Secret** - Music/DJ showcase site
-- **WE ARE SWARM** - Swarm intelligence platform
-- **TradingRobotPlug** - Trading automation platform
+- **WordPress themes** stored alongside each site/domain folder
+- **Static HTML/CSS/JS** for lightweight pages and side projects
+- **Custom utilities** under `tools/` (verification, packaging, maintenance scripts)
+- **Custom WordPress plugins** under `wordpress-plugins/`
 
-## Structure
+## Repository layout (high level)
 
-```
-websites/
-├── themes/
-│   ├── freerideinvestor/
-│   ├── southwestsecret/
-│   ├── swarm/
-│   └── tradingrobotplug/
-├── plugins/
-│   └── (shared plugins)
-├── tools/
-│   └── (deployment tools)
-└── docs/
-    └── (documentation)
-```
+| Path | What it contains | Notes |
+|------|------------------|-------|
+| `FreeRideInvestor/` | WordPress theme code + a large snapshot of plugins/assets | Legacy/monolithic; includes `docker-compose.yml` and many third-party plugin files. |
+| `FreeRideInvestor_V2/` | A cleaner standalone WordPress theme | Theme files at the folder root (e.g., `functions.php`, `style.css`). |
+| `prismblossom.online/wordpress-theme/prismblossom/` | WordPress theme for `prismblossom.online` | Theme-only folder. |
+| `ariajet.site/` | Static pages + WordPress theme | Static `index.html` + games; theme in `wordpress-theme/ariajet/`. |
+| `Swarm_website/wp-content/themes/swarm-theme/` | WordPress theme for the Swarm site | Includes theme templates and JS/CSS. |
+| `dadudekc.com/blog-posts/` | Blog drafts/content | Markdown + HTML drafts. |
+| `side-projects/` | Small experimental pages | Standalone HTML content. |
+| `wordpress-plugins/` | Custom plugins | Each plugin has its own folder and readme. |
+| `docs/` | Internal maintenance documentation | Operational notes and guides. |
+| `tools/` | Helper scripts | Packaging, verification, and maintenance automation. |
 
-## Auto-Deployment
+## Working with WordPress themes
 
-This repository is configured with pre-commit hooks that automatically deploy changes to live websites when code is pushed to GitHub.
+- **Theme locations vary** by site. Look for either:
+  - `*/wordpress-theme/<theme-name>/` (theme-only folder), or
+  - `*/wp-content/themes/<theme-name>/` (WordPress-style tree), or
+  - a theme stored at the folder root (e.g., `FreeRideInvestor_V2/`).
+- **To install a theme**: copy the theme folder into your WordPress install at `wp-content/themes/`, then activate it in **Appearance → Themes**.
 
-### Deployment Process
+## Deployment (high level)
 
-1. Make changes to theme/plugin files
-2. Commit changes: `git commit -m "Update theme"`
-3. Pre-commit hook triggers deployment
-4. Push to GitHub: `git push origin main`
-5. Changes are live on website
+This repository **does not store production credentials**. Deployment is expected to be done via one of:
 
-## Setup
+- **Manual upload** (SFTP / hosting file manager / WordPress Theme Editor) of the changed theme files
+- **Packaging + verification helpers**:
+  - `python tools/deploy_website_fixes.py` (creates zip packages and prints file-by-file instructions)
+  - `python tools/verify_website_fixes.py` (sanity-checks a few live endpoints)
 
-1. Clone repository: `git clone <repo-url>`
-2. Install dependencies: `pip install -r requirements.txt`
-3. Configure deployment: Update `tools/wordpress_deployment_manager.py` with credentials
-4. Start developing!
+## Security & secrets
 
-## Deployment Tools
+- **Do not commit secrets** (hosting credentials, API keys, application passwords).
+- Keep any credentials in **local-only** files (ignored by git) or injected via environment variables.
+- This repo contains **third-party code** (notably under `FreeRideInvestor/plugins/`). Treat updates and security reviews as part of routine maintenance.
 
-- `wordpress_deployment_manager.py` - Main deployment tool
-- `wordpress_deployer.py` - Theme deployment
-- `deploy_static_html.py` - Static HTML deployment
+## Contributing guidelines
 
-## Notes
-
-- All sites deploy to Hostinger server (157.173.214.121:65002)
-- Credentials stored in environment variables
-- Pre-commit hooks ensure automatic deployment
+- Keep changes **scoped to one site** when possible (makes review and deployment safer).
+- Prefer small, well-described commits (what changed + why).
+- For WordPress PHP changes, validate syntax before deployment if you have PHP available (`php -l <file>`).

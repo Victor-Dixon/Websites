@@ -1,32 +1,31 @@
-# 📚 Website Maintenance Guide
+# Website maintenance guide
 
-**Author**: Agent-7 (Web Development Specialist)  
 **Date**: 2025-11-29  
-**Status**: ✅ **COMPREHENSIVE GUIDE**
+**Status**: Comprehensive internal checklist
 
 ---
 
-## 🎯 **OVERVIEW**
+## Overview
 
 This guide provides comprehensive maintenance procedures for all websites in the swarm.
 
 ---
 
-## 📋 **MAINTENANCE SCHEDULE**
+## Maintenance schedule
 
-### **Daily Tasks**
+### Daily tasks
 - [ ] Check site uptime
 - [ ] Check for errors in logs
 - [ ] Monitor security alerts
 
-### **Weekly Tasks**
+### Weekly tasks
 - [ ] Run website fixes verification
 - [ ] Check WordPress core version
 - [ ] Check plugin versions
 - [ ] Review security logs
 - [ ] Test contact forms
 
-### **Monthly Tasks**
+### Monthly tasks
 - [ ] Full security audit
 - [ ] Performance audit
 - [ ] Backup verification
@@ -34,7 +33,7 @@ This guide provides comprehensive maintenance procedures for all websites in the
 - [ ] Update plugins (if needed)
 - [ ] Review and optimize CSS/JS
 
-### **Quarterly Tasks**
+### Quarterly tasks
 - [ ] Full site audit
 - [ ] Review and update security headers
 - [ ] Performance optimization review
@@ -43,7 +42,7 @@ This guide provides comprehensive maintenance procedures for all websites in the
 
 ---
 
-## 🛠️ **MAINTENANCE TOOLS**
+## Maintenance tools
 
 ### **1. Website Fixes Verification**
 ```bash
@@ -71,7 +70,7 @@ Creates deployment packages and instructions.
 
 ---
 
-## 🔒 **SECURITY MAINTENANCE**
+## Security maintenance
 
 ### **Security Headers**
 All WordPress sites should include `add_security_headers.php`:
@@ -88,7 +87,7 @@ require_once get_template_directory() . '/tools/add_security_headers.php';
 
 ---
 
-## ⚡ **PERFORMANCE MAINTENANCE**
+## Performance maintenance
 
 ### **CSS/JS Optimization**
 - Minify CSS and JavaScript
@@ -110,7 +109,7 @@ require_once get_template_directory() . '/tools/add_security_headers.php';
 
 ---
 
-## 📊 **MONITORING**
+## Monitoring
 
 ### **Uptime Monitoring**
 - Monitor site availability
@@ -129,7 +128,7 @@ require_once get_template_directory() . '/tools/add_security_headers.php';
 
 ---
 
-## 🚨 **INCIDENT RESPONSE**
+## Incident response
 
 ### **Site Down**
 1. Check server status
@@ -154,7 +153,7 @@ require_once get_template_directory() . '/tools/add_security_headers.php';
 
 ---
 
-## 📝 **DOCUMENTATION**
+## Documentation
 
 ### **Site Information**
 - Domain names
@@ -177,7 +176,7 @@ require_once get_template_directory() . '/tools/add_security_headers.php';
 
 ---
 
-## 🔄 **BACKUP PROCEDURES**
+## Backup procedures
 
 ### **Regular Backups**
 - Daily: Database backups
@@ -192,7 +191,7 @@ require_once get_template_directory() . '/tools/add_security_headers.php';
 
 ---
 
-## 🚀 **DEPLOYMENT PROCEDURES**
+## Deployment procedures
 
 ### **Pre-Deployment**
 1. Backup current site
@@ -215,13 +214,11 @@ require_once get_template_directory() . '/tools/add_security_headers.php';
 
 ---
 
-## 📞 **SUPPORT CONTACTS**
+## Support contacts
 
-- **Hosting Provider**: Hostinger (157.173.214.121:65002)
+- **Hosting provider**: use your provider’s support channels and SFTP settings
 - **WordPress Support**: wordpress.org/support
 - **Security Issues**: Report immediately
 
 ---
-
-🐝 **WE. ARE. SWARM.** ⚡🔥
 

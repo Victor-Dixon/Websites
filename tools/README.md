@@ -1,95 +1,41 @@
-# 🛠️ Website Tools
+# Website tools
 
-**Author**: Agent-7 (Web Development Specialist)  
-**Date**: 2025-11-29
+Utilities used to package, deploy, verify, and maintain the websites in this repository.
 
----
+## Available tools
 
-## 📋 **Available Tools**
+### 1) `verify_website_fixes.py`
 
-### **1. verify_website_fixes.py**
-Verifies that website fixes have been properly deployed.
+Verifies that specific fixes are visible on live sites (basic HTTP checks).
 
-**Usage**:
+Usage:
+
 ```bash
 python tools/verify_website_fixes.py
 ```
 
-**Features**:
-- Checks text rendering fixes
-- Verifies CSS files are loading (no 404s)
-- Generates verification report
+### 2) `add_security_headers.php`
 
----
+Adds common security headers to WordPress responses.
 
-### **2. add_security_headers.php**
-Adds security headers to WordPress sites.
+Usage (in your theme’s `functions.php`):
 
-**Usage**:
-Add to `functions.php` or include as separate file:
 ```php
 require_once get_template_directory() . '/tools/add_security_headers.php';
 ```
 
-**Security Headers Added**:
-- X-Frame-Options
-- X-Content-Type-Options
-- X-XSS-Protection
-- Referrer-Policy
-- Content-Security-Policy
-- Permissions-Policy
-- Strict-Transport-Security (HTTPS only)
+### 3) `wordpress_version_checker.py`
 
-**Additional Security**:
-- Removes WordPress version from header
-- Removes RSD link
-- Removes wlwmanifest link
-- Removes shortlink
+Checks WordPress core/plugin versions for update awareness.
 
----
+Usage:
 
-### **3. wordpress_version_checker.py**
-Checks WordPress core and plugin versions for updates.
-
-**Usage**:
 ```bash
 python tools/wordpress_version_checker.py
 ```
 
-**Features**:
-- Checks latest WordPress core version
-- Checks plugin versions
-- Generates update report
-- Saves report to file
+## Notes
 
----
-
-## 🚀 **Quick Start**
-
-1. **Verify Fixes**:
-   ```bash
-   cd D:\websites
-   python tools/verify_website_fixes.py
-   ```
-
-2. **Add Security Headers**:
-   - Copy `add_security_headers.php` to WordPress theme
-   - Include in `functions.php`
-
-3. **Check Updates**:
-   ```bash
-   python tools/wordpress_version_checker.py
-   ```
-
----
-
-## 📝 **Notes**
-
-- All tools are designed to be non-destructive
-- Backup before making changes
-- Test in staging environment first
-
----
-
-🐝 **WE. ARE. SWARM.** ⚡🔥
+- These scripts are intended to be **non-destructive**, but you should still back up before deploying changes.
+- Prefer testing in a staging environment when available.
 

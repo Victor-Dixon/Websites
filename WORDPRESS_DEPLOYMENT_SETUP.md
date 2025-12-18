@@ -1,147 +1,47 @@
-# 🔐 WordPress Deployment Setup Guide
+# WordPress deployment setup guide (direct upload tooling)
 
 **Date**: 2025-11-30  
-**Agent**: Agent-7 (Web Development Specialist)  
-**Purpose**: Configure WordPress deployment manager for direct hosting connection
+**Purpose**: Configure direct-to-host deployment tooling for WordPress theme updates
 
----
+## Overview
 
-## 🎯 **OVERVIEW**
+Some scripts in `tools/` are designed to deploy changed files directly to hosting via SFTP/SSH. This requires:
 
-We have a WordPress deployment manager (`wordpress_manager.py`) that connects directly to hosting via SFTP/SSH. This allows automatic deployment of website fixes without manual file uploads.
+- A deployment manager module (commonly referenced as `wordpress_manager.py`)
+- A local-only credentials file (or environment variables)
 
----
+> Note: In this repository snapshot, the referenced `wordpress_manager.py` module is not included. If you want to use direct deployment, provide that module (internal/private tooling) and ensure it is importable by the scripts.
 
-## 📋 **REQUIRED SETUP**
+## Credentials
 
-### **Step 1: Configure Credentials**
+Store credentials outside of git. A common convention is:
 
-Edit the credentials file:
-```
-D:\Agent_Cellphone_V2_Repository\.deploy_credentials\sites.json
-```
+- `.deploy_credentials/sites.json` (git-ignored)
 
-Add credentials for each site:
+Example structure:
 
 ```json
 {
   "freerideinvestor": {
-    "host": "your-hostinger-host.com",
-    "username": "your-ftp-username",
-    "password": "your-ftp-password",
-    "port": 65002,
+    "host": "sftp.example.com",
+    "username": "your-username",
+    "password": "your-password",
+    "port": 22,
     "remote_path": "/public_html/wp-content/themes/freerideinvestor"
-  },
-  "prismblossom": {
-    "host": "your-hostinger-host.com",
-    "username": "your-ftp-username",
-    "password": "your-ftp-password",
-    "port": 65002,
-    "remote_path": "/public_html/wp-content/themes/prismblossom"
-  },
-  "southwestsecret": {
-    "host": "your-hostinger-host.com",
-    "username": "your-ftp-username",
-    "password": "your-ftp-password",
-    "port": 65002,
-    "remote_path": "/public_html/wp-content/themes/southwestsecret"
   }
 }
 ```
 
-### **Step 2: Get Hostinger Credentials**
+## Usage
 
-1. **Log into Hostinger**: https://hpanel.hostinger.com
-2. **Go to FTP Accounts**:
-   - Navigate to **"FTP Accounts"** in your hosting panel
-   - Find or create FTP account for your site
-   - Note the credentials:
-     - **Host**: Usually `ftp.yourdomain.com` or provided by Hostinger
-     - **Username**: Your FTP username
-     - **Password**: Your FTP password
-     - **Port**: Usually `65002` for Hostinger SFTP (or `21` for FTP)
+- Deploy packages + manual upload (works without direct deployment tooling):
+  - `python tools/deploy_website_fixes.py`
+- If direct deployment is configured in your environment:
+  - `python tools/deploy_all_websites.py`
+  - `python tools/auto_deploy_hook.py --auto-deploy`
 
-3. **Alternative - SSH Access**:
-   - If you have SSH access, you can use SSH credentials instead
-   - Port is usually `65002` for Hostinger
+## Troubleshooting
 
----
-
-## 🚀 **USING THE DEPLOYMENT MANAGER**
-
-### **Deploy All Websites**:
-
-```bash
-cd D:\websites
-python tools/deploy_all_websites.py
-```
-
-### **Deploy Single Site**:
-
-```bash
-cd D:\Agent_Cellphone_V2_Repository
-python tools/wordpress_manager.py --site prismblossom --deploy
-```
-
-### **Deploy Specific Files**:
-
-```python
-from wordpress_manager import WordPressManager
-from pathlib import Path
-
-manager = WordPressManager("prismblossom")
-manager.connect()
-manager.deploy_file(Path("D:/websites/prismblossom.online/wordpress-theme/prismblossom/functions.php"))
-manager.disconnect()
-```
-
----
-
-## ✅ **VERIFICATION**
-
-After setting up credentials, test the connection:
-
-```bash
-cd D:\Agent_Cellphone_V2_Repository
-python tools/wordpress_manager.py --site prismblossom --verify
-```
-
----
-
-## 🔧 **TROUBLESHOOTING**
-
-### **Connection Failed**:
-1. Check credentials are correct in `sites.json`
-2. Verify FTP/SSH is enabled on Hostinger
-3. Check firewall isn't blocking port 65002
-4. Try port 21 (FTP) if 65002 doesn't work
-
-### **File Upload Failed**:
-1. Check file permissions on server
-2. Verify remote path is correct
-3. Check disk space on server
-4. Verify file exists locally
-
-### **Site Not Found**:
-1. Check site key matches `SITE_CONFIGS` in `wordpress_manager.py`
-2. Verify site is added to `SITE_CONFIGS`
-3. Check credentials file has matching site key
-
----
-
-## 📝 **CURRENT STATUS**
-
-**WordPress Manager**: ✅ Ready  
-**FreeRideInvestor**: ⚠️ Needs credentials  
-**prismblossom.online**: ⚠️ Needs credentials  
-**southwestsecret.com**: ⚠️ Needs credentials  
-
-**Next Step**: Configure credentials in `sites.json`
-
----
-
-🐝 **WE. ARE. SWARM.** ⚡🔥
-
-**Agent-7 (Web Development Specialist)**  
-**Status: ✅ DEPLOYMENT MANAGER READY - AWAITING CREDENTIALS**
+- **Connection failed**: confirm host/port, credentials, and that SFTP/SSH access is enabled by your hosting provider.
+- **Upload failed**: confirm `remote_path` and file permissions, and verify the target theme is the active theme.
 
