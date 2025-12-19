@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-import argparse
 import json
 import re
-from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -11,9 +9,11 @@ from zoneinfo import ZoneInfo
 import yaml
 
 from .llm_client import generate_markdown, load_llm_config
+from .examples_loader import load_example_snippets
 from .models import BrandProfile
-from .paths import content_dir, drafts_dir, runtime_dir
+from .paths import drafts_dir, runtime_dir
 from .prompt_builder import build_prompt
+from .site_config import load_site_config
 from .selector import (
     get_backlog_item,
     load_backlog,
@@ -22,6 +22,7 @@ from .selector import (
     pick_post_id,
 )
 from .validator import validate_markdown
+from .wp_publisher import load_wp_env, publish_wordpress_post
 
 
 def _slugify(s: str) -> str:
@@ -47,12 +48,12 @@ def _ensure_dirs() -> None:
     runtime_dir().mkdir(parents=True, exist_ok=True)
 
 
-def _state_path() -> Path:
-    return runtime_dir() / "autoblogger_state.json"
+def _state_path(site_id: str) -> Path:
+    return runtime_dir() / f"autoblogger_state__{site_id}.json"
 
 
-def _write_state(state: dict) -> None:
-    _state_path().write_text(json.dumps(state, indent=2, ensure_ascii=False), encoding="utf-8")
+def _write_state(site_id: str, state: dict) -> None:
+    _state_path(site_id).write_text(json.dumps(state, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
 def _extract_frontmatter_title(md: str) -> str | None:
@@ -67,56 +68,64 @@ def _extract_frontmatter_title(md: str) -> str | None:
     return str(title).strip() if title else None
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description="Autoblogger daily runner")
-    parser.add_argument("--date", help="Override date (YYYY-MM-DD). Default: today in America/Chicago")
-    parser.add_argument("--timezone", default="America/Chicago", help="Timezone for 'today'")
-    parser.add_argument("--auto-publish", action="store_true", help="Publish to WordPress (default: queue only)")
-    parser.add_argument("--wp-status", default="draft", choices=["draft", "publish"], help="WP post status")
-    parser.add_argument("--dry-run", action="store_true", help="Do everything except LLM + publish")
-    parser.add_argument("--site-id", default="dadudekc.com", help="WordPress site id in .deploy_credentials/blogging_api.json")
+def run_daily_for_site(
+    *,
+    site: str,
+    date_override: str | None,
+    timezone: str,
+    auto_publish: bool,
+    wp_status: str,
+    dry_run: bool,
+) -> int:
+    site_cfg = load_site_config(site)
 
-    args = parser.parse_args()
-
-    tz = ZoneInfo(args.timezone)
+    tz = ZoneInfo(timezone)
     now = datetime.now(tz)
-    today = now.date() if not args.date else datetime.fromisoformat(args.date).date()
+    today = now.date() if not date_override else datetime.fromisoformat(date_override).date()
 
     _ensure_dirs()
 
-    voice_path = content_dir() / "voice_profile.md"
-    brand_path = content_dir() / "brand_profile.yaml"
-    backlog_path = content_dir() / "backlog.yaml"
-    calendar_path = content_dir() / "calendar.yaml"
+    voice_path = site_cfg.voice_profile_path
+    brand_path = site_cfg.brand_profile_path
+    backlog_path = site_cfg.backlog_path
+    calendar_path = site_cfg.calendar_path
 
     voice_md = _read_text(voice_path)
     brand_yaml = _read_text(brand_path)
+    example_snippets = load_example_snippets(site_cfg.examples_glob)
 
     brand = BrandProfile.from_dict(_load_yaml(brand_path))
 
     backlog = load_backlog(backlog_path)
-    state = load_state(_state_path())
+    state = load_state(_state_path(site_cfg.site_id))
 
     post_id = pick_post_id(today, calendar_path, backlog, state)
     item = get_backlog_item(backlog, post_id)
 
-    prompt = build_prompt(voice_profile_md=voice_md, brand_profile_yaml=brand_yaml, item=item)
+    prompt = build_prompt(
+        voice_profile_md=voice_md,
+        brand_profile_yaml=brand_yaml,
+        example_snippets=example_snippets,
+        item=item,
+    )
 
     # Draft path
     draft_name = f"{today.isoformat()}--{_slugify(item.title)}.md"
-    draft_path = drafts_dir() / draft_name
+    draft_path = drafts_dir() / site_cfg.site_id / draft_name
+    draft_path.parent.mkdir(parents=True, exist_ok=True)
 
     history_entry = {
         "ts": now.isoformat(),
+        "site_id": site_cfg.site_id,
         "date": today.isoformat(),
         "post_id": post_id,
         "title": item.title,
         "draft_path": str(draft_path),
-        "mode": "publish" if args.auto_publish else "queue",
+        "mode": "publish" if auto_publish else "queue",
     }
 
     try:
-        if args.dry_run:
+        if dry_run:
             # Save prompt only (so you can hand it to an agent)
             draft_path.write_text(
                 "---\n"
@@ -125,6 +134,7 @@ def main() -> int:
                 f"pillar: {item.pillar}\n"
                 f"audience: {item.audience}\n"
                 f"cta: {item.cta}\n"
+                f"site_id: {site_cfg.site_id}\n"
                 "---\n\n"
                 "# DRAFT NOT GENERATED (dry-run)\n\n"
                 "Below is the exact prompt that would be sent.\n\n"
@@ -150,11 +160,16 @@ def main() -> int:
                     f"pillar: {item.pillar}\n"
                     f"audience: {item.audience}\n"
                     f"cta: {item.cta}\n"
+                    f"site_id: {site_cfg.site_id}\n"
                     "---\n\n"
                     + md
                 )
 
-            result = validate_markdown(md, word_count_min=brand.word_count_min, word_count_max=brand.word_count_max, cta_type=item.cta)
+            # Prefer per-site defaults; fall back to brand_profile.yaml
+            wc_min = site_cfg.word_count_min or brand.word_count_min
+            wc_max = site_cfg.word_count_max or brand.word_count_max
+
+            result = validate_markdown(md, word_count_min=wc_min, word_count_max=wc_max, cta_type=item.cta)
             if not result.ok:
                 raise RuntimeError("Validation failed: " + "; ".join(result.errors))
 
@@ -162,34 +177,35 @@ def main() -> int:
             history_entry["status"] = "draft_saved"
             history_entry["word_count"] = result.word_count
 
-            if args.auto_publish:
-                # Publish via existing tooling (WP REST) if configured.
-                from tools.blog.unified_blogging_automation import UnifiedBloggingAutomation
+            if auto_publish:
+                if site_cfg.publish.provider != "wordpress":
+                    raise RuntimeError(f"Unsupported publish provider: {site_cfg.publish.provider}")
+                if not (site_cfg.publish.wp_base_url_env and site_cfg.publish.wp_user_env and site_cfg.publish.wp_app_password_env):
+                    raise RuntimeError("WordPress publish config missing env var names in site config")
 
-                excerpt = f"{item.angle}"
-                automation = UnifiedBloggingAutomation()
-                publish_result = automation.publish_to_site(
-                    site_id=args.site_id,
+                wp_env = load_wp_env(
+                    base_url_env=site_cfg.publish.wp_base_url_env,
+                    user_env=site_cfg.publish.wp_user_env,
+                    app_password_env=site_cfg.publish.wp_app_password_env,
+                )
+                publish_result = publish_wordpress_post(
+                    cfg=wp_env,
                     title=item.title,
                     content=md,
-                    site_purpose=None,
-                    excerpt=excerpt,
-                    status=args.wp_status,
+                    excerpt=item.angle,
+                    status=wp_status,
                 )
-                if not publish_result.get("success"):
-                    raise RuntimeError(f"WP publish failed: {publish_result.get('error')}")
-
-                history_entry["wp"] = {k: publish_result.get(k) for k in ("post_id", "link", "edit_link", "site_id")}
-                history_entry["status"] = "published" if args.wp_status == "publish" else "wp_draft_created"
+                history_entry["wp"] = publish_result
+                history_entry["status"] = "published" if wp_status == "publish" else "wp_draft_created"
 
         # Update state (and optionally consume backlog)
-        if not args.dry_run:
+        if not dry_run:
             mark_backlog_used(backlog_path, post_id)
             used_ids = list(dict.fromkeys((state.get("used_ids") or []) + [post_id]))
             state["used_ids"] = used_ids
 
         state["history"] = (state.get("history") or []) + [history_entry]
-        _write_state(state)
+        _write_state(site_cfg.site_id, state)
         return 0
 
     except Exception as e:
@@ -197,8 +213,35 @@ def main() -> int:
         history_entry["error"] = str(e)
         state["failures"] = (state.get("failures") or []) + [history_entry]
         state["history"] = (state.get("history") or []) + [history_entry]
-        _write_state(state)
+        _write_state(site_cfg.site_id, state)
         raise
+
+
+def main() -> int:
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Autoblogger daily runner (multi-tenant)")
+    parser.add_argument("--site", required=True, help="Site key (matches sites/<site>.yaml, e.g. dadudekc)")
+    parser.add_argument("--date", help="Override date (YYYY-MM-DD). Default: today in America/Chicago")
+    parser.add_argument("--timezone", default="America/Chicago", help="Timezone for 'today'")
+    parser.add_argument("--auto-publish", action="store_true", help="Publish to WordPress (default: queue only)")
+    parser.add_argument("--wp-status", default="draft", choices=["draft", "publish"], help="WP post status")
+    parser.add_argument("--dry-run", action="store_true", help="Do everything except LLM + publish")
+
+    args = parser.parse_args()
+
+    # If --auto-publish not set, default comes from site config.
+    site_cfg = load_site_config(args.site)
+    auto_publish = bool(args.auto_publish) if args.auto_publish else bool(site_cfg.auto_publish_default)
+
+    return run_daily_for_site(
+        site=args.site,
+        date_override=args.date,
+        timezone=args.timezone,
+        auto_publish=auto_publish,
+        wp_status=args.wp_status,
+        dry_run=args.dry_run,
+    )
 
 
 if __name__ == "__main__":

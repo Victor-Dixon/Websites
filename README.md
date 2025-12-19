@@ -53,31 +53,35 @@ This repository is configured with pre-commit hooks that automatically deploy ch
 
 ## Autoblogger (dadudekc.com) — calendar + backlog → daily drafts
 
-Autoblogger runs a **daily pipeline** that selects a post from a rolling calendar/backlog, generates a draft in your voice, validates it, and saves it to `content/drafts/`.
+Autoblogger runs a **daily pipeline** that selects a post from a rolling calendar/backlog, generates a draft in the correct site's voice, validates it, and saves it to `content/drafts/<site_id>/`.
 
 ### SSOT file contract
 
 ```
 content/
-  voice_profile.md
-  brand_profile.yaml
-  backlog.yaml
-  calendar.yaml
+  voices/
+  brands/
+  backlogs/
+  calendars/
   drafts/
+sites/
+  dadudekc.yaml
+  corey.yaml
+  kiki.yaml
 runtime/
-  autoblogger_state.json
+  autoblogger_state__<site_id>.json
 ```
 
 ### Run (queue-only by default)
 
 ```bash
-python3 -m src.autoblogger.run_daily
+python3 -m autoblogger.run_daily --site dadudekc
 ```
 
 ### Dry-run (writes prompt to a draft, no LLM, no publish)
 
 ```bash
-python3 -m src.autoblogger.run_daily --dry-run --date 2025-12-20
+python3 -m autoblogger.run_daily --site dadudekc --dry-run --date 2025-12-20
 ```
 
 ### Enable generation (OpenAI-compatible)
@@ -90,16 +94,22 @@ Set env vars:
 
 ### Optional: publish to WordPress
 
-Requires `.deploy_credentials/blogging_api.json` configured for `dadudekc.com`.
+Uses per-site WordPress env vars configured in `sites/<site>.yaml` (see `publish.wp_*_env` keys).
 
 ```bash
-python3 -m src.autoblogger.run_daily --auto-publish --wp-status draft
+python3 -m autoblogger.run_daily --site dadudekc --auto-publish --wp-status draft
 ```
 
 ### Cron example (06:00 America/Chicago)
 
 ```cron
-0 6 * * * TZ=America/Chicago cd /path/to/repo && python3 -m src.autoblogger.run_daily >> runtime/autoblogger_cron.log 2>&1
+0 6 * * * TZ=America/Chicago cd /path/to/repo && python3 -m autoblogger.run_daily --site dadudekc >> runtime/autoblogger_cron.log 2>&1
+```
+
+### Run all sites (single runner)
+
+```bash
+python3 -m autoblogger.run_all_sites --dry-run
 ```
 
 ## Notes

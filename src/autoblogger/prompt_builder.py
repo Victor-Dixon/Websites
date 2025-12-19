@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
 
 from .models import BacklogItem
 
@@ -12,15 +11,22 @@ class Prompt:
     user: str
 
 
-def build_prompt(*, voice_profile_md: str, brand_profile_yaml: str, item: BacklogItem) -> Prompt:
-    system = "You are writing a blog post for dadudekc.com in Victor's voice. Follow VOICE_PROFILE exactly."
+def build_prompt(
+    *,
+    voice_profile_md: str,
+    brand_profile_yaml: str,
+    example_snippets: str,
+    item: BacklogItem,
+) -> Prompt:
+    system = "Write a blog post in the exact voice defined in VOICE_PROFILE. Do not drift."
 
     user = (
-        "INPUTS:\n"
         "VOICE_PROFILE:\n"
         f"<<<{voice_profile_md}>>>\n\n"
         "BRAND_PROFILE:\n"
         f"<<<{brand_profile_yaml}>>>\n\n"
+        "OPTIONAL_EXAMPLES (for style imitation):\n"
+        f"<<<{example_snippets}>>>\n\n"
         "POST_BRIEF:\n"
         f"- title: {item.title}\n"
         f"- audience: {item.audience}\n"
@@ -28,12 +34,11 @@ def build_prompt(*, voice_profile_md: str, brand_profile_yaml: str, item: Backlo
         f"- angle: {item.angle}\n"
         f"- keywords: {item.keywords}\n"
         f"- CTA: {item.cta}\n\n"
-        "REQUIREMENTS:\n"
+        "OUTPUT:\n"
+        "- Markdown only\n"
         "- 900–1400 words\n"
         "- Use H2/H3 headings\n"
-        "- Include 1 short real-world example relevant to the audience\n"
-        "- End with a clear CTA matching the CTA type\n"
-        "- Output markdown only\n"
+        "- End with the CTA\n"
         "\nWRITE:\n"
     )
 
