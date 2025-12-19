@@ -1,0 +1,24 @@
+{
+  "used_ids": [],
+  "history": [
+    {
+      "ts": "2025-12-19T10:49:24.033774-06:00",
+      "date": "2025-12-20",
+      "post_id": "CC-001",
+      "title": "You’re the bottleneck: 3 signs your ops are breaking",
+      "draft_path": "/workspace/content/drafts/2025-12-20--youre-the-bottleneck-3-signs-your-ops-are-breaking.md",
+      "mode": "queue",
+      "status": "queued_prompt_only"
+    },
+    {
+      "ts": "2025-12-19T10:50:11.122465-06:00",
+      "date": "2025-12-20",
+      "post_id": "CC-001",
+      "title": "You’re the bottleneck: 3 signs your ops are breaking",
+      "draft_path": "/workspace/content/drafts/2025-12-20--youre-the-bottleneck-3-signs-your-ops-are-breaking.md",
+      "mode": "queue",
+      "status": "queued_prompt_only"
+    }
+  ],
+  "failures": []
+}
