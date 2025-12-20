@@ -17,18 +17,14 @@
 <header class="site-header">
     <div class="header-container">
         <div class="site-logo">
-            <div class="logo-icon">
-                <span>🐝</span>
-            </div>
-            <?php if (has_custom_logo()) : ?>
-                <?php the_custom_logo(); ?>
-            <?php else : ?>
-                <h1 class="site-title">
-                    <a href="<?php echo esc_url(home_url('/')); ?>">
-                        <?php bloginfo('name'); ?>
-                    </a>
-                </h1>
-            <?php endif; ?>
+            <a href="<?php echo esc_url(home_url('/')); ?>" class="logo-link">
+                <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/swarm-logo.svg'); ?>" 
+                     alt="weareswarm logo" 
+                     class="swarm-logo-img"
+                     width="48" 
+                     height="48">
+                <h1 class="site-title">weareswarm</h1>
+            </a>
         </div>
         
         <button class="menu-toggle" aria-label="Toggle menu">

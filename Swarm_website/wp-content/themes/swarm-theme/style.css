@@ -209,6 +209,25 @@ code {
   gap: var(--spacing-4);
 }
 
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.logo-link:hover {
+  transform: scale(1.05);
+}
+
+.swarm-logo-img {
+  width: 48px;
+  height: 48px;
+  animation: pulse 2s infinite;
+  filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+}
+
 .logo-icon {
   width: 48px;
   height: 48px;
@@ -242,11 +261,27 @@ code {
   background: var(--swarm-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  letter-spacing: -0.5px;
+  text-transform: lowercase;
 }
 
 .site-title a {
   background: none;
   -webkit-text-fill-color: transparent;
+}
+
+.logo-link .site-title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  background: var(--swarm-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  letter-spacing: -0.5px;
+  text-transform: lowercase;
 }
 
 /* Navigation */
