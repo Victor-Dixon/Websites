@@ -2,28 +2,76 @@
 
 Unified repository for all WordPress themes, plugins, and static websites.
 
-## Sites
+## Sites (8 Active + 3 Pending)
 
-- **FreeRideInvestor** - Trading education platform
-- **Southwest Secret** - Music/DJ showcase site
-- **WE ARE SWARM** - Swarm intelligence platform
-- **TradingRobotPlug** - Trading automation platform
+### Active Websites
+
+1. **FreeRideInvestor** (`FreeRideInvestor/`)
+   - Trading education platform
+   - URL: https://freerideinvestor.com
+   - Type: WordPress theme
+
+2. **Southwest Secret** (`southwestsecret.com/`)
+   - Music/DJ showcase site
+   - URL: https://southwestsecret.com
+   - Type: Static HTML + WordPress theme
+
+3. **WE ARE SWARM** (`Swarm_website/`)
+   - Swarm intelligence platform
+   - URL: https://weareswarm.online
+   - Type: WordPress theme with CI/CD
+
+4. **AriaJet** (`ariajet.site/`)
+   - Personal website with games
+   - URL: https://ariajet.site
+   - Type: Static HTML + WordPress theme
+
+5. **Prism Blossom** (`prismblossom.online/`)
+   - Personal/Portfolio site
+   - URL: https://prismblossom.online
+   - Type: WordPress theme
+
+6. **DaduDekC** (`dadudekc.com/`)
+   - Blog/Personal website
+   - URL: https://dadudekc.com
+   - Type: Blog/Website
+
+7. **Journal App** (`journal-app/`)
+   - Personal journaling application
+   - Type: Static HTML/JS app
+
+8. **TradingRobotPlug** (`TradingRobotPlugWeb/`)
+   - Trading automation platform
+   - Type: WordPress theme (in development)
+
+### Additional Directories
+
+- **FreeRideInvestor_V2** - Backup/archive version
+- **side-projects** - Games and experimental projects
+- **tools** - Deployment and maintenance tools
+- **wordpress-plugins** - Shared WordPress plugins
+- **docs** - Documentation and guides
 
 ## Structure
 
 ```
 websites/
-├── themes/
-│   ├── freerideinvestor/
-│   ├── southwestsecret/
-│   ├── swarm/
-│   └── tradingrobotplug/
-├── plugins/
-│   └── (shared plugins)
-├── tools/
-│   └── (deployment tools)
-└── docs/
-    └── (documentation)
+├── [WEBSITE_DIRECTORIES]/
+│   ├── ariajet.site/
+│   ├── dadudekc.com/
+│   ├── FreeRideInvestor/
+│   ├── journal-app/
+│   ├── prismblossom.online/
+│   ├── southwestsecret.com/
+│   ├── Swarm_website/
+│   └── TradingRobotPlugWeb/
+├── docs/
+│   ├── deployment/        # Deployment guides
+│   ├── sites/            # Site-specific documentation
+│   └── consolidation/    # Consolidation notes
+├── side-projects/        # Games and experiments
+├── tools/                # Deployment tools
+└── wordpress-plugins/    # Shared plugins
 ```
 
 ## Auto-Deployment
