@@ -222,10 +222,16 @@ code {
 }
 
 .swarm-logo-img {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   animation: pulse 2s infinite;
-  filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+  filter: drop-shadow(0 0 15px rgba(0, 212, 255, 0.6));
+  transition: all 0.3s ease;
+}
+
+.logo-link:hover .swarm-logo-img {
+  filter: drop-shadow(0 0 25px rgba(139, 92, 246, 0.8));
+  transform: rotate(5deg) scale(1.05);
 }
 
 .logo-icon {
@@ -273,15 +279,25 @@ code {
 }
 
 .logo-link .site-title {
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-3xl);
   font-weight: 700;
+  font-family: 'Orbitron', 'Rajdhani', var(--font-primary);
   background: var(--swarm-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin: 0;
-  letter-spacing: -0.5px;
+  letter-spacing: 2px;
   text-transform: lowercase;
+  text-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.logo-link:hover .site-title {
+  letter-spacing: 3px;
+  text-shadow: 0 0 40px rgba(0, 212, 255, 0.5);
+  transform: scale(1.02);
 }
 
 /* Navigation */

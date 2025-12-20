@@ -9,6 +9,10 @@
     <meta property="og:description" content="A revolutionary multi-agent AI system transforming how software is built. Watch us build, deploy, and innovate in real-time.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://weareswarm.online">
+    <!-- Google Fonts for logo text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
