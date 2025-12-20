@@ -19,7 +19,8 @@ config = configparser.ConfigParser()
 
 # Check if configuration file exists
 if not get_unified_utility().path.exists(CONFIG_FILE):
-    get_logger(__name__).critical(f"Configuration file not found: {CONFIG_FILE}")
+    get_logger(__name__).critical(
+        f"Configuration file not found: {CONFIG_FILE}")
     raise FileNotFoundError(f"Configuration file not found: {CONFIG_FILE}")
 
 get_logger(__name__).info(f"Loading configuration from: {CONFIG_FILE}")
@@ -30,41 +31,53 @@ try:
     WORDPRESS_URL = config.get('wordpress', 'url')
     WORDPRESS_USERNAME = config.get('wordpress', 'username')
     WORDPRESS_PASSWORD = config.get('wordpress', 'password')
-    DEFAULT_CATEGORIES = json.loads(config.get('wordpress', 'categories', fallback='[]'))
+    DEFAULT_CATEGORIES = json.loads(config.get(
+        'wordpress', 'categories', fallback='[]'))
     DEFAULT_TAGS = json.loads(config.get('wordpress', 'tags', fallback='[]'))
-    POST_STATUS = config.get('wordpress', 'status', fallback='draft').strip().lower()
+    POST_STATUS = config.get('wordpress', 'status',
+                             fallback='draft').strip().lower()
 
     if POST_STATUS not in ['publish', 'draft']:
-        get_logger(__name__).error(f"Invalid POST_STATUS value: {POST_STATUS}. Defaulting to 'draft'.")
+        get_logger(__name__).error(
+            f"Invalid POST_STATUS value: {POST_STATUS}. Defaulting to 'draft'.")
         POST_STATUS = 'draft'
 
     get_logger(__name__).info("WordPress configuration loaded successfully.")
 except configparser.NoSectionError as e:
-    get_logger(__name__).critical(f"Missing required section in configuration file: {e}")
+    get_logger(__name__).critical(
+        f"Missing required section in configuration file: {e}")
     raise
 except configparser.NoOptionError as e:
-    get_logger(__name__).critical(f"Missing required option in configuration file: {e}")
+    get_logger(__name__).critical(
+        f"Missing required option in configuration file: {e}")
     raise
 except json.JSONDecodeError as e:
-    get_logger(__name__).critical(f"Error parsing JSON fields in configuration file: {e}")
+    get_logger(__name__).critical(
+        f"Error parsing JSON fields in configuration file: {e}")
     raise
 
 # Vector database configuration
 try:
     VECTOR_DB_DIMENSION = config.getint('vector_db', 'dimension', fallback=768)
-    VECTOR_DB_INDEX_FILE = config.get('vector_db', 'index_file', fallback='vector_store.index').strip()
-    VECTOR_DB_METADATA_FILE = config.get('vector_db', 'metadata_file', fallback='vector_metadata.json').strip()
+    VECTOR_DB_INDEX_FILE = config.get(
+        'vector_db', 'index_file', fallback='vector_store.index').strip()
+    VECTOR_DB_METADATA_FILE = config.get(
+        'vector_db', 'metadata_file', fallback='vector_metadata.json').strip()
 
     if VECTOR_DB_DIMENSION <= 0:
-        get_logger(__name__).error(f"Invalid VECTOR_DB_DIMENSION value: {VECTOR_DB_DIMENSION}. Defaulting to 768.")
+        get_logger(__name__).error(
+            f"Invalid VECTOR_DB_DIMENSION value: {VECTOR_DB_DIMENSION}. Defaulting to 768.")
         VECTOR_DB_DIMENSION = 768
 
-    get_logger(__name__).info("Vector database configuration loaded successfully.")
+    get_logger(__name__).info(
+        "Vector database configuration loaded successfully.")
 except configparser.NoSectionError as e:
-    get_logger(__name__).critical(f"Missing required section in configuration file: {e}")
+    get_logger(__name__).critical(
+        f"Missing required section in configuration file: {e}")
     raise
 except configparser.NoOptionError as e:
-    get_logger(__name__).critical(f"Missing required option in configuration file: {e}")
+    get_logger(__name__).critical(
+        f"Missing required option in configuration file: {e}")
     raise
 except ValueError as e:
     get_logger(__name__).critical(f"Invalid value in configuration file: {e}")
@@ -73,6 +86,8 @@ except ValueError as e:
 get_logger(__name__).info("Configuration setup completed successfully.")
 
 # Initialize or load FAISS index
+
+
 def initialize_faiss():
     if get_unified_utility().path.exists(VECTOR_DB_INDEX_FILE):
         index = faiss.read_index(VECTOR_DB_INDEX_FILE)
@@ -84,6 +99,8 @@ def initialize_faiss():
     return index
 
 # Load or initialize metadata
+
+
 def load_metadata():
     if get_unified_utility().path.exists(VECTOR_DB_METADATA_FILE):
         with open(VECTOR_DB_METADATA_FILE, 'r', encoding='utf-8') as f:
@@ -97,20 +114,26 @@ def load_metadata():
     return metadata
 
 # Save metadata
+
+
 def save_metadata(metadata):
     with open(VECTOR_DB_METADATA_FILE, 'w', encoding='utf-8') as f:
         json.dump(metadata, f, indent=2)
     get_logger(__name__).info("Metadata saved successfully.")
 
 # Generate embeddings using Sentence Transformers
+
+
 def generate_embeddings(texts):
     try:
-        model = SentenceTransformer('all-MiniLM-L6-v2')  # Lightweight and efficient
+        # Lightweight and efficient
+        model = SentenceTransformer('all-MiniLM-L6-v2')
         embeddings = model.encode(texts, get_unified_utility().convert_to_numpy=True)
         return embeddings
     except Exception as e:
         get_logger(__name__).error(f"Error generating embeddings: {e}")
         return None
+
 
 def run_ollama(prompt):
     """
@@ -135,6 +158,7 @@ def run_ollama(prompt):
         get_logger(__name__).error(f"Error running Ollama: {e.stderr.strip()}")
         return ""
 
+
 def generate_content():
     """
     Generates content for different sections of the blog post using Ollama's Mistral model.
@@ -142,29 +166,32 @@ def generate_content():
     content = {}
 
     # Define prompts for each section tailored to freerideinvestor
+    # Writing style: Direct, conversational, authentic, reflective. Use "..." for pauses. Mix short and long sentences. Use "you" to engage readers. Be honest about challenges. Focus on growth and practical action.
+    style_context = "Write in a direct, conversational tone. Be authentic and personal. Use '...' for pauses (not em dashes). Mix short punchy sentences with longer reflective ones. Use 'you' to engage readers. Share real insights and be honest about challenges. Focus on growth, building, and practical action over perfection."
+
     prompts = {
-        "post_title": "Generate an engaging blog post title about automating blog posts with AI in the context of investment strategies.",
-        "post_subtitle": "Generate a subtitle for the blog post titled 'Automating Blog Posts with AI in Investment Strategies'.",
-        "introduction": "Write an introduction section for a blog post about automating blog posts using AI, specifically focusing on investment strategies. The introduction should be engaging and set the stage for the rest of the post.",
+        "post_title": f"Generate an engaging blog post title about automating blog posts with AI in the context of investment strategies. {style_context} Make it direct and compelling, not corporate.",
+        "post_subtitle": f"Generate a subtitle for the blog post. {style_context} Keep it conversational and authentic.",
+        "introduction": f"Write an introduction section for a blog post about automating blog posts using AI, specifically focusing on investment strategies. {style_context} Start with reflection or observation. Be honest about the journey. Set the stage authentically.",
         "sections": [
             {
                 "title": "Choosing the Right Templating Engine",
-                "prompt": "Explain how to choose the right templating engine for an autoblogger, highlighting the benefits of using Python's Jinja2 in the context of investment blogs."
+                "prompt": f"Explain how to choose the right templating engine for an autoblogger, highlighting the benefits of using Python's Jinja2 in the context of investment blogs. {style_context} Share practical insights and real considerations."
             },
             {
                 "title": "Integrating AI for Content Generation",
-                "prompt": "Describe how to integrate AI models like Mistral into an autoblogger to generate dynamic content for investment strategies."
+                "prompt": f"Describe how to integrate AI models like Mistral into an autoblogger to generate dynamic content for investment strategies. {style_context} Be honest about what works and what doesn't. Share lessons learned."
             },
             {
                 "title": "Automating the Deployment Process",
-                "prompt": "Provide a detailed explanation on automating the deployment process of the generated blog posts to a web server, specifically for investment-related content."
+                "prompt": f"Provide a detailed explanation on automating the deployment process of the generated blog posts to a web server, specifically for investment-related content. {style_context} Focus on practical action and real-world implementation."
             }
         ],
         "image": {
             "title": "Visual Representation of the Automation Process",
             "prompt": "Describe an image that visually represents the process of automating blog post generation using AI, tailored for an investment-focused blog."
         },
-        "conclusion": "Write a conclusion for the blog post on automating blog posts with AI in investment strategies. The conclusion should summarize the key points and encourage readers to implement the strategies discussed.",
+        "conclusion": f"Write a conclusion for the blog post on automating blog posts with AI in investment strategies. {style_context} End with encouragement and forward-looking perspective. Avoid generic corporate conclusions.",
         "cta": {
             "title": "Stay Updated with the Latest AI Blogging Techniques for Investments",
             "content": "Subscribe to our newsletter to receive the latest updates, tutorials, and insights on automating your blogging process with AI in the investment sector.",
@@ -173,8 +200,10 @@ def generate_content():
     }
 
     # Generate each content section
-    content['post_title'] = run_ollama(prompts['post_title']) or "Automating Blog Posts with AI in Investment Strategies: A Comprehensive Guide"
-    content['post_subtitle'] = run_ollama(prompts['post_subtitle']) or "Leveraging Artificial Intelligence to Streamline Your Investment Content Workflow"
+    content['post_title'] = run_ollama(
+        prompts['post_title']) or "Automating Blog Posts with AI in Investment Strategies: A Comprehensive Guide"
+    content['post_subtitle'] = run_ollama(
+        prompts['post_subtitle']) or "Leveraging Artificial Intelligence to Streamline Your Investment Content Workflow"
 
     introduction_text = run_ollama(prompts['introduction'])
     content['introduction'] = {
@@ -205,21 +234,24 @@ def generate_content():
     conclusion_text = run_ollama(prompts['conclusion'])
     content['conclusion'] = {
         "title": "Conclusion",
-        "content": conclusion_text or "In conclusion, automating your blog posts with AI can revolutionize your content creation process, especially in the realm of investment strategies. By integrating powerful models like Mistral, you can produce high-quality content efficiently, allowing you to focus more on strategy and less on repetitive tasks."
+        "content": conclusion_text or "So where does this leave us? Automating blog posts with AI isn't about replacing your voice... it's about amplifying it. The tools are there. The question is: how will you use them to build something that matters? This is just the beginning."
     }
 
     content['cta'] = prompts['cta']
     return content
+
 
 def render_template(content):
     """
     Renders the blog_template.html with the provided content.
     """
     try:
-        base_dir = get_unified_utility().path.dirname(get_unified_utility().path.abspath(__file__))
+        base_dir = get_unified_utility().path.dirname(
+            get_unified_utility().path.abspath(__file__))
         env = Environment(loader=FileSystemLoader(base_dir))
         template = env.get_template('blog_template.html')
-        get_logger(__name__).info(f"Rendering template with content: {json.dumps(content, indent=2)}")
+        get_logger(__name__).info(
+            f"Rendering template with content: {json.dumps(content, indent=2)}")
         rendered_html = template.render(content)
         get_logger(__name__).info("Template rendered successfully.")
         return rendered_html
@@ -227,15 +259,18 @@ def render_template(content):
         get_logger(__name__).error(f"Error rendering template: {e}")
         return ""
 
+
 def save_output(rendered_html, post_title):
     """
     Saves the rendered HTML to the output directory with a filename based on the post title.
     """
     try:
-        base_dir = get_unified_utility().path.dirname(get_unified_utility().path.abspath(__file__))
+        base_dir = get_unified_utility().path.dirname(
+            get_unified_utility().path.abspath(__file__))
         output_dir = get_unified_utility().path.join(base_dir, 'output')
         get_unified_utility().makedirs(output_dir, exist_ok=True)
-        safe_title = ''.join(c for c in post_title if c.isalnum() or c in (' ', '_')).rstrip()
+        safe_title = ''.join(
+            c for c in post_title if c.isalnum() or c in (' ', '_')).rstrip()
         safe_title = safe_title.strip().replace(' ', '_').lower()
         max_length = 100
         if len(safe_title) > max_length:
@@ -245,12 +280,15 @@ def save_output(rendered_html, post_title):
         output_path = get_unified_utility().path.join(output_dir, filename)
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(rendered_html)
-        get_logger(__name__).info(f"Blog post generated successfully: {output_path}")
-        get_logger(__name__).info(f"Blog post generated successfully: {output_path}")
+        get_logger(__name__).info(
+            f"Blog post generated successfully: {output_path}")
+        get_logger(__name__).info(
+            f"Blog post generated successfully: {output_path}")
         return output_path
     except Exception as e:
         get_logger(__name__).error(f"Error saving output file: {e}")
         return ""
+
 
 def post_to_wordpress(title, content, excerpt, categories, tags, image_url=None):
     """
@@ -277,12 +315,15 @@ def post_to_wordpress(title, content, excerpt, categories, tags, image_url=None)
                 if response.status_code == 201:
                     return response.json()['id']
                 else:
-                    get_logger(__name__).error(f"Failed to create term '{name}': {response.text}")
+                    get_logger(__name__).error(
+                        f"Failed to create term '{name}': {response.text}")
             else:
-                get_logger(__name__).error(f"Failed to get term '{name}': {response.text}")
+                get_logger(__name__).error(
+                    f"Failed to get term '{name}': {response.text}")
             return None
 
-        category_ids = [get_or_create_term('categories', cat) for cat in categories]
+        category_ids = [get_or_create_term(
+            'categories', cat) for cat in categories]
         tag_ids = [get_or_create_term('tags', tag) for tag in tags]
 
         post_data = {
@@ -314,20 +355,26 @@ def post_to_wordpress(title, content, excerpt, categories, tags, image_url=None)
                     media_id = media_response.json().get("id")
                     post_data["featured_media"] = media_id
                 else:
-                    get_logger(__name__).error(f"Failed to upload feature image: {media_response.text}")
+                    get_logger(__name__).error(
+                        f"Failed to upload feature image: {media_response.text}")
             else:
-                get_logger(__name__).error(f"Failed to download image from URL: {image_url}")
+                get_logger(__name__).error(
+                    f"Failed to download image from URL: {image_url}")
 
-        response = requests.post(f"{wordpress_url}/posts", json=post_data, auth=auth)
+        response = requests.post(
+            f"{wordpress_url}/posts", json=post_data, auth=auth)
         if response.status_code == 201:
-            get_logger(__name__).info(f"Blog post published to WordPress: {response.json().get('link')}")
+            get_logger(__name__).info(
+                f"Blog post published to WordPress: {response.json().get('link')}")
             return response.json()
         else:
-            get_logger(__name__).error(f"Failed to publish post: {response.text}")
+            get_logger(__name__).error(
+                f"Failed to publish post: {response.text}")
             return None
     except Exception as e:
         get_logger(__name__).error(f"Exception in post_to_wordpress: {e}")
         return None
+
 
 def generate_blog():
     """
@@ -367,13 +414,15 @@ def generate_blog():
         metadata_entry = {
             "title": post_title,
             "excerpt": post_excerpt,
-            "link": WORDPRESS_URL.replace('/wp-json/wp/v2', '') + f"/{post_title.replace(' ', '-').lower()}/",  # Simplistic link generation
+            # Simplistic link generation
+            "link": WORDPRESS_URL.replace('/wp-json/wp/v2', '') + f"/{post_title.replace(' ', '-').lower()}/",
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
         }
         metadata.append(metadata_entry)
         save_metadata(metadata)
     else:
-        get_logger(__name__).error("Embeddings generation failed; skipping vector database entry.")
+        get_logger(__name__).error(
+            "Embeddings generation failed; skipping vector database entry.")
 
     # Post to WordPress
     try:
@@ -386,8 +435,10 @@ def generate_blog():
             image_url=content['image']['url']
         )
         if wordpress_response:
-            get_logger(__name__).info(f"Blog post published: {wordpress_response['link']}")
-            get_logger(__name__).info(f"Blog post published: {wordpress_response['link']}")
+            get_logger(__name__).info(
+                f"Blog post published: {wordpress_response['link']}")
+            get_logger(__name__).info(
+                f"Blog post published: {wordpress_response['link']}")
         else:
             get_logger(__name__).error("Failed to publish to WordPress.")
             get_logger(__name__).info("Failed to publish to WordPress.")
@@ -397,6 +448,7 @@ def generate_blog():
 
     return output_path
 
+
 def initialize_faiss():
     """
     Initializes or loads the FAISS index.
@@ -405,10 +457,12 @@ def initialize_faiss():
         index = faiss.read_index(VECTOR_DB_INDEX_FILE)
         get_logger(__name__).info("FAISS index loaded successfully.")
     else:
-        index = faiss.IndexFlatIP(VECTOR_DB_DIMENSION)  # Using Inner Product for cosine similarity
+        # Using Inner Product for cosine similarity
+        index = faiss.IndexFlatIP(VECTOR_DB_DIMENSION)
         faiss.write_index(index, VECTOR_DB_INDEX_FILE)
         get_logger(__name__).info("FAISS index initialized and saved.")
     return index
+
 
 def load_metadata():
     """
@@ -425,6 +479,7 @@ def load_metadata():
         get_logger(__name__).info("Metadata file initialized.")
     return metadata
 
+
 def save_metadata(metadata):
     """
     Saves the metadata to a JSON file.
@@ -432,4 +487,3 @@ def save_metadata(metadata):
     with open(VECTOR_DB_METADATA_FILE, 'w', encoding='utf-8') as f:
         json.dump(metadata, f, indent=2)
     get_logger(__name__).info("Metadata saved successfully.")
-  

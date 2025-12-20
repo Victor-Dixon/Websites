@@ -7,30 +7,30 @@ from ..core.unified_import_system import logging
 
 # Configure logging
 logging.basicConfig(
-    filename='autoblogger.log',
-    level=logging.INFO,
-    format='%(asctime)s:%(levelname)s:%(message)s'
+    filename = 'autoblogger.log',
+    level = logging.INFO,
+    format = '%(asctime)s:%(levelname)s:%(message)s'
 )
 
 class BlogGeneratorThread(QThread):
     # Define custom signals
-    progress = pyqtSignal(int)
-    log = pyqtSignal(str)
-    finished_signal = pyqtSignal(str)  # Emits path to generated file
+    progress= pyqtSignal(int)
+    log= pyqtSignal(str)
+    finished_signal= pyqtSignal(str)  # Emits path to generated file
 
     def __init__(self, prompts, template_path, output_dir):
         super().__init__()
-        self.prompts = prompts
-        self.template_path = template_path
-        self.output_dir = output_dir
+        self.prompts= prompts
+        self.template_path= template_path
+        self.output_dir= output_dir
 
     def run(self):
         try:
-            content = self.generate_content()
+            content= self.generate_content()
             self.progress.emit(50)
-            rendered_html = self.render_template(content)
+            rendered_html= self.render_template(content)
             self.progress.emit(80)
-            output_path = self.save_output(rendered_html, content.get('post_title', 'blog_post'))
+            output_path= self.save_output(rendered_html, content.get('post_title', 'blog_post'))
             self.progress.emit(100)
             self.finished_signal.emit(output_path)
         except Exception as e:
@@ -42,12 +42,12 @@ class BlogGeneratorThread(QThread):
             # Validate prompt input
             if not get_unified_validator().validate_type(prompt, str) or len(prompt) > 1000:
                 get_unified_validator().raise_validation_error("Invalid prompt format or length")
-            
+
             # Sanitize prompt - remove dangerous characters
-            sanitized_prompt = re.sub(r'[;&|`$()]', '', prompt)
-            
+            sanitized_prompt= re.sub(r'[;&|`$()]', '', prompt)
+
             # Use list of arguments instead of shell command
-            args = [
+            args= [
                 'ollama', 'run', 'mistral:latest',
                 sanitized_prompt, '--stdout'
             ]
@@ -98,12 +98,12 @@ class BlogGeneratorThread(QThread):
         # Generate post subtitle
         content['post_subtitle'] = self.run_ollama(prompts['post_subtitle'])
         if not content['post_subtitle']:
-            content['post_subtitle'] = "Leveraging AI to Streamline Your Blogging Workflow"
+            content['post_subtitle'] = "Real insights from building an autoblogger"
 
         # Generate introduction
         introduction_text = self.run_ollama(prompts['introduction'])
         if not get_unified_validator().validate_required(introduction_text):
-            introduction_text = "Welcome to this comprehensive guide on automating your blog posts using AI. In today's digital age, leveraging artificial intelligence can significantly streamline your content creation process, saving you time and enhancing productivity."
+            introduction_text = "Looking back at building an autoblogger... it wasn't what I expected. Here's what I've learned about automating blog posts with AI. The journey taught me more about the process than I thought it would."
 
         content['introduction'] = {
             "title": "Introduction",
@@ -137,7 +137,7 @@ class BlogGeneratorThread(QThread):
         # Generate conclusion
         conclusion_text = self.run_ollama(prompts['conclusion'])
         if not get_unified_validator().validate_required(conclusion_text):
-            conclusion_text = "In conclusion, automating your blog posts with AI can revolutionize your content creation process. By integrating powerful models like Mistral, you can produce high-quality content efficiently, allowing you to focus more on strategy and less on repetitive tasks."
+            conclusion_text = "So where does this leave us? Automating blog posts with AI isn't about replacing your voice... it's about amplifying it. The tools are there. The question is: how will you use them to build something that matters? This is just the beginning."
 
         content['conclusion'] = {
             "title": "Conclusion",
@@ -252,22 +252,25 @@ class AutobloggerApp(QWidget):
         self.log_area.clear()
         self.progress_bar.setValue(0)
 
-        # Define prompts
+        # Define prompts with writing style context
+        # Writing style: Direct, conversational, authentic, reflective. Use "..." for pauses. Mix short and long sentences. Use "you" to engage readers. Be honest about challenges. Focus on growth and practical action.
+        style_context = "Write in a direct, conversational tone. Be authentic and personal. Use '...' for pauses (not em dashes). Mix short punchy sentences with longer reflective ones. Use 'you' to engage readers. Share real insights and be honest about challenges. Focus on growth, building, and practical action over perfection."
+        
         prompts = {
-            "post_title": "Generate an engaging blog post title about automating blog posts with AI.",
-            "post_subtitle": "Generate a subtitle for the blog post titled 'Automating Blog Posts with AI'.",
-            "introduction": "Write an introduction section for a blog post about automating blog posts using AI. The introduction should be engaging and set the stage for the rest of the post.",
+            "post_title": f"Generate an engaging blog post title about automating blog posts with AI. {style_context} Make it direct and compelling, not corporate.",
+            "post_subtitle": f"Generate a subtitle for the blog post. {style_context} Keep it conversational and authentic.",
+            "introduction": f"Write an introduction section for a blog post about automating blog posts using AI. {style_context} Start with reflection or observation. Be honest about the journey. Set the stage authentically.",
             "sections": [
                 {
                     "title": "Section Title",
-                    "prompt": "Section prompt"
+                    "prompt": f"Section prompt. {style_context} Share practical insights and real considerations."
                 }
             ],
             "image": {
                 "title": "Image Title",
                 "prompt": "Image prompt"
             },
-            "conclusion": "Write a conclusion for the blog post about automating blog posts using AI.",
+            "conclusion": f"Write a conclusion for the blog post about automating blog posts using AI. {style_context} End with encouragement and forward-looking perspective. Avoid generic corporate conclusions.",
             "cta": "Call to Action"
         }
 
