@@ -1,82 +1,26 @@
-# 📊 Website Deployment Status
+# Website deployment status
 
-**Date**: 2025-11-30  
-**Agent**: Agent-7 (Web Development Specialist)
+**Date**: 2025-11-30
 
----
+## Current state
 
-## ✅ **DEPLOYMENT SYSTEM READY**
+- **Packaging-based deployment** is supported via this repository:
+  - Generate packages/instructions: `python tools/deploy_website_fixes.py`
+  - Output directory: `tools/deployment_packages/`
+- **Direct-to-host deployment** scripts exist (e.g., `tools/deploy_all_websites.py`, `tools/auto_deploy_hook.py`), but they reference an external `wordpress_manager.py` component that is not present in this repository snapshot. If you intend to use direct deployment, you will need to provide that component and configure credentials.
 
-### **WordPress Deployment Manager**:
-- ✅ **Tool**: `wordpress_manager.py` (connects via SFTP/SSH)
-- ✅ **Location**: `D:\Agent_Cellphone_V2_Repository\tools\wordpress_manager.py`
-- ✅ **FreeRideInvestor**: Added to SITE_CONFIGS
-- ⚠️ **Credentials**: Need to be configured
+## Credentials
 
-### **Deployment Script**:
-- ✅ **Tool**: `deploy_all_websites.py`
-- ✅ **Location**: `D:\websites\tools\deploy_all_websites.py`
-- ✅ **Ready**: All sites configured
+This repository does not store production credentials. If you use any direct deployment tooling, keep credentials in a local-only, git-ignored file (commonly `.deploy_credentials/sites.json`) or inject them via environment variables.
 
----
+## Next steps
 
-## 🔐 **CREDENTIALS SETUP REQUIRED**
+- **Option A (recommended / lowest risk)**: deploy via package + manual upload (WordPress admin editor or SFTP).
+- **Option B**: enable direct deployment after providing the missing deployment manager and credential configuration.
 
-**File**: `D:\Agent_Cellphone_V2_Repository\.deploy_credentials\sites.json`
+## Success criteria
 
-**Current Status**: File exists but credentials are empty
-
-**Required for Each Site**:
-- `host`: Hostinger FTP/SSH host
-- `username`: FTP/SSH username
-- `password`: FTP/SSH password
-- `port`: Usually 65002 (Hostinger SFTP) or 21 (FTP)
-
----
-
-## 🚀 **DEPLOYMENT PACKAGES** (Alternative Method)
-
-If credentials aren't available, deployment packages are ready:
-
-1. **FreeRideInvestor**: `FreeRideInvestor_fixes_20251130_022723.zip`
-2. **prismblossom.online**: `prismblossom.online_fixes_20251130_022723.zip`
-3. **southwestsecret.com**: `southwestsecret.com_fixes_20251130_022723.zip`
-
-**Location**: `D:\websites\tools\deployment_packages\`
-
-**Manual Deployment**: Upload via WordPress admin or FTP client
-
----
-
-## 📋 **NEXT STEPS**
-
-### **Option 1: Configure Credentials (Recommended)**
-1. Get Hostinger FTP/SSH credentials
-2. Add to `sites.json`
-3. Run: `python tools/deploy_all_websites.py`
-
-### **Option 2: Manual Deployment**
-1. Extract deployment packages
-2. Upload via WordPress admin or FTP
-3. Clear cache
-4. Verify fixes
-
----
-
-## 🎯 **SUCCESS CRITERIA**
-
-Deployment is successful when:
-- ✅ All files uploaded to correct locations
-- ✅ Sites load without errors
-- ✅ Navigation menus work correctly
-- ✅ Text renders properly
-- ✅ Forms submit successfully
-- ✅ Professional appearance maintained
-
----
-
-🐝 **WE. ARE. SWARM.** ⚡🔥
-
-**Agent-7 (Web Development Specialist)**  
-**Status: ✅ DEPLOYMENT SYSTEM READY - AWAITING CREDENTIALS OR MANUAL DEPLOYMENT**
+- Files uploaded to the intended theme directory
+- Site loads without errors
+- Expected UI/behavior changes are visible after cache clearing
 
