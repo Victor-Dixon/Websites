@@ -15,7 +15,7 @@
 **Reference:** `D:\websites\crosbyultimateevents.com\GRADE_CARD_SALES_FUNNEL.yaml` for full details  
 **Top 10 Priority Fixes:**
 
-- [ ] **P0**: Create lead magnet (Event Planning Checklist) + landing page + thank-you page - crosbyultimateevents.com [Agent-7] ETA: 2025-12-21
+- [x] **P0**: Create lead magnet (Event Planning Checklist) + landing page + thank-you page - crosbyultimateevents.com [Agent-7] ETA: 2025-12-21
 - [ ] **P0**: Set up email welcome sequence + nurture campaign (3-5 emails) - crosbyultimateevents.com [Agent-7] ETA: 2025-12-24
 - [ ] **P0**: Implement booking calendar (Calendly) + payment processing (Stripe) for deposits - crosbyultimateevents.com [Agent-7] ETA: 2025-12-25
 - [ ] **P0**: Define positioning statement + offer ladder + ICP with pain/outcome - crosbyultimateevents.com [Agent-7] ETA: 2025-12-22
@@ -33,7 +33,7 @@
 **Reference:** `D:\websites\dadudekc.com\GRADE_CARD_SALES_FUNNEL.yaml` for full details  
 **Top 10 Priority Fixes:**
 
-- [ ] **P0**: Optimize /audit, /scoreboard, /intake as lead magnets with landing pages + thank-you pages - dadudekc.com [Agent-7] ETA: 2025-12-21
+- [x] **P0**: Optimize /audit, /scoreboard, /intake as lead magnets with landing pages + thank-you pages - dadudekc.com [Agent-7] ETA: 2025-12-21
 - [ ] **P0**: Set up email welcome sequence + nurture campaign (5 emails over 2 weeks) - dadudekc.com [Agent-7] ETA: 2025-12-24
 - [ ] **P0**: Implement booking calendar (Calendly) + payment processing (Stripe) for sprint deposits - dadudekc.com [Agent-7] ETA: 2025-12-25
 - [ ] **P0**: Define positioning statement + offer ladder + ICP with pain/outcome on homepage - dadudekc.com [Agent-7] ETA: 2025-12-22
@@ -51,7 +51,7 @@
 **Reference:** `D:\websites\FreeRideInvestor\GRADE_CARD_SALES_FUNNEL.yaml` for full details  
 **Top 10 Priority Fixes:**
 
-- [ ] **P0**: Optimize free resources (roadmap PDF, mindset journal) as lead magnets with landing pages + thank-you pages - freerideinvestor.com [Agent-7] ETA: 2025-12-21
+- [x] **P0**: Optimize free resources (roadmap PDF, mindset journal) as lead magnets with landing pages + thank-you pages - freerideinvestor.com [Agent-7] ETA: 2025-12-21
 - [ ] **P0**: Set up email welcome sequence + nurture campaign (5 emails over 2 weeks) for trading leads - freerideinvestor.com [Agent-7] ETA: 2025-12-24
 - [ ] **P0**: Implement payment processing (Stripe) for premium membership + clear upgrade flow - freerideinvestor.com [Agent-7] ETA: 2025-12-25
 - [ ] **P0**: Define positioning statement + offer ladder + ICP with pain/outcome on homepage - freerideinvestor.com [Agent-7] ETA: 2025-12-22
@@ -69,7 +69,7 @@
 **Reference:** `D:\websites\houstonsipqueen.com\GRADE_CARD_SALES_FUNNEL.yaml` for full details  
 **Top 10 Priority Fixes:**
 
-- [ ] **P0**: Create lead magnet (Event Planning Checklist) + landing page + thank-you page - houstonsipqueen.com [Agent-7] ETA: 2025-12-21
+- [x] **P0**: Create lead magnet (Event Planning Checklist) + landing page + thank-you page - houstonsipqueen.com [Agent-7] ETA: 2025-12-21
 - [ ] **P0**: Set up email welcome sequence + nurture campaign (5 emails over 2 weeks) for event leads - houstonsipqueen.com [Agent-7] ETA: 2025-12-24
 - [ ] **P0**: Implement booking calendar (Calendly) + payment processing (Stripe) for deposits - houstonsipqueen.com [Agent-7] ETA: 2025-12-25
 - [ ] **P0**: Define positioning statement + offer ladder + ICP with pain/outcome on homepage - houstonsipqueen.com [Agent-7] ETA: 2025-12-22
