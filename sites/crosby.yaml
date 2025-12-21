@@ -1,10 +1,10 @@
 site_id: crosby
 domain: crosbyultimateevents.com
-voice_profile: content/voices/victor.md
+voice_profile: content/voices/corey.md
 brand_profile: content/brands/crosby.yaml
 backlog: content/backlogs/crosby.yaml
 calendar: content/calendars/crosby.yaml
-examples_glob: content/examples/victor/*.md
+examples_glob: content/examples/corey/*.md
 publish:
   provider: wordpress
   wp_base_url_env: CROSBY_WP_URL
