@@ -27,7 +27,7 @@
     "deployment_method": "rest_api",
     "rest_api": {
       "username": "dadudeKC@Gmail.com",
-      "app_password": "udje VjlR o4XL EI96 8y2L vH47",
+      "app_password": "REPLACE_WITH_APPLICATION_PASSWORD",
       "site_url": "https://crosbyultimateevents.com"
     },
     "sftp": {
@@ -96,7 +96,7 @@
     "deployment_method": "rest_api",
     "rest_api": {
       "username": "carmyn",
-      "app_password": "gwnc 2Yr3 3Ey8 NIOQ hHuD Lt51",
+      "app_password": "REPLACE_WITH_APPLICATION_PASSWORD",
       "site_url": "https://prismblossom.online"
     },
     "sftp": {
@@ -119,7 +119,7 @@
     "deployment_method": "rest_api",
     "rest_api": {
       "username": "DadudeKC@Gmail.com",
-      "app_password": "gda9 mfqv A5WJ 7DwQ C0OB A3dl",
+      "app_password": "REPLACE_WITH_APPLICATION_PASSWORD",
       "site_url": "https://southwestsecret.com"
     },
     "sftp": {
@@ -142,7 +142,7 @@
     "deployment_method": "rest_api",
     "rest_api": {
       "username": "DadudeKC@Gmail.com",
-      "app_password": "UoZV BbNI sv4y ur7I HTSl shTh",
+      "app_password": "REPLACE_WITH_APPLICATION_PASSWORD",
       "site_url": "https://tradingrobotplug.com"
     },
     "sftp": {
@@ -165,7 +165,7 @@
     "deployment_method": "rest_api",
     "rest_api": {
       "username": "DadudeKC@Gmail.com",
-      "app_password": "8m5x iuN1 8FY3 lqx5 rCkj GVD7",
+      "app_password": "REPLACE_WITH_APPLICATION_PASSWORD",
       "site_url": "https://weareswarm.online"
     },
     "sftp": {
@@ -188,7 +188,7 @@
     "deployment_method": "rest_api",
     "rest_api": {
       "username": "DadudeKC@Gmail.com",
-      "app_password": "Is8A yncq jSnC vKvE Cmq6 6EZw",
+      "app_password": "REPLACE_WITH_APPLICATION_PASSWORD",
       "site_url": "https://weareswarm.site"
     },
     "sftp": {

@@ -44,6 +44,16 @@ SITE_MAPPING = {
     "prismblossom.online": "prismblossom",
 }
 
+# New canonical layout support: websites/<domain>/...
+# This keeps legacy mappings intact while allowing future migrations without breaking deploy detection.
+DOMAIN_SITE_KEY_OVERRIDES = {
+    # Canonical domain -> deploy manager key (legacy)
+    "freerideinvestor.com": "freerideinvestor",
+    "southwestsecret.com": "southwestsecret",
+    "weareswarm.site": "weareswarm",
+    "prismblossom.online": "prismblossom",
+}
+
 # File type mappings
 THEME_FILES = {
     "style.css", "functions.php", "header.php", "footer.php", "index.php",
@@ -72,6 +82,19 @@ def get_changed_files() -> List[str]:
 def detect_site_from_path(file_path: str) -> Optional[str]:
     """Detect which site a file belongs to based on path."""
     path_parts = Path(file_path).parts
+
+    # Canonical layout: websites/<domain>/...
+    # Example: websites/freerideinvestor.com/wp/wp-content/themes/foo/style.css
+    if "websites" in path_parts:
+        try:
+            idx = path_parts.index("websites")
+            if idx + 1 < len(path_parts):
+                domain = path_parts[idx + 1]
+                # Minimal sanity check: domain-like string
+                if "." in domain:
+                    return DOMAIN_SITE_KEY_OVERRIDES.get(domain, domain)
+        except ValueError:
+            pass
     
     # Check each site mapping
     for local_dir, site_key in SITE_MAPPING.items():

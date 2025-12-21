@@ -54,6 +54,9 @@ logs/
 .env.local
 .env.*.local
 
+# Deployment credentials (never commit secrets)
+.deploy_credentials/
+
 # Deployment
 deploy.log
 deployment_cache/
