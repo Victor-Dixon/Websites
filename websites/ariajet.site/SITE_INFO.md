@@ -5,6 +5,12 @@
 - **primary_owner**: Aria
 - **notes**: Protected creative space
 
+### Canonical theme locations (migrated)
+
+- `websites/ariajet.site/wp/wp-content/themes/ariajet/`
+- `websites/ariajet.site/wp/wp-content/themes/ariajet-cosmic/`
+- `websites/ariajet.site/wp/wp-content/themes/ariajet-studio/`
+
 ### Current source locations (legacy pointers)
 
 - `ariajet.site`

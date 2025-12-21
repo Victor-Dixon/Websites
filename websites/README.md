@@ -7,7 +7,8 @@ Today, the repo still contains “legacy” layouts (themes/plugins scattered in
 ### Current locations (source + overlays)
 
 - **ariajet.site**
-  - Source: `ariajet.site/wordpress-theme/`
+  - Canonical themes: `websites/ariajet.site/wp/wp-content/themes/`
+  - Legacy source (symlinked): `ariajet.site/wordpress-theme/`
   - Generated overlays/snippets: `sites/ariajet.site/`
 
 - **crosbyultimateevents.com**
@@ -31,7 +32,8 @@ Today, the repo still contains “legacy” layouts (themes/plugins scattered in
   - Theme overlays: `sites/houstonsipqueen.com/wp/`
 
 - **prismblossom.online**
-  - Source: `prismblossom.online/wordpress-theme/prismblossom/`
+  - Canonical theme: `websites/prismblossom.online/wp/wp-content/themes/prismblossom/`
+  - Legacy source (symlinked): `prismblossom.online/wordpress-theme/prismblossom/`
 
 - **southwestsecret.com**
   - (Directory exists but is not standardized yet; migrate into this hub when ready.)

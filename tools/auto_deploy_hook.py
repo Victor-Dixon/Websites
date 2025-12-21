@@ -92,7 +92,9 @@ def detect_site_from_path(file_path: str) -> Optional[str]:
                 domain = path_parts[idx + 1]
                 # Minimal sanity check: domain-like string
                 if "." in domain:
-                    return DOMAIN_SITE_KEY_OVERRIDES.get(domain, domain)
+                    # Only deploy sites we explicitly mapped to a deployment key.
+                    # This prevents accidental deploy attempts for domains not yet configured.
+                    return DOMAIN_SITE_KEY_OVERRIDES.get(domain)
         except ValueError:
             pass
     
