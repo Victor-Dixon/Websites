@@ -112,3 +112,39 @@
 - [ ] Add SEO tasks for tradingrobotplug.com - Grade: F (44.5/100), SEO: F (50/100) [Agent-7 + Agent-2 COORDINATING] - SEO code generated (temp_tradingrobotplug_com_seo.php), Agent-7 handling implementation, Agent-2 handling architecture review
 - [ ] Add SEO tasks for weareswarm.online - Grade: F (44.5/100), SEO: F (50/100) [Agent-7 + Agent-2 COORDINATING] - SEO code generated (temp_weareswarm_online_seo.php), Agent-7 handling implementation, Agent-2 handling architecture review
 - [ ] Add SEO tasks for weareswarm.site - Grade: F (44.5/100), SEO: F (50/100) [Agent-7 + Agent-2 COORDINATING] - SEO code generated (temp_weareswarm_site_seo.php), Agent-7 handling implementation, Agent-2 handling architecture review
+
+## TRADING ROBOT PLUG SERVICE PLATFORM
+
+**Generated:** 2025-12-19 from service platform planning  
+**Status:** Planning complete, implementation ready to begin  
+**Reference:** `docs/trading_robot/TRADING_ROBOT_PLUG_SERVICE_PLATFORM_PLAN.md` for full details  
+**Timeline:** 8-10 weeks to full launch
+
+### Phase 3: WordPress Plugin Development (Week 3-5) - HIGH PRIORITY
+
+- [ ] **HIGH**: Create WordPress plugin structure - Create `tradingrobotplug-wordpress-plugin/` directory structure with main plugin file, `includes/` (user-manager, performance-tracker, subscription-manager, api-client, dashboard), `admin/` (settings, dashboard), `public/` (shortcodes, assets, templates), `api/` (REST API). Deliverables: Plugin structure, main plugin file. [Agent-7 CLAIMED]
+- [ ] **HIGH**: Build user management WordPress integration - Integrate WordPress user system with backend API, create user registration/login forms, implement session management, handle user authentication. Deliverables: User management integration, login/registration forms. [Agent-7 CLAIMED]
+- [ ] **HIGH**: Create performance dashboard shortcode - Create `[trading_robot_performance]` shortcode that displays user performance dashboard with daily/weekly/monthly/all-time metrics, charts, and filters. Deliverables: Performance dashboard shortcode, frontend display. [Agent-7 CLAIMED]
+- [ ] **HIGH**: Create pricing page shortcode - Create `[trading_robot_pricing]` shortcode that displays tier comparison table (Free, Low Commitment $9.99, Mid-Tier $29.99, Premium $99.99), feature breakdown, "Most Popular" highlighting, FAQ section, "Start Free Trial" CTAs. Deliverables: Pricing shortcode, tier comparison table. [Agent-7 CLAIMED]
+- [ ] **HIGH**: Create plugin marketplace shortcode - Create `[trading_robot_marketplace]` shortcode that displays grid/list of available robots, filters by strategy type/performance/price, shows robot cards with name, description, performance metrics (avg win rate, profit factor), price/availability by tier, "Try Demo" or "Purchase" buttons. Deliverables: Marketplace shortcode, robot cards, filtering. [Agent-7 CLAIMED]
+- [ ] **MEDIUM**: Build user dashboard frontend - Create user dashboard page template that displays personal performance dashboard, active robots list, subscription status, trading account management, plugin management, settings. Deliverables: User dashboard template, all sections functional. [Agent-7 CLAIMED]
+- [ ] **MEDIUM**: Create admin settings interface - Build WordPress admin settings page for plugin configuration, API endpoint configuration, subscription tier management, plugin management. Deliverables: Admin settings page, configuration interface. [Agent-7 CLAIMED]
+
+### Phase 4: Website Updates (Week 4-6) - HIGH PRIORITY
+
+- [ ] **HIGH**: Update homepage with service focus - Update homepage with hero section ("Automated Trading Robots That Actually Work"), value proposition (performance tracking, multiple strategies, tiered pricing), social proof (performance metrics, user testimonials), clear CTAs ("Start Free", "View Pricing", "See Performance"). Deliverables: Updated homepage, all CTAs working. [Agent-7 CLAIMED]
+- [ ] **HIGH**: Create pricing page - Create pricing page using `[trading_robot_pricing]` shortcode, add additional content (FAQ, testimonials, comparison), ensure mobile responsiveness. Deliverables: Pricing page, all tiers displayed. [Agent-7 CLAIMED]
+- [ ] **HIGH**: Create performance dashboard page - Create performance dashboard page using `[trading_robot_performance]` shortcode, add public leaderboard (anonymized), average performance metrics, best performing robots, historical performance charts, "See Your Performance" CTA (login required). Deliverables: Performance dashboard page, public metrics displayed. [Agent-7 CLAIMED]
+- [ ] **HIGH**: Create plugin marketplace page - Create plugin marketplace page using `[trading_robot_marketplace]` shortcode, ensure filtering works, robot cards display correctly, purchase/demo buttons functional. Deliverables: Marketplace page, all robots listed. [Agent-7 CLAIMED]
+- [ ] **MEDIUM**: Create user dashboard page - Create user dashboard page (requires login) that displays personal performance, active robots, subscription status, trading accounts, plugin management, settings. Deliverables: User dashboard page, all sections functional. [Agent-7 CLAIMED]
+- [ ] **MEDIUM**: Create "How It Works" page - Create "How It Works" page explaining how trading robots work, performance tracking explanation, risk management, getting started guide. Deliverables: How It Works page, comprehensive guide. [Agent-7 CLAIMED]
+- [ ] **MEDIUM**: Update navigation and CTAs - Update website navigation to include new pages (Pricing, Performance, Marketplace, Dashboard), ensure all CTAs point to correct pages, add login/logout functionality. Deliverables: Updated navigation, all CTAs working. [Agent-7 CLAIMED]
+
+### Phase 5: Service Pipeline Implementation (Week 6-7) - HIGH PRIORITY
+
+- [ ] **HIGH**: Implement free tier restrictions - Implement free tier restrictions (1 demo robot only, paper trading only, daily metrics only, 7-day history limit), enforce restrictions in plugin access control, display upgrade prompts when limits reached. Deliverables: Free tier restrictions enforced, upgrade prompts working. [Agent-3 CLAIMED]
+- [ ] **HIGH**: Build upgrade flows - Create upgrade flow from free → low → mid → premium, implement payment processing integration (Stripe recommended), handle subscription upgrades/downgrades, send confirmation emails. Deliverables: Upgrade flows functional, payment processing integrated. [Agent-3 CLAIMED]
+- [ ] **MEDIUM**: Create conversion tracking - Implement conversion tracking for free → low → mid → premium, track conversion events, create conversion analytics dashboard, monitor conversion rates. Deliverables: Conversion tracking system, analytics dashboard. [Agent-3 CLAIMED]
+- [ ] **MEDIUM**: Build email campaigns - Create email campaigns for free → low conversion (highlighting limitations, upgrade prompts), low → mid conversion (live trading, all robots), mid → premium conversion (custom development, enterprise features). Deliverables: Email campaigns, automated sending. [Agent-4 CLAIMED]
+- [ ] **MEDIUM**: Implement in-app upgrade prompts - Create in-app upgrade prompts that trigger when free tier limits reached, show upgrade benefits, link to pricing page, track prompt interactions. Deliverables: In-app prompts, tracking system. [Agent-7 CLAIMED]
+- [ ] **MEDIUM**: Test conversion funnel - Test entire conversion funnel (free signup → low upgrade → mid upgrade → premium upgrade), validate payment processing, test email campaigns, optimize conversion paths. Deliverables: Tested conversion funnel, optimization recommendations. [Agent-4 CLAIMED]
