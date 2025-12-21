@@ -5,6 +5,10 @@
 - **primary_owner**: Carmyn
 - **notes**: No funnel, no experiments
 
+### Canonical theme location (migrated)
+
+- `websites/prismblossom.online/wp/wp-content/themes/prismblossom/`
+
 ### Current source locations (legacy pointers)
 
 - `prismblossom.online`
