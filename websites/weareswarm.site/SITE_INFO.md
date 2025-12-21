@@ -5,12 +5,17 @@
 - **primary_owner**: Victor
 - **notes**: Sales sandbox
 
-### Current source locations (legacy pointers)
+### Current source locations
 
-- `Swarm_website`
+- ✅ **Canonical theme**: `websites/weareswarm.site/wp/wp-content/themes/swarm-theme/` (MIGRATED 2025-12-20)
+- **Legacy source**: `Swarm_website/wp-content/themes/swarm-theme/` (preserved for backward compatibility)
+- **Additional files**: `Swarm_website/wp-content/themes/swarm-products-page.php` (standalone template file)
 
-### Target layout (when migrated)
+### Theme structure
 
-- `wp/wp-content/themes/<theme>/`
-- `wp/wp-content/plugins/<plugin>/`
-- `static/` (if not WordPress)
+- Theme name: **swarm-theme**
+- Location: `wp/wp-content/themes/swarm-theme/`
+- Key files: functions.php, style.css, header.php, footer.php, front-page.php, index.php
+- Custom pages: page-els-suite.php
+- Custom features: swarm-api-enhanced.php, missions-dashboard.css
+- Assets: swarm-logo.svg, main.js, els-suite.js

@@ -37,12 +37,20 @@ ENV_FILE = PROJECT_ROOT / ".env"
 if ENV_FILE.exists():
     load_dotenv(ENV_FILE)
 
-# Expected themes in websites repo
+# Expected themes in websites repo (canonical layout)
 EXPECTED_THEMES = {
-    "FreeRideInvestor": "freerideinvestor",
-    "southwestsecret.com/wordpress-theme": "southwestsecret",
+    "websites/freerideinvestor.com/wp/wp-content/themes/freerideinvestor-modern": "freerideinvestor",  # ✅ MIGRATED 2025-12-20 (Phases 1 & 2)
+    "websites/southwestsecret.com/wp/wp-content/themes/southwestsecret": "southwestsecret",  # ✅ MIGRATED 2025-12-20
+    "websites/weareswarm.site/wp/wp-content/themes/swarm-theme": "weareswarm",  # ✅ MIGRATED 2025-12-20
+    "websites/tradingrobotplug.com/wp/wp-content/themes/tradingrobotplug-theme": "tradingrobotplug",  # ✅ MIGRATED 2025-12-20
+}
+
+# Legacy theme locations (for backward compatibility check)
+LEGACY_THEME_LOCATIONS = {
+    "FreeRideInvestor/wp-content/themes/freerideinvestor-modern": "freerideinvestor",
+    "southwestsecret.com/wordpress-theme/southwestsecret": "southwestsecret",  # Legacy - preserved
     "Swarm_website/wp-content/themes/swarm-theme": "weareswarm",
-    "TradingRobotPlugWeb/my-custom-theme": "tradingrobotplug",
+    "TradingRobotPlugWeb/wordpress/wp-content/themes/my-custom-theme": "tradingrobotplug",  # Legacy - preserved (renamed to tradingrobotplug-theme in canonical)
 }
 
 # Known theme locations in main repo (should be moved or removed)

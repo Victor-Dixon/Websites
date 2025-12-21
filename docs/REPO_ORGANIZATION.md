@@ -36,6 +36,7 @@ websites/
 shared/
   wordpress-plugins/           # shared plugins not owned by one site
 ops/
+  deployment/                  # WordPress deployment tools and automation
   site-overlays/               # generated snippets used by automation (current `sites/`)
 ```
 

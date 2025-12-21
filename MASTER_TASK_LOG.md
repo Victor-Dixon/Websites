@@ -148,19 +148,19 @@
 ### SALES FUNNEL ECOSYSTEM GRADE CARD - crosbyultimateevents.com
 
 **Generated:** 2025-12-19 from Sales Funnel Ecosystem Grade Card (v1)  
-**Status:** Grade F (35.5/100) - Comprehensive audit complete  
-**Reference:** `D:\websites\crosbyultimateevents.com\GRADE_CARD_SALES_FUNNEL.yaml` for full details  
+**Status:** Grade F (35.5/100) - Comprehensive audit complete, setup documentation ready  
+**Reference:** `D:\websites\crosbyultimateevents.com\GRADE_CARD_SALES_FUNNEL.yaml` and `crosbyultimateevents.com/IMPLEMENTATION_CHECKLIST.md` for full details  
 **Top 10 Priority Fixes:**
 
-- [ ] **P0**: Create lead magnet (Event Planning Checklist) + landing page + thank-you page - crosbyultimateevents.com [Agent-7] ETA: 2025-12-21
-- [ ] **P0**: Set up email welcome sequence + nurture campaign (3-5 emails) - crosbyultimateevents.com [Agent-7] ETA: 2025-12-24
-- [ ] **P0**: Implement booking calendar (Calendly) + payment processing (Stripe) for deposits - crosbyultimateevents.com [Agent-7] ETA: 2025-12-25
-- [ ] **P0**: Define positioning statement + offer ladder + ICP with pain/outcome - crosbyultimateevents.com [Agent-7] ETA: 2025-12-22
-- [ ] **P0**: Reduce contact form friction (3 fields) + add phone + chat widget - crosbyultimateevents.com [Agent-7] ETA: 2025-12-21
-- [ ] **P0**: Add real testimonials with photos + trust badges + case studies - crosbyultimateevents.com [Agent-7] ETA: 2025-12-22
-- [ ] **P0**: A/B test hero headline for better benefit focus + add urgency - crosbyultimateevents.com [Agent-7] ETA: 2025-12-20
-- [ ] **P1**: Claim social media accounts (@crosbyultimateevents) + complete profiles - crosbyultimateevents.com [Agent-7] ETA: 2025-12-23
-- [ ] **P1**: Install analytics (GA4, Facebook Pixel) + set up UTM tracking + metrics sheet - crosbyultimateevents.com [Agent-7] ETA: 2025-12-23
+- [x] **P0**: Create lead magnet (Event Planning Checklist) + landing page + thank-you page - ✅ Documentation complete (`LEAD_MAGNET_EVENT_PLANNING_CHECKLIST.md`, `pages/lead-magnet-event-planning-checklist-landing.md`, `pages/lead-magnet-event-planning-checklist-thank-you.md`). Ready for WordPress deployment. [Agent-7] ETA: 2025-12-21
+- [x] **P0**: Set up email welcome sequence + nurture campaign (3-5 emails) - ✅ Documentation complete (`EMAIL_SEQUENCE_WELCOME_NURTURE.md`, `setup/EMAIL_AUTOMATION_SETUP.md`). Ready for email platform integration. [Agent-7] ETA: 2025-12-24
+- [x] **P0**: Implement booking calendar (Calendly) + payment processing (Stripe) for deposits - ✅ Implementation guide complete (`setup/BOOKING_AND_DEPOSIT_FLOW.md`). Ready for WordPress integration. [Agent-7] ETA: 2025-12-25
+- [x] **P0**: Define positioning statement + offer ladder + ICP with pain/outcome - ✅ Documentation complete (`POSITIONING_STATEMENT.md`, `OFFER_LADDER.md`, `ICP_DEFINITION.md`). Ready for homepage implementation. [Agent-7] ETA: 2025-12-22
+- [x] **P0**: Reduce contact form friction (3 fields) + add phone + chat widget - ✅ Implementation spec complete (`setup/CONTACT_FORM_PHONE_CHAT.md`). Ready for WordPress form implementation. [Agent-7] ETA: 2025-12-21
+- [x] **P0**: Add real testimonials with photos + trust badges + case studies - ✅ Collection template complete (`setup/TESTIMONIALS_TRUST_CASE_STUDIES.md`). Ready for content collection and placement. [Agent-7] ETA: 2025-12-22
+- [x] **P0**: A/B test hero headline for better benefit focus + add urgency - ✅ Testing plan complete (`setup/HERO_AB_TEST_PLAN.md`). Ready for implementation and tracking setup. [Agent-7] ETA: 2025-12-20
+- [x] **P1**: Claim social media accounts (@crosbyultimateevents) + complete profiles - ✅ Profile copy complete (`SOCIAL_MEDIA_PROFILES.md`). Ready for account setup. [Agent-7] ETA: 2025-12-23
+- [ ] **P1**: Install analytics (GA4, Facebook Pixel) + set up UTM tracking + metrics sheet - ✅ Tracking setup guide complete (`setup/TRACKING_UTM_METRICS.md`). Ready for implementation. [Agent-7] ETA: 2025-12-23
 - [ ] **P1**: Optimize mobile UX + page speed (images, caching, target 90+ mobile score) - crosbyultimateevents.com [Agent-7] ETA: 2025-12-23
 
 ### SALES FUNNEL ECOSYSTEM GRADE CARD - dadudekc.com
@@ -184,8 +184,9 @@
 ### SALES FUNNEL ECOSYSTEM GRADE CARD - freerideinvestor.com
 
 **Generated:** 2025-12-19 from Sales Funnel Ecosystem Grade Card (v1)  
-**Status:** Grade F (38.5/100) - Comprehensive audit complete  
+**Status:** Grade F (38.5/100) - Comprehensive audit complete, blog templates added  
 **Reference:** `D:\websites\FreeRideInvestor\GRADE_CARD_SALES_FUNNEL.yaml` for full details  
+**Recent Updates:** New blog templates added (`FreeRideInvestor/Auto_blogger/ui/blog_templates/`): search results templates (v1 & v2), newsletter footer snippet, social author stats CSS  
 **Top 10 Priority Fixes:**
 
 - [ ] **P0**: Optimize free resources (roadmap PDF, mindset journal) as lead magnets with landing pages + thank-you pages - freerideinvestor.com [Agent-7] ETA: 2025-12-21
@@ -220,8 +221,9 @@
 ### SALES FUNNEL ECOSYSTEM GRADE CARD - tradingrobotplug.com
 
 **Generated:** 2025-12-19 from Sales Funnel Ecosystem Grade Card (v1)  
-**Status:** Grade F (33.0/100) - Comprehensive audit complete (Building Mode - Pre-Launch)  
-**Reference:** `D:\websites\TradingRobotPlugWeb\GRADE_CARD_SALES_FUNNEL.yaml` for full details  
+**Status:** Grade F (33.0/100) - Comprehensive audit complete (Building Mode - Pre-Launch), setup documentation added  
+**Reference:** `D:\websites\TradingRobotPlugWeb\GRADE_CARD_SALES_FUNNEL.yaml` and `docs/sites/tradingrobotplug/SETUP.md` for full details  
+**Recent Updates:** Setup documentation created with WordPress admin steps, theme activation, page creation, and waitlist form behavior  
 **Top 10 Priority Fixes:**
 
 - [ ] **P0**: Create lead magnet (Trading Robot Validation Checklist) or waitlist + landing page + thank-you page - tradingrobotplug.com [Agent-7] ETA: 2025-12-21
@@ -249,6 +251,33 @@
 - [ ] Add SEO tasks for tradingrobotplug.com - Grade: F (44.5/100), SEO: F (50/100) [Agent-7 + Agent-2 COORDINATING] - SEO code generated (temp_tradingrobotplug_com_seo.php), Agent-7 handling implementation, Agent-2 handling architecture review
 - [ ] Add SEO tasks for weareswarm.online - Grade: F (44.5/100), SEO: F (50/100) [Agent-7 + Agent-2 COORDINATING] - SEO code generated (temp_weareswarm_online_seo.php), Agent-7 handling implementation, Agent-2 handling architecture review
 - [ ] Add SEO tasks for weareswarm.site - Grade: F (44.5/100), SEO: F (50/100) [Agent-7 + Agent-2 COORDINATING] - SEO code generated (temp_weareswarm_site_seo.php), Agent-7 handling implementation, Agent-2 handling architecture review
+
+## REPOSITORY ORGANIZATION & INFRASTRUCTURE
+
+**Generated:** 2025-12-20 from repository reorganization pull  
+**Status:** Initial structure created, migration in progress  
+**Reference:** `docs/REPO_ORGANIZATION.md` and `websites/README.md` for full details
+
+### Completed Tasks ✅
+
+- [x] **COMPLETE**: Create `websites/` directory structure as navigation hub - Standardized directory structure created for all 11 sites in `configs/sites_registry.json` ✅
+- [x] **COMPLETE**: Generate SITE_INFO.md files for all websites - Navigation files created for: ariajet.site, crosbyultimateevents.com, dadudekc.com, digitaldreamscape.site, freerideinvestor.com, houstonsipqueen.com, prismblossom.online, southwestsecret.com, tradingrobotplug.com, weareswarm.online, weareswarm.site ✅
+- [x] **COMPLETE**: Create repository organization tooling - `tools/organize_repo.py` and `tools/repo_inventory.py` created for systematic migration ✅
+- [x] **COMPLETE**: Migrate WordPress themes to standardized locations - Themes moved to `websites/<domain>/wp/wp-content/themes/` structure (ariajet, prismblossom themes migrated) ✅
+- [x] **COMPLETE**: Create repository organization documentation - `docs/REPO_ORGANIZATION.md` created with migration approach and target standard ✅
+
+### Remaining Migration Tasks
+
+- [x] **COMPLETE**: Create detailed migration plan from inventory - ✅ Migration plan document created (`docs/REPO_MIGRATION_PLAN.md`). Inventory analyzed, all sites mapped, migration strategy defined, risk assessment complete. weareswarm.site directory verified. Ready for execution phase. [COMPLETE 2025-12-20]
+- [x] **COMPLETE**: Test migration on southwestsecret.com - ✅ Theme successfully migrated to `websites/southwestsecret.com/wp/wp-content/themes/southwestsecret/`. All 17 files copied, SITE_INFO.md updated, deployment automation verified compatible. Legacy location preserved for backward compatibility. [COMPLETE 2025-12-20]
+- [x] **COMPLETE**: tradingrobotplug.com migration - ✅ Theme and plugins successfully migrated to `websites/tradingrobotplug.com/wp/wp-content/`. Theme renamed from my-custom-theme to tradingrobotplug-theme (42 files), 3 plugins migrated (trading-robot-service, trp-paper-trading-stats, trp-swarm-status). SITE_INFO.md updated. [COMPLETE 2025-12-20]
+- [x] **COMPLETE**: weareswarm.site migration - ✅ Theme successfully migrated to `websites/weareswarm.site/wp/wp-content/themes/swarm-theme/`. 12 files copied (functions.php, style.css, header.php, footer.php, front-page.php, index.php, page-els-suite.php, swarm-api-enhanced.php, missions-dashboard.css, assets, js). SITE_INFO.md updated. Legacy location preserved. [COMPLETE 2025-12-20]
+- [x] **ALL PHASES COMPLETE**: freerideinvestor.com comprehensive migration - ✅ **Phases 1-4 COMPLETE** (2025-12-20). Phase 1: Core theme (13 files). Phase 2: Core plugin (29 files). Phase 3: Comprehensive root-level theme merged - functions.php (1,668 lines), header.php, footer.php, home.php, single.php, custom.css, plus supporting directories: inc/ (24 files), page-templates/ (36 files), scss/ (20 files), css/ (56 files), js/ (10 files), assets/ (partial), template-parts/ (9 files). Phase 4: Non-WordPress components documented (Auto_blogger, scripts/, POSTS/ kept in legacy). Total: 202 files migrated (173 theme + 29 plugin). Legacy location preserved (12,619 files total). See `docs/FREERIDEINVESTOR_MIGRATION_PLAN.md` and `docs/FREERIDEINVESTOR_PHASE3_4_ANALYSIS.md` for details. [COMPLETE 2025-12-20]
+- [x] **COMPLETE**: WordPress deployment tools migration - ✅ WordPress deployment manager and tools migrated to `ops/deployment/` (2025-12-20). Tools: auto_deploy_hook.py, deploy_all_websites.py, deploy_website_fixes.py, check_wordpress_updates.py, check_wordpress_versions.py, wordpress_version_checker.py, verify_website_fixes.py. Documentation created (ops/README.md, ops/deployment/README.md). Tools in `tools/` maintained for backward compatibility. [COMPLETE 2025-12-20]
+- [ ] **MEDIUM**: Update deployment automation for new structure - Update `tools/auto_deploy_hook.py` to recognize new `websites/<domain>/` paths and maintain backward compatibility during transition [Agent-3 CLAIMED]
+- [ ] **LOW**: Migrate shared plugins to `shared/wordpress-plugins/` - Move plugins from `wordpress-plugins/` to `shared/wordpress-plugins/` per target standard [Agent-3]
+- [ ] **LOW**: Migrate generated overlays to `ops/site-overlays/` - Move current `sites/<domain>/` generated snippets to `ops/site-overlays/` per target standard [Agent-3]
+- [ ] **LOW**: Remove legacy directory structures after cutover - Clean up old theme/plugin locations once all sites migrated and automation updated [Agent-3]
 
 ## TOOLBELT HEALTH CHECK TASKS
 

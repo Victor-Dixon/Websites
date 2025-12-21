@@ -5,12 +5,22 @@
 - **primary_owner**: Victor
 - **notes**: Fed by FreeRideInvestor traffic
 
-### Current source locations (legacy pointers)
+### Current source locations
 
-- `sites/tradingrobotplug.com`
+- ✅ **Canonical theme**: `websites/tradingrobotplug.com/wp/wp-content/themes/tradingrobotplug-theme/` (MIGRATED 2025-12-20)
+- **Legacy source**: `TradingRobotPlugWeb/wordpress/wp-content/themes/my-custom-theme/` (preserved for backward compatibility)
+- **Generated overlays**: `sites/tradingrobotplug.com/` (to be migrated to `ops/site-overlays/`)
 
-### Target layout (when migrated)
+### Theme structure
 
-- `wp/wp-content/themes/<theme>/`
-- `wp/wp-content/plugins/<plugin>/`
-- `static/` (if not WordPress)
+- Theme name: **tradingrobotplug-theme** (renamed from my-custom-theme)
+- Location: `wp/wp-content/themes/tradingrobotplug-theme/`
+- Key files: functions.php, style.css, header.php, footer.php, front-page.php, index.php
+- Custom pages: page-products.php
+- Setup reference: `docs/sites/tradingrobotplug/SETUP.md`
+
+### Plugin structure
+
+- ✅ **Plugins migrated**: `wp/wp-content/plugins/` (MIGRATED 2025-12-20)
+- Plugins: trading-robot-service, trp-paper-trading-stats, trp-swarm-status
+- Legacy source: `TradingRobotPlugWeb/wordpress/wp-content/plugins/` (preserved for backward compatibility)
