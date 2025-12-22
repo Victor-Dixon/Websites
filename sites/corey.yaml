@@ -1,6 +1,6 @@
 site_id: corey
 domain: freerideinvestor.com
-voice_profile: content/voices/victor.md
+voice_profile: content/voices/corey.md
 brand_profile: content/brands/corey_site.yaml
 backlog: content/backlogs/corey_site.yaml
 calendar: content/calendars/corey_site.yaml
