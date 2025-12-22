@@ -173,6 +173,35 @@ class VoicePatternProcessor:
         
         return "\n".join(instructions)
     
+    def _post_process_content(self, content: str) -> str:
+        """
+        Post-process content to remove dead giveaways that it wasn't written by Victor.
+        
+        This catches things that might slip through the LLM processing.
+        """
+        result = content
+        
+        # CRITICAL: Remove em dashes and en dashes (dead giveaway)
+        # Victor never uses these - he uses ... (ellipsis) instead for pacing
+        # Handle spacing: "word — word" becomes "word...word" (no spaces around ellipsis)
+        
+        # Replace em dash with spaces around it: " — " → "..."
+        result = result.replace(' — ', '...')
+        result = result.replace(' —', '...')  # Space before, no space after
+        result = result.replace('— ', '...')  # No space before, space after
+        result = result.replace('—', '...')   # No spaces at all
+        
+        # Same for en dash
+        result = result.replace(' – ', '...')
+        result = result.replace(' –', '...')
+        result = result.replace('– ', '...')
+        result = result.replace('–', '...')
+        
+        # Also check for other "polished" punctuation that Victor doesn't use
+        # (Add more as needed)
+        
+        return result
+    
     def apply_voice_patterns(self, content: str, title: str = "", model: str = "mistral:latest") -> str:
         """
         Apply Victor's voice patterns to content.
@@ -187,7 +216,7 @@ class VoicePatternProcessor:
         """
         if not self.voice_template:
             print("⚠️  Voice template not loaded, returning original content")
-            return content
+            return self._post_process_content(content)  # Still post-process even if no template
         
         print("🎤 Applying Victor's voice patterns...")
         
@@ -216,6 +245,7 @@ CRITICAL RULES FROM TEMPLATE:
 5. STRUCTURE: Keep original markdown format (## headers, * bullets, **bold**)
 6. DO NOT: Use slang NOT in template (no "ppl", "vibin", "sumthin", "jus", "dig", "ya", "aint")
 7. DO: Use ONLY the shorthand from template: js, cs, idk, tbh, rn, lol, tryna, gon, wanna, kinda, lowkey
+8. PUNCTUATION: NEVER use em dashes (—) or en dashes (–). Use ellipsis (...) instead for pauses and pacing. When replacing dashes, use ellipsis with NO spaces: "word — word" becomes "word...word" (not "word ... word"). This is a DEAD GIVEAWAY that the content wasn't written by Victor.
 
 ORIGINAL CONTENT:
 {content}
@@ -225,6 +255,7 @@ Rewrite maintaining:
 - Same meaning and flow
 - Victor's voice patterns from template ONLY
 - No made-up slang or abbreviations
+- NO em dashes (—) or en dashes (–) - use ... (ellipsis) instead for pauses, with NO spaces around it: "word — word" becomes "word...word"
 
 Return ONLY the rewritten content with proper markdown formatting."""
         
@@ -253,6 +284,9 @@ Return ONLY the rewritten content with proper markdown formatting."""
                         if rewritten.startswith("```"):
                             lines = rewritten.split('\n')
                             rewritten = '\n'.join(lines[1:-1]) if len(lines) > 2 else rewritten
+                        
+                        # Final post-processing to catch any dead giveaways
+                        rewritten = self._post_process_content(rewritten)
                         
                         print("✅ Voice patterns applied successfully (Ollama API)")
                         return rewritten
@@ -286,8 +320,11 @@ Return ONLY the rewritten content with proper markdown formatting."""
                     lines = rewritten.split('\n')
                     rewritten = '\n'.join(lines[1:-1]) if len(lines) > 2 else rewritten
                 
-                print("✅ Voice patterns applied successfully (Mistral API)")
-                return rewritten
+                        # Final post-processing to catch any dead giveaways
+                        rewritten = self._post_process_content(rewritten)
+                        
+                        print("✅ Voice patterns applied successfully (Mistral API)")
+                        return rewritten
                 
             except Exception as e:
                 print(f"⚠️  Error applying voice patterns: {e}")
@@ -356,6 +393,9 @@ Return ONLY the rewritten content with proper markdown formatting."""
                         # Fix any broken markdown patterns
                         rewritten = rewritten.replace('** ', '**').replace(' **', '**')
                         
+                        # Final post-processing to catch any dead giveaways
+                        rewritten = self._post_process_content(rewritten)
+                        
                         print("✅ Voice patterns applied successfully (subprocess Ollama)")
                         return rewritten
                     else:
@@ -379,8 +419,8 @@ Return ONLY the rewritten content with proper markdown formatting."""
             except Exception as e:
                 print(f"⚠️  Ollama subprocess unexpected error: {e}")
         
-        print("⚠️  No LLM available, returning original content")
-        return content  # Return original if all methods fail
+        print("⚠️  No LLM available, returning original content (post-processed)")
+        return self._post_process_content(content)  # Still post-process even if no LLM
     
     def apply_voice_patterns_simple(self, content: str) -> str:
         """

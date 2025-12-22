@@ -2,8 +2,10 @@
 /**
  * Digital Dreamscape Theme Functions
  * 
+ * Living, narrative-driven AI world theme
+ * 
  * @package DigitalDreamscape
- * @since 1.0.0
+ * @since 2.0.0
  */
 
 if (!defined('ABSPATH')) {
@@ -45,10 +47,17 @@ add_action('after_setup_theme', 'digitaldreamscape_setup');
  */
 function digitaldreamscape_scripts() {
     // Enqueue theme stylesheet
-    wp_enqueue_style('digitaldreamscape-style', get_stylesheet_uri(), array(), '1.0.0');
+    wp_enqueue_style('digitaldreamscape-style', get_stylesheet_uri(), array(), '2.0.0');
 
     // Enqueue theme JavaScript
-    wp_enqueue_script('digitaldreamscape-script', get_template_directory_uri() . '/js/main.js', array('jquery'), '1.0.0', true);
+    wp_enqueue_script('digitaldreamscape-script', get_template_directory_uri() . '/js/main.js', array('jquery'), '2.0.0', true);
+    
+    // Add Digital Dreamscape context to page
+    wp_localize_script('digitaldreamscape-script', 'dreamscapeContext', array(
+        'isEpisode' => is_single(),
+        'isArchive' => is_archive(),
+        'narrativeMode' => true,
+    ));
 }
 add_action('wp_enqueue_scripts', 'digitaldreamscape_scripts');
 
@@ -68,3 +77,13 @@ function digitaldreamscape_widgets_init() {
 }
 add_action('widgets_init', 'digitaldreamscape_widgets_init');
 
+/**
+ * Add Digital Dreamscape meta description to posts
+ */
+function digitaldreamscape_post_meta_description() {
+    if (is_single()) {
+        $description = 'Digital Dreamscape is a living, narrative-driven AI world where real actions become story, and story feeds back into execution. This episode is part of the persistent simulation of self + system.';
+        echo '<meta name="description" content="' . esc_attr($description) . '">';
+    }
+}
+add_action('wp_head', 'digitaldreamscape_post_meta_description');
