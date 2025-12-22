@@ -137,46 +137,6 @@ def check_css_hiding_content(deployer, theme_name, wp_path):
     
     return issues
 
-def create_front_page_template(deployer, theme_name):
-    """Create front-page.php template if missing and homepage is set to static page."""
-    print(f"🔍 Checking if front-page.php is needed...")
-    
-    theme_path = f"{deployer.remote_path}/wp-content/themes/{theme_name}"
-    front_page_path = f"{theme_path}/front-page.php"
-    
-    # Check if index.php exists to use as base
-    index_path = f"{theme_path}/index.php"
-    if not deployer.file_exists(index_path):
-        print("  ❌ index.php not found - cannot create front-page.php")
-        return False
-    
-    # Read index.php content
-    index_content = deployer.read_file(index_path)
-    if not index_content:
-        print("  ❌ Could not read index.php")
-        return False
-    
-    # Create front-page.php based on index.php
-    front_page_content = f"""<?php
-/**
- * Front Page Template
- *
- * This template is used when a static page is set as the homepage.
- * Based on index.php to ensure content displays correctly.
- *
- * @package FreeRideInvestor
- */
-
-{index_content}
-"""
-    
-    # Write front-page.php
-    if deployer.write_file(front_page_path, front_page_content):
-        print(f"  ✅ Created front-page.php")
-        return True
-    else:
-        print(f"  ❌ Failed to create front-page.php")
-        return False
 
 def fix_homepage_settings(deployer, wp_path):
     """Fix homepage settings to use blog posts if static page is empty."""
@@ -226,28 +186,42 @@ def main():
         sys.exit(1)
     
     try:
+        # Get WordPress path
+        wp_path = deployer.remote_path
+        if not wp_path:
+            wp_path = f"domains/freerideinvestor.com/public_html"
+        
+        # Ensure absolute path
+        if not wp_path.startswith('/'):
+            username = site_config.get('username') or site_config.get('sftp', {}).get('username', '')
+            if username:
+                wp_path = f"/home/{username}/{wp_path}"
+        
+        print(f"📁 WordPress path: {wp_path}\n")
+        
         # Check active theme
-        active_theme = check_active_theme(deployer)
-        if not active_theme:
+        active_theme = check_active_theme(deployer, wp_path)
+        if not active_theme or "error" in active_theme.lower():
             print("❌ Could not determine active theme")
+            print(f"   Result: {active_theme}")
             sys.exit(1)
         
         # Check homepage settings
-        homepage_settings = check_homepage_settings(deployer)
+        homepage_settings = check_homepage_settings(deployer, wp_path)
         print(f"\n📊 Homepage Settings:")
         print(f"   Show on front: {homepage_settings.get('show_on_front')}")
         if homepage_settings.get('page_id'):
             print(f"   Page ID: {homepage_settings.get('page_id')}")
         
         # Check template files
-        templates = check_theme_template_files(deployer, active_theme)
+        templates = check_theme_template_files(deployer, active_theme, wp_path)
         print(f"\n📊 Template Files:")
         for template, exists in templates.items():
             status = "✅" if exists else "❌"
             print(f"   {status} {template}")
         
         # Check CSS issues
-        css_issues = check_css_hiding_content(deployer, active_theme)
+        css_issues = check_css_hiding_content(deployer, active_theme, wp_path)
         if css_issues:
             print(f"\n⚠️  CSS Issues Found:")
             for issue in css_issues:
@@ -257,11 +231,9 @@ def main():
         
         # Fix homepage settings if needed
         print(f"\n🔧 Applying fixes...")
-        homepage_fixed = fix_homepage_settings(deployer)
+        homepage_fixed = fix_homepage_settings(deployer, wp_path)
         
-        # Create front-page.php if needed
-        if homepage_settings.get("show_on_front") == "page" and not templates.get("front-page.php"):
-            create_front_page_template(deployer, active_theme)
+        # Note: front-page.php creation removed - will use index.php if homepage is set to posts
         
         # Summary
         print(f"\n{'='*60}")
@@ -274,4 +246,10 @@ def main():
         if not css_issues:
             print("✅ No CSS hiding issues")
         
-        print("\n✅ Fix complete. Please verif
+        print("\n✅ Fix complete. Please verify the site displays content correctly.")
+        
+    finally:
+        deployer.disconnect()
+
+if __name__ == "__main__":
+    main()
