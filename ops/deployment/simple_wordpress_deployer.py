@@ -181,18 +181,56 @@ class SimpleWordPressDeployer:
         
         if not all([host, username, password]):
             print(f"❌ Incomplete SFTP credentials for {self.site_key}")
-            print("   Tried: HOSTINGER_* env vars and site config")
+            print("   📋 Credential Loading Diagnostics:")
+            print(f"      - HOSTINGER_HOST: {'✅ Set' if host else '❌ Missing'}")
+            print(f"      - HOSTINGER_USER: {'✅ Set' if username else '❌ Missing'}")
+            print(f"      - HOSTINGER_PASS: {'✅ Set' if password else '❌ Missing'}")
+            print(f"      - HOSTINGER_PORT: {port if port else '❌ Missing (default: 65002)'}")
+            print("   📋 Configuration Sources Checked:")
+            print("      1. Environment variables (.env file)")
+            if 'sftp' in self.site_config:
+                sftp_config = self.site_config.get('sftp', {})
+                print(f"      2. site_configs.json['{self.site_key}']['sftp']")
+                print(f"         - host: {'✅ Set' if sftp_config.get('host') else '❌ Missing'}")
+                print(f"         - username: {'✅ Set' if sftp_config.get('username') else '❌ Missing'}")
+                print(f"         - password: {'✅ Set' if sftp_config.get('password') else '❌ Missing'}")
+            else:
+                print(f"      2. sites.json['{self.site_key}']")
+                print(f"         - host: {'✅ Set' if self.site_config.get('host') else '❌ Missing'}")
+                print(f"         - username: {'✅ Set' if self.site_config.get('username') else '❌ Missing'}")
+                print(f"         - password: {'✅ Set' if self.site_config.get('password') else '❌ Missing'}")
+            print("   💡 Solution: Set HOSTINGER_* environment variables in .env file or add credentials to site config")
             return False
         
         self.remote_path = remote_path
         
         try:
+            print(f"🔌 Connecting to {host}:{port} as {username}...")
             self.transport = paramiko.Transport((host, port))
             self.transport.connect(username=username, password=password)
             self.sftp = paramiko.SFTPClient.from_transport(self.transport)
+            print(f"✅ Connected successfully to {host}:{port}")
             return True
+        except paramiko.AuthenticationException as e:
+            print(f"❌ Authentication failed for {self.site_key}")
+            print(f"   Error: {str(e)}")
+            print(f"   Details: Invalid username or password for {username}@{host}:{port}")
+            print("   💡 Solution: Verify credentials in .env file or site config")
+            return False
+        except paramiko.SSHException as e:
+            print(f"❌ SSH connection error for {self.site_key}")
+            print(f"   Error: {str(e)}")
+            print(f"   Details: Failed to establish SSH connection to {host}:{port}")
+            print("   💡 Solution: Check host/port, firewall rules, and network connectivity")
+            return False
         except Exception as e:
-            print(f"❌ Connection error: {e}")
+            print(f"❌ Connection error for {self.site_key}")
+            print(f"   Error Type: {type(e).__name__}")
+            print(f"   Error Message: {str(e)}")
+            print(f"   Connection Details: {username}@{host}:{port}")
+            import traceback
+            print(f"   Full Traceback:")
+            traceback.print_exc()
             return False
     
     def deploy_file(self, local_path: Path, remote_path: str = None) -> bool:
@@ -253,9 +291,30 @@ class SimpleWordPressDeployer:
             # Upload file (use absolute path)
             self.sftp.put(str(local_path), full_remote_path)
             return True
+        except paramiko.SSHException as e:
+            print(f"❌ SFTP upload error for {self.site_key}")
+            print(f"   Error Type: SSHException")
+            print(f"   Error Message: {str(e)}")
+            print(f"   Local File: {local_path}")
+            print(f"   Remote Path: {full_remote_path}")
+            print("   💡 Solution: Check file permissions, disk space, and remote path validity")
+            return False
+        except IOError as e:
+            print(f"❌ SFTP file I/O error for {self.site_key}")
+            print(f"   Error Type: IOError")
+            print(f"   Error Message: {str(e)}")
+            print(f"   Local File: {local_path}")
+            print(f"   Remote Path: {full_remote_path}")
+            print("   💡 Solution: Verify local file exists and is readable, check remote directory permissions")
+            return False
         except Exception as e:
-            print(f"❌ Upload error: {e}")
+            print(f"❌ SFTP upload error for {self.site_key}")
+            print(f"   Error Type: {type(e).__name__}")
+            print(f"   Error Message: {str(e)}")
+            print(f"   Local File: {local_path}")
+            print(f"   Remote Path: {full_remote_path}")
             import traceback
+            print(f"   Full Traceback:")
             traceback.print_exc()
             return False
     
@@ -295,6 +354,10 @@ class SimpleWordPressDeployer:
             
             if not all([host, username, password]):
                 print(f"⚠️  Incomplete SSH credentials for {self.site_key}")
+                print("   📋 Credential Loading Diagnostics:")
+                print(f"      - HOSTINGER_HOST: {'✅ Set' if host else '❌ Missing'}")
+                print(f"      - HOSTINGER_USER: {'✅ Set' if username else '❌ Missing'}")
+                print(f"      - HOSTINGER_PASS: {'✅ Set' if password else '❌ Missing'}")
                 return ""
             
             ssh = paramiko.SSHClient()
@@ -311,9 +374,99 @@ class SimpleWordPressDeployer:
                 print(f"⚠️  Command warning: {error[:200]}")
             
             return output if output else error
-        except Exception as e:
-            print(f"❌ SSH command error: {e}")
+        except paramiko.AuthenticationException as e:
+            print(f"❌ SSH authentication failed for {self.site_key}")
+            print(f"   Error: {str(e)}")
+            print(f"   Details: Invalid username or password for {username}@{host}:{port}")
             return ""
+        except paramiko.SSHException as e:
+            print(f"❌ SSH connection error for {self.site_key}")
+            print(f"   Error: {str(e)}")
+            print(f"   Command: {command}")
+            print(f"   Connection: {username}@{host}:{port}")
+            return ""
+        except Exception as e:
+            print(f"❌ SSH command error for {self.site_key}")
+            print(f"   Error Type: {type(e).__name__}")
+            print(f"   Error Message: {str(e)}")
+            print(f"   Command: {command}")
+            print(f"   Connection: {username}@{host}:{port}")
+            import traceback
+            traceback.print_exc()
+            return ""
+    
+    def check_php_syntax(self, remote_file_path: str) -> Dict[str, any]:
+        """
+        Check PHP file syntax and return detailed error information with line numbers.
+        
+        Args:
+            remote_file_path: Path to PHP file on remote server
+            
+        Returns:
+            Dictionary with syntax check results including line numbers
+        """
+        if not self.sftp:
+            return {
+                "valid": False,
+                "error": "Not connected. Call connect() first.",
+                "line_number": None,
+                "error_message": None
+            }
+        
+        try:
+            command = f"php -l {remote_file_path} 2>&1"
+            result = self.execute_command(command)
+            
+            # Parse PHP syntax error output
+            if "No syntax errors" in result or "syntax is OK" in result:
+                return {
+                    "valid": True,
+                    "error": None,
+                    "line_number": None,
+                    "error_message": None,
+                    "output": result.strip()
+                }
+            
+            # Extract line number from error message
+            # PHP error format: "Parse error: ... in /path/to/file.php on line N"
+            import re
+            line_match = re.search(r'on line (\d+)', result, re.IGNORECASE)
+            line_number = int(line_match.group(1)) if line_match else None
+            
+            # Extract error type and message
+            error_type_match = re.search(r'(Parse error|Fatal error|Warning|Notice):\s*(.+?)(?:\s+in\s|$)', result, re.IGNORECASE | re.DOTALL)
+            error_type = error_type_match.group(1) if error_type_match else "Unknown error"
+            error_message = error_type_match.group(2).strip() if error_type_match else result.strip()
+            
+            # Get context around error line if line number found
+            context = None
+            if line_number:
+                try:
+                    # Read lines around the error (5 lines before and after)
+                    start_line = max(1, line_number - 5)
+                    end_line = line_number + 5
+                    context_command = f"sed -n '{start_line},{end_line}p' {remote_file_path}"
+                    context = self.execute_command(context_command)
+                except Exception:
+                    context = None
+            
+            return {
+                "valid": False,
+                "error": error_type,
+                "line_number": line_number,
+                "error_message": error_message,
+                "output": result.strip(),
+                "context": context,
+                "file_path": remote_file_path
+            }
+        except Exception as e:
+            return {
+                "valid": False,
+                "error": f"Syntax check failed: {str(e)}",
+                "line_number": None,
+                "error_message": str(e),
+                "output": None
+            }
     
     def disconnect(self):
         """Disconnect from server."""
