@@ -122,11 +122,13 @@ function add_missing_image_alt($attr, $attachment = null) {
 add_filter(\'wp_get_attachment_image_attributes\', \'add_missing_image_alt\', 10, 2);
 '''
         
-        # Add to functions.php
-        if '?>' in functions_content:
-            new_content = functions_content.replace('?>', alt_function + '\n?>')
+        # Add to functions.php - append at the end (before closing tag if exists)
+        if functions_content.rstrip().endswith('?>'):
+            # Remove closing tag, add function, then add closing tag back
+            new_content = functions_content.rstrip()[:-2].rstrip() + '\n' + alt_function + '\n?>'
         else:
-            new_content = functions_content + '\n' + alt_function
+            # No closing tag, just append
+            new_content = functions_content.rstrip() + '\n' + alt_function
         
         # Save locally
         local_file = Path(__file__).parent.parent / "temp" / f"{site_name}_functions_alt_simple.php"

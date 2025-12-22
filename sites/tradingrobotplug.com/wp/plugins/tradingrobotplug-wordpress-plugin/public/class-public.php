@@ -19,7 +19,16 @@ class Public_Display {
     }
 
     public function enqueue_scripts() {
-        wp_enqueue_script($this->plugin_name, TRADINGROBOTPLUG_PLUGIN_URL . 'public/js/public.js', ['jquery'], $this->version, false);
+        // Enqueue Chart.js library
+        wp_enqueue_script('chart-js', 'https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js', [], '3.9.1', true);
+        
+        wp_enqueue_script($this->plugin_name, TRADINGROBOTPLUG_PLUGIN_URL . 'public/js/public.js', ['jquery', 'chart-js'], $this->version, true);
+        
+        // Localize script with REST API URL
+        wp_localize_script($this->plugin_name, 'tradingRobotPlug', [
+            'restUrl' => rest_url('tradingrobotplug/v1/'),
+            'nonce' => wp_create_nonce('wp_rest'),
+        ]);
     }
 
     public function render_pricing_shortcode($atts) {

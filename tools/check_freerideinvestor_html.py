@@ -37,4 +37,11 @@ if body_start > 0:
             print("\n❌ No <main> tag found in body")
             print("First 1000 chars of body:")
             print(body[:1000])
+            print("\nSearching for content...")
+            if 'section' in body.lower():
+                print("✅ Found 'section'")
+            if 'article' in body.lower():
+                print("✅ Found 'article'")
+            div_count = body.lower().count('<div')
+            print(f"Divs found: {div_count}")
 

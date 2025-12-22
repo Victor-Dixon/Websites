@@ -57,6 +57,59 @@ class Trading_Robot_Plug {
         add_shortcode('trading_robot_performance', [$plugin_public, 'render_performance_shortcode']);
         add_shortcode('trading_robot_marketplace', [$plugin_public, 'render_marketplace_shortcode']);
         add_shortcode('trading_robot_dashboard', [$plugin_public, 'render_dashboard_shortcode']);
+        
+        // Register REST API endpoints
+        add_action('rest_api_init', [$this, 'register_rest_routes']);
+    }
+    
+    public function register_rest_routes() {
+        register_rest_route('tradingrobotplug/v1', '/chart-data', [
+            'methods' => 'GET',
+            'callback' => [$this, 'get_chart_data'],
+            'permission_callback' => '__return_true', // Public endpoint for now
+        ]);
+    }
+    
+    public function get_chart_data($request) {
+        try {
+            $user_id = get_current_user_id();
+            $period = $request->get_param('period') ?: 'all_time';
+            
+            // Get performance data (works for both logged-in and non-logged-in users)
+            $performance_tracker = new Performance_Tracker();
+            $metrics = $performance_tracker->get_user_performance($user_id, $period);
+            
+            // Generate mock chart data (30 days of performance)
+            $chart_data = [
+                'labels' => [],
+                'datasets' => [
+                    [
+                        'label' => 'Cumulative P&L',
+                        'data' => [],
+                        'borderColor' => '#007bff',
+                        'backgroundColor' => 'rgba(0, 123, 255, 0.1)',
+                        'fill' => true,
+                        'tension' => 0.4
+                    ]
+                ]
+            ];
+            
+            // Generate 30 days of mock data
+            $base_pnl = isset($metrics['total_pnl']) && $metrics['total_pnl'] > 0 ? $metrics['total_pnl'] / 30 : 100;
+            $cumulative = 0;
+            for ($i = 29; $i >= 0; $i--) {
+                $date = date('M j', strtotime("-$i days"));
+                $daily_pnl = $base_pnl + (rand(-50, 50));
+                $cumulative += $daily_pnl;
+                
+                $chart_data['labels'][] = $date;
+                $chart_data['datasets'][0]['data'][] = round($cumulative, 2);
+            }
+            
+            return rest_ensure_response($chart_data);
+        } catch (\Exception $e) {
+            return new \WP_Error('chart_data_error', 'Failed to generate chart data: ' . $e->getMessage(), ['status' => 500]);
+        }
     }
 
     public function run() {
