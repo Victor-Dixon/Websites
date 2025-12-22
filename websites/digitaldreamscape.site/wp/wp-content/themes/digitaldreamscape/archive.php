@@ -62,64 +62,71 @@ get_header(); ?>
                 while (have_posts()) :
                     the_post();
                     ?>
-                    <article id="post-<?php the_ID(); ?>" <?php post_class('blog-post-card dreamscape-episode-card'); ?>>
-                        <div class="episode-marker">[EPISODE]</div>
+                    <article id="post-<?php the_ID(); ?>" <?php post_class('blog-post-card dreamscape-episode-card face-card'); ?>>
+                        <!-- Face Card Header - Author Avatar Prominent -->
+                        <div class="face-card-header">
+                            <div class="face-card-avatar-wrapper">
+                                <div class="face-card-avatar-frame">
+                                    <?php echo get_avatar(get_the_author_meta('ID'), 120); ?>
+                                    <div class="avatar-glow"></div>
+                                </div>
+                                <div class="face-card-identity">
+                                    <div class="face-card-name"><?php the_author(); ?></div>
+                                    <div class="face-card-title">[Shadow Sovereign]</div>
+                                </div>
+                            </div>
+                            <div class="face-card-badges">
+                                <span class="episode-marker">[EPISODE]</span>
+                                <span class="canon-badge">[CANON]</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Featured Image or Gradient Background -->
                         <?php if (has_post_thumbnail()) : ?>
-                            <div class="post-card-image dreamscape-episode-image">
+                            <div class="face-card-image">
                                 <a href="<?php the_permalink(); ?>">
-                                    <?php the_post_thumbnail('medium_large', array('class' => 'card-img')); ?>
-                                    <div class="episode-overlay">
-                                        <span class="episode-badge">[CANON]</span>
-                                    </div>
+                                    <?php the_post_thumbnail('large', array('class' => 'face-card-img')); ?>
+                                    <div class="face-card-image-overlay"></div>
                                 </a>
                             </div>
                         <?php else : ?>
-                            <div class="post-card-image dreamscape-episode-image dreamscape-default-episode">
+                            <div class="face-card-image face-card-gradient">
                                 <a href="<?php the_permalink(); ?>">
-                                    <div class="episode-pattern"></div>
-                                    <div class="episode-overlay">
-                                        <span class="episode-badge">[CANON]</span>
-                                    </div>
+                                    <div class="face-card-pattern"></div>
+                                    <div class="face-card-image-overlay"></div>
                                 </a>
                             </div>
                         <?php endif; ?>
                         
-                        <div class="post-card-content dreamscape-episode-content">
-                            <div class="post-card-meta dreamscape-episode-meta">
-                                <time datetime="<?php echo get_the_date('c'); ?>" class="post-card-date episode-timestamp">
+                        <!-- Face Card Content -->
+                        <div class="face-card-content">
+                            <div class="face-card-meta">
+                                <time datetime="<?php echo get_the_date('c'); ?>" class="face-card-date">
                                     [TIMELINE] <?php echo get_the_date('M j, Y'); ?>
                                 </time>
                                 <?php
                                 $categories = get_the_category();
                                 if (!empty($categories)) {
                                     $category = $categories[0];
-                                    echo '<a href="' . esc_url(get_category_link($category->term_id)) . '" class="post-card-category episode-questline">[QUESTLINE] ' . esc_html($category->name) . '</a>';
+                                    echo '<a href="' . esc_url(get_category_link($category->term_id)) . '" class="face-card-questline">[QUESTLINE] ' . esc_html($category->name) . '</a>';
                                 } else {
-                                    echo '<span class="post-card-category episode-questline">[QUESTLINE] Uncategorized</span>';
+                                    echo '<span class="face-card-questline">[QUESTLINE] Uncategorized</span>';
                                 }
                                 ?>
                             </div>
                             
-                            <h2 class="post-card-title dreamscape-episode-title">
+                            <h2 class="face-card-title">
                                 <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
                             </h2>
                             
-                            <div class="post-card-excerpt dreamscape-episode-excerpt">
+                            <div class="face-card-excerpt">
                                 <?php the_excerpt(); ?>
                             </div>
                             
-                            <div class="post-card-footer dreamscape-episode-footer">
-                                <div class="post-card-author episode-identity">
-                                    <?php echo get_avatar(get_the_author_meta('ID'), 40); ?>
-                                    <div class="episode-identity-info">
-                                        <span class="author-name"><?php the_author(); ?></span>
-                                        <span class="episode-identity-title">[Shadow Sovereign]</span>
-                                    </div>
-                                </div>
-                                <a href="<?php the_permalink(); ?>" class="post-card-link episode-link">
-                                    [ENTER EPISODE] →
-                                </a>
-                            </div>
+                            <a href="<?php the_permalink(); ?>" class="face-card-cta">
+                                <span>[ENTER EPISODE]</span>
+                                <span class="cta-arrow">→</span>
+                            </a>
                         </div>
                     </article>
                     <?php

@@ -1132,7 +1132,303 @@ body {
     padding: 0 1rem;
 }
 
-.blog-post-card.dreamscape-episode-card {
+/* Face Card Design - Modern, Engaging Blog Cards */
+.blog-post-card.dreamscape-episode-card.face-card {
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border: 1px solid rgba(99, 102, 241, 0.1);
+    background: linear-gradient(180deg, #ffffff 0%, #fafbff 100%);
+}
+
+.face-card:hover {
+    box-shadow: 0 20px 60px rgba(99, 102, 241, 0.15), 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-12px) scale(1.02);
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+/* Face Card Header - Prominent Author Avatar */
+.face-card-header {
+    padding: 2rem 2rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background: linear-gradient(180deg, rgba(99, 102, 241, 0.03) 0%, transparent 100%);
+    border-bottom: 1px solid rgba(99, 102, 241, 0.08);
+}
+
+.face-card-avatar-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex: 1;
+}
+
+.face-card-avatar-frame {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+}
+
+.face-card-avatar-frame img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--white);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2), 0 0 0 4px rgba(99, 102, 241, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 2;
+}
+
+.face-card:hover .face-card-avatar-frame img {
+    transform: scale(1.1);
+    box-shadow: 0 12px 32px rgba(99, 102, 241, 0.3), 0 0 0 6px rgba(99, 102, 241, 0.15);
+}
+
+.avatar-glow {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 1;
+    filter: blur(12px);
+}
+
+.face-card:hover .avatar-glow {
+    opacity: 0.6;
+}
+
+.face-card-identity {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.face-card-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+}
+
+.face-card-title {
+    font-size: 0.75rem;
+    color: var(--primary-color);
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.face-card-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-end;
+}
+
+.face-card-badges .episode-marker {
+    background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
+    color: var(--white);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.face-card-badges .canon-badge {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary-color);
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+/* Face Card Image */
+.face-card-image {
+    position: relative;
+    width: 100%;
+    height: 280px;
+    overflow: hidden;
+    background: var(--gradient-1);
+}
+
+.face-card-gradient {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+}
+
+.face-card-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.05) 20px, rgba(255,255,255,0.05) 40px);
+    opacity: 0.4;
+}
+
+.face-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.face-card:hover .face-card-img {
+    transform: scale(1.15);
+}
+
+.face-card-image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.3) 100%);
+    opacity: 0.6;
+    transition: opacity 0.4s ease;
+}
+
+.face-card:hover .face-card-image-overlay {
+    opacity: 0.8;
+}
+
+/* Face Card Content */
+.face-card-content {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 1rem;
+}
+
+.face-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 0.875rem;
+}
+
+.face-card-date {
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.face-card-questline {
+    padding: 0.5rem 1.25rem;
+    background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+.face-card-questline:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+}
+
+.face-card-title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin: 0;
+}
+
+.face-card-title a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: block;
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.face-card-title a:hover {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #8b5cf6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.face-card-excerpt {
+    color: #475569;
+    line-height: 1.7;
+    font-size: 1rem;
+    flex: 1;
+}
+
+.face-card-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+    margin-top: 0.5rem;
+}
+
+.face-card-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+    background: linear-gradient(135deg, #8b5cf6, #ec4899);
+}
+
+.face-card-cta .cta-arrow {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.face-card-cta:hover .cta-arrow {
+    transform: translateX(4px);
+}
+
+/* Legacy episode card styles for backward compatibility */
+.blog-post-card.dreamscape-episode-card:not(.face-card) {
     background: var(--white);
     border-radius: 20px;
     overflow: hidden;
@@ -1470,6 +1766,83 @@ body {
 /* ============================================
    RESPONSIVE STYLES
    ============================================ */
+/* Face Card Responsive Styles */
+@media (max-width: 768px) {
+    .face-card-header {
+        padding: 1.5rem 1.5rem 1rem;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .face-card-avatar-wrapper {
+        width: 100%;
+    }
+    
+    .face-card-avatar-frame {
+        width: 64px;
+        height: 64px;
+    }
+    
+    .face-card-name {
+        font-size: 1.1rem;
+    }
+    
+    .face-card-badges {
+        flex-direction: row;
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .face-card-image {
+        height: 220px;
+    }
+    
+    .face-card-content {
+        padding: 1.5rem;
+    }
+    
+    .face-card-title {
+        font-size: 1.5rem;
+    }
+    
+    .blog-posts-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .face-card-header {
+        padding: 1.25rem 1.25rem 0.75rem;
+    }
+    
+    .face-card-avatar-frame {
+        width: 56px;
+        height: 56px;
+    }
+    
+    .face-card-name {
+        font-size: 1rem;
+    }
+    
+    .face-card-image {
+        height: 200px;
+    }
+    
+    .face-card-content {
+        padding: 1.25rem;
+    }
+    
+    .face-card-title {
+        font-size: 1.25rem;
+    }
+    
+    .face-card-cta {
+        padding: 0.875rem 1.25rem;
+        font-size: 0.8rem;
+    }
+}
+
 @media (max-width: 768px) {
     .mobile-menu-toggle {
         display: flex;
