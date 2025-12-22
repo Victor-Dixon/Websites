@@ -157,7 +157,7 @@
 - 🔒 **HTTPS Enabled:** 10/10 sites (100%)
 - ⚠️ **Total Issues:** 18 issues (SEO, performance, security)
 - 🐌 **Performance:** 1 site slow (prismblossom.online: 16.61s)
-- ❌ **Down:** 1 site (freerideinvestor.com - connection error)
+- ❌ **Down:** 1 site (freerideinvestor.com - HTTP 500 error, in progress)
 
 **Priority Fixes by Category:**
 
@@ -176,7 +176,7 @@
 - [ ] **MEDIUM**: Review and add other security headers (X-Frame-Options, X-Content-Type-Options, CSP) where missing [Agent-7 + Agent-3 COORDINATING] ETA: 2025-12-24
 
 #### Accessibility Issues
-- [ ] **CRITICAL**: Investigate and fix freerideinvestor.com HTTP 500 error - 🔄 IN PROGRESS by Agent-1 (2025-12-22) - Root causes identified: 1) wp-config.php syntax error (fixed - duplicate debug blocks removed), 2) Theme functions.php syntax error on line 209 (function/variable names with hyphens - partially fixed, object property access operators need correction). Site now shows WordPress error page (2653 bytes) instead of blank 500. Plugins disabled, database connection verified. Tools created: diagnose_freerideinvestor_500.py, diagnose_freerideinvestor_500_http.py, fix_freerideinvestor_500.py, fix_wp_config_syntax.py, fix_freerideinvestor_theme_syntax.py, test_freerideinvestor_database.py. [Agent-1 IN PROGRESS] ETA: 2025-12-22
+- [ ] **CRITICAL**: Investigate and fix freerideinvestor.com HTTP 500 error - 🔄 IN PROGRESS by Agent-1 (2025-12-22) - Root causes identified: 1) wp-config.php syntax error (✅ FIXED - duplicate debug blocks removed), 2) Theme functions.php syntax errors on lines 209-230 (function/variable names with hyphens - 🔄 PARTIALLY FIXED, lines 223 and 230 still need fixing: `$mcp-test-page_page` → `$mcp_test_page_page`). Site now shows WordPress error page (2653 bytes) instead of blank 500. Plugins disabled, database connection verified. Tools created: diagnose_freerideinvestor_500.py, diagnose_freerideinvestor_500_http.py, fix_freerideinvestor_500.py, fix_wp_config_syntax.py, fix_freerideinvestor_theme_syntax.py, test_freerideinvestor_database.py, switch_freerideinvestor_theme.py. [Agent-1 IN PROGRESS] ETA: 2025-12-22
 
 **Site-Specific Findings:**
 
@@ -184,7 +184,7 @@
 - **crosbyultimateevents.com**: ✅ Accessible, 1.13s load, 25.61KB - Title too short (24 chars), missing meta description, 2 H1 headings
 - **houstonsipqueen.com**: ✅ Accessible, 1.04s load, 77.62KB - Title too short (19 chars), missing meta description, 2 H1 headings
 - **digitaldreamscape.site**: ✅ Accessible, 1.06s load, 21.66KB - Title too short (22 chars), missing meta description
-- **freerideinvestor.com**: ❌ **DOWN** - Connection error, site not responding
+- **freerideinvestor.com**: ❌ **HTTP 500** - WordPress error page (syntax errors in theme functions.php being fixed)
 - **prismblossom.online**: ✅ Accessible, **16.61s load (SLOW)**, 41.94KB - Title too short (26 chars), missing meta description, 2 H1 headings, **CRITICAL: Performance optimization needed**
 - **southwestsecret.com**: ✅ Accessible, 1.17s load, 25.98KB - Missing meta description (title OK)
 - **tradingrobotplug.com**: ✅ Accessible, 0.96s load, 20.23KB - Title too short (20 chars), missing meta description, 2 H1 headings
@@ -218,7 +218,7 @@
 
 - [ ] **P0**: Optimize /audit, /scoreboard, /intake as lead magnets with landing pages + thank-you pages - dadudekc.com [Agent-7] ETA: 2025-12-21
 - [ ] **P0**: Set up email welcome sequence + nurture campaign (5 emails over 2 weeks) - dadudekc.com [Agent-7] ETA: 2025-12-24
-- [ ] **P0**: Implement booking calendar (Calendly) + payment processing (Stripe) for sprint deposits - dadudekc.com [Agent-7] ETA: 2025-12-25
+- [ ] **P0**: Implement booking calendar (Calendly) + payment processing (Stripe) for sprint deposits - dadudekc.com [Applying Agent-7] ETA: 2025-12-25
 - [ ] **P0**: Define positioning statement + offer ladder + ICP with pain/outcome on homepage - dadudekc.com [Agent-7] ETA: 2025-12-22
 - [ ] **P0**: Reduce intake form friction (3-4 fields) + add phone + chat widget - dadudekc.com [Agent-7] ETA: 2025-12-21
 - [ ] **P0**: Add pricing transparency + testimonials + case studies + trust badges - dadudekc.com [Agent-7] ETA: 2025-12-22
@@ -330,3 +330,17 @@
 **Generated:** 2025-12-18 from `tools/check_toolbelt_health.py`  
 **Status:** All tools healthy (100% pass rate) - All broken tools fixed  
 **Reference:** `docs/toolbelt_health_check_tasks.md` for full details
+
+## INFRASTRUCTURE IMPROVEMENTS & AUTOMATION
+
+**Generated:** 2025-12-22 from infrastructure analysis  
+**Status:** Opportunities identified for automation and tooling improvements
+
+### WordPress Deployment Infrastructure
+- [ ] **MEDIUM**: Enhance SimpleWordPressDeployer error reporting - Add detailed error messages for SSH/SFTP failures, include line numbers in syntax error reports, improve credential loading diagnostics [Agent-1] ETA: 2025-12-23
+- [ ] **MEDIUM**: Create WordPress site health monitoring tool - Automated daily health checks (uptime, response time, SSL validity, WordPress updates, plugin/theme conflicts), alert on issues, generate health reports [Agent-1 + Agent-3 COORDINATING] ETA: 2025-12-24
+- [ ] **LOW**: Add retry logic to WordPress deployment tools - Implement exponential backoff for transient failures, connection retry for SSH/SFTP, improve reliability of automated deployments [Agent-1] ETA: 2025-12-25
+
+### Diagnostic & Troubleshooting Tools
+- [ ] **MEDIUM**: Create comprehensive WordPress error diagnostic tool - Automated detection of common WordPress issues (syntax errors, plugin conflicts, database issues, memory limits), generate fix recommendations, integrate with existing diagnostic tools [Agent-1] ETA: 2025-12-24
+- [ ] **LOW**: Enhance PHP syntax error detection - Improve PHP syntax checker to provide line numbers and context, detect common patterns (hyphens in identifiers, unclosed brackets), suggest fixes [Agent-1] ETA: 2025-12-26
