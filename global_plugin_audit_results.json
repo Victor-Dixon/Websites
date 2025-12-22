@@ -1,79 +1,85 @@
 {
-  "audit_date": "2025-12-22T12:47:49.762739",
+  "audit_date": "2025-12-22T12:51:03.235662",
   "websites": {
     "ariajet.site": {
-      "status": "audited",
-      "reason": "Scanned local directory",
+      "status": "audited_empty",
+      "reason": "Site directory found but no plugins detected",
       "plugins": [],
       "plugin_count": 0,
       "site_path": "ariajet.site"
     },
     "crosbyultimateevents.com": {
-      "status": "audited",
-      "reason": "Scanned local directory",
+      "status": "audited_empty",
+      "reason": "Site directory found but no plugins detected",
       "plugins": [],
       "plugin_count": 0,
       "site_path": "crosbyultimateevents.com"
     },
     "dadudekc.com": {
-      "status": "audited",
-      "reason": "Scanned local directory",
+      "status": "audited_empty",
+      "reason": "Site directory found but no plugins detected",
       "plugins": [],
       "plugin_count": 0,
       "site_path": "dadudekc.com"
     },
     "digitaldreamscape.site": {
-      "status": "audited",
-      "reason": "Scanned local directory",
+      "status": "audited_empty",
+      "reason": "Site directory found but no plugins detected",
       "plugins": [],
       "plugin_count": 0,
       "site_path": "sites/digitaldreamscape.site"
     },
     "freerideinvestor.com": {
       "status": "audited",
-      "reason": "Scanned local directory",
-      "plugins": [],
-      "plugin_count": 0,
-      "site_path": "sites/freerideinvestor.com"
+      "reason": "Plugins found",
+      "plugins": [
+        "freeride-automated-trading-plan"
+      ],
+      "plugin_count": 1,
+      "site_path": "websites/freerideinvestor.com"
     },
     "houstonsipqueen.com": {
-      "status": "audited",
-      "reason": "Scanned local directory",
+      "status": "audited_empty",
+      "reason": "Site directory found but no plugins detected",
       "plugins": [],
       "plugin_count": 0,
       "site_path": "houstonsipqueen.com"
     },
     "prismblossom.online": {
-      "status": "audited",
-      "reason": "Scanned local directory",
+      "status": "audited_empty",
+      "reason": "Site directory found but no plugins detected",
       "plugins": [],
       "plugin_count": 0,
       "site_path": "prismblossom.online"
     },
     "southwestsecret.com": {
-      "status": "audited",
-      "reason": "Scanned local directory",
+      "status": "audited_empty",
+      "reason": "Site directory found but no plugins detected",
       "plugins": [],
       "plugin_count": 0,
       "site_path": "southwestsecret.com"
     },
     "tradingrobotplug.com": {
       "status": "audited",
-      "reason": "Scanned local directory",
-      "plugins": [],
-      "plugin_count": 0,
-      "site_path": "sites/tradingrobotplug.com"
+      "reason": "Plugins found",
+      "plugins": [
+        "trading-robot-service",
+        "trp-paper-trading-stats",
+        "trp-swarm-status"
+      ],
+      "plugin_count": 3,
+      "site_path": "websites/tradingrobotplug.com"
     },
     "weareswarm.online": {
-      "status": "audited",
-      "reason": "Scanned local directory",
+      "status": "audited_empty",
+      "reason": "Site directory found but no plugins detected",
       "plugins": [],
       "plugin_count": 0,
       "site_path": "sites/weareswarm.online"
     },
     "weareswarm.site": {
-      "status": "audited",
-      "reason": "Scanned local directory",
+      "status": "audited_empty",
+      "reason": "Site directory found but no plugins detected",
       "plugins": [],
       "plugin_count": 0,
       "site_path": "websites/weareswarm.site"
@@ -82,6 +88,6 @@
   "summary": {
     "total_websites": 11,
     "websites_audited": 11,
-    "total_plugins": 0
+    "total_plugins": 4
   }
 }
