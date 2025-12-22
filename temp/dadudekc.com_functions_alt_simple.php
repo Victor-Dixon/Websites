@@ -207,32 +207,79 @@ add_action( 'init', 'twentytwentyfour_pattern_categories' );
 
 
 /**
- * Set SEO-optimized title tag (30-60 characters)
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
  */
-function set_seo_title($title) {
-    $site_title = "We Are Swarm - Autonomous Agent Civilization & AI Technology";
-    if (is_front_page() || is_home()) {
-        return $site_title;
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
     }
-    return $site_title . " | " . get_bloginfo('name');
 }
-add_filter('wp_title', 'set_seo_title', 10, 1);
-add_filter('document_title_parts', function($title_parts) {
-    $title_parts['title'] = "We Are Swarm - Autonomous Agent Civilization & AI Technology";
-    return $title_parts;
-}, 10, 1);
+add_action('send_headers', 'add_hsts_header', 1);
 
 
 /**
- * Add Strict-Transport-Security (HSTS) header
- * Forces browsers to use HTTPS for all future requests
+ * Automatically add alt text to images missing it
+ * Improves SEO and accessibility
  */
-function add_hsts_header() {
-    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
-        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+function add_missing_alt_text($attr, $attachment = null) {
+    // If alt text is missing or empty, generate from filename
+    if (empty($attr['alt']) && $attachment) {
+        $filename = get_post_meta($attachment->ID, '_wp_attached_file', true);
+        if ($filename) {
+            // Generate alt text from filename
+            $name = pathinfo($filename, PATHINFO_FILENAME);
+            $name = preg_replace('/[0-9]+[-_]?/', '', $name); // Remove leading numbers
+            $name = preg_replace('/[-_]/', ' ', $name); // Replace dashes/underscores
+            $name = preg_replace('/\s+/', ' ', $name); // Normalize spaces
+            $name = ucwords(strtolower($name)); // Capitalize words
+            $attr['alt'] = $name ?: 'Image';
+        }
     }
+    return $attr;
 }
-add_action('send_headers', 'add_hsts_header', 1);
+add_filter('wp_get_attachment_image_attributes', 'add_missing_alt_text', 10, 2);
+
+/**
+ * Add alt text to images in content (post/page content)
+ */
+function add_alt_to_content_images($content) {
+    if (empty($content)) {
+        return $content;
+    }
+    
+    // Find all img tags without alt attribute or with empty alt
+    $pattern = '/<img([^>]*?)(?:alt=["']([^"']*)["'])?([^>]*?)>/i';
+    
+    $content = preg_replace_callback($pattern, function($matches) {
+        $before_alt = $matches[1];
+        $alt_value = isset($matches[2]) ? $matches[2] : '';
+        $after_alt = $matches[3];
+        
+        // If alt is missing or empty, generate from src
+        if (empty($alt_value)) {
+            // Extract src
+            if (preg_match('/src=["']([^"']+)["']/', $matches[0], $src_match)) {
+                $src = $src_match[1];
+                $filename = basename(parse_url($src, PHP_URL_PATH));
+                $name = pathinfo($filename, PATHINFO_FILENAME);
+                $name = preg_replace('/[0-9]+[-_]?/', '', $name);
+                $name = preg_replace('/[-_]/', ' ', $name);
+                $name = preg_replace('/\s+/', ' ', $name);
+                $name = ucwords(strtolower($name));
+                $alt_value = $name ?: 'Image';
+            } else {
+                $alt_value = 'Image';
+            }
+        }
+        
+        // Reconstruct img tag with alt
+        return '<img' . $before_alt . ' alt="' . esc_attr($alt_value) . '"' . $after_alt . '>';
+    }, $content);
+    
+    return $content;
+}
+add_filter('the_content', 'add_alt_to_content_images', 10, 1);
 
 
 /**
@@ -248,7 +295,7 @@ function add_missing_alt_text($attr, $attachment = null) {
             $name = pathinfo($filename, PATHINFO_FILENAME);
             $name = preg_replace('/[0-9]+[-_]?/', '', $name); // Remove leading numbers
             $name = preg_replace('/[-_]/', ' ', $name); // Replace dashes/underscores
-            $name = preg_replace('/\s+/', ' ', $name); // Normalize spaces
+            $name = preg_replace('/\\s+/', ' ', $name); // Normalize spaces
             $name = ucwords(strtolower($name)); // Capitalize words
             $attr['alt'] = $name ?: 'Image';
         }
@@ -266,7 +313,7 @@ function add_alt_to_content_images($content) {
     }
     
     // Find all img tags without alt attribute or with empty alt
-    $pattern = '/<img([^>]*?)(?:alt=["']([^"']*)["'])?([^>]*?)>/i';
+    $pattern = '/<img([^>]*?)(?:alt=["\']([^"\']*)["\'])?([^>]*?)>/i';
     
     $content = preg_replace_callback($pattern, function($matches) {
         $before_alt = $matches[1];
@@ -276,13 +323,13 @@ function add_alt_to_content_images($content) {
         // If alt is missing or empty, generate from src
         if (empty($alt_value)) {
             // Extract src
-            if (preg_match('/src=["']([^"']+)["']/', $matches[0], $src_match)) {
+            if (preg_match('/src=["\']([^"\']+)["\']/', $matches[0], $src_match)) {
                 $src = $src_match[1];
                 $filename = basename(parse_url($src, PHP_URL_PATH));
                 $name = pathinfo($filename, PATHINFO_FILENAME);
                 $name = preg_replace('/[0-9]+[-_]?/', '', $name);
                 $name = preg_replace('/[-_]/', ' ', $name);
-                $name = preg_replace('/\s+/', ' ', $name);
+                $name = preg_replace('/\\s+/', ' ', $name);
                 $name = ucwords(strtolower($name));
                 $alt_value = $name ?: 'Image';
             } else {
@@ -300,64 +347,18 @@ add_filter('the_content', 'add_alt_to_content_images', 10, 1);
 
 
 /**
- * Automatically add alt text to images missing it
- * Improves SEO and accessibility
+ * Add missing alt text to images for SEO and accessibility
  */
-function add_missing_alt_text($attr, $attachment = null) {
-    // If alt text is missing or empty, generate from filename
+function add_missing_image_alt($attr, $attachment = null) {
     if (empty($attr['alt']) && $attachment) {
         $filename = get_post_meta($attachment->ID, '_wp_attached_file', true);
         if ($filename) {
-            // Generate alt text from filename
             $name = pathinfo($filename, PATHINFO_FILENAME);
-            $name = preg_replace('/[0-9]+[-_]?/', '', $name); // Remove leading numbers
-            $name = preg_replace('/[-_]/', ' ', $name); // Replace dashes/underscores
-            $name = preg_replace('/\\s+/', ' ', $name); // Normalize spaces
-            $name = ucwords(strtolower($name)); // Capitalize words
-            $attr['alt'] = $name ?: 'Image';
+            $name = str_replace(array('-', '_'), ' ', $name);
+            $name = ucwords(strtolower(trim($name)));
+            $attr['alt'] = $name ? $name : 'Image';
         }
     }
     return $attr;
 }
-add_filter('wp_get_attachment_image_attributes', 'add_missing_alt_text', 10, 2);
-
-/**
- * Add alt text to images in content (post/page content)
- */
-function add_alt_to_content_images($content) {
-    if (empty($content)) {
-        return $content;
-    }
-    
-    // Find all img tags without alt attribute or with empty alt
-    $pattern = '/<img([^>]*?)(?:alt=["\']([^"\']*)["\'])?([^>]*?)>/i';
-    
-    $content = preg_replace_callback($pattern, function($matches) {
-        $before_alt = $matches[1];
-        $alt_value = isset($matches[2]) ? $matches[2] : '';
-        $after_alt = $matches[3];
-        
-        // If alt is missing or empty, generate from src
-        if (empty($alt_value)) {
-            // Extract src
-            if (preg_match('/src=["\']([^"\']+)["\']/', $matches[0], $src_match)) {
-                $src = $src_match[1];
-                $filename = basename(parse_url($src, PHP_URL_PATH));
-                $name = pathinfo($filename, PATHINFO_FILENAME);
-                $name = preg_replace('/[0-9]+[-_]?/', '', $name);
-                $name = preg_replace('/[-_]/', ' ', $name);
-                $name = preg_replace('/\\s+/', ' ', $name);
-                $name = ucwords(strtolower($name));
-                $alt_value = $name ?: 'Image';
-            } else {
-                $alt_value = 'Image';
-            }
-        }
-        
-        // Reconstruct img tag with alt
-        return '<img' . $before_alt . ' alt="' . esc_attr($alt_value) . '"' . $after_alt . '>';
-    }, $content);
-    
-    return $content;
-}
-add_filter('the_content', 'add_alt_to_content_images', 10, 1);
+add_filter('wp_get_attachment_image_attributes', 'add_missing_image_alt', 10, 2);
