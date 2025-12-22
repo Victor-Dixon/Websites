@@ -142,11 +142,15 @@ def monitor_site_health(site_name: str, site_config: Dict) -> Dict:
     """Monitor health for a single site."""
     url = site_config.get('url', '')
     if not url:
-        return {
-            "site": site_name,
-            "status": "ERROR",
-            "error": "No URL configured"
-        }
+        # Try to construct URL from site name
+        if site_name and '.' in site_name:
+            url = f"https://{site_name}"
+        else:
+            return {
+                "site": site_name,
+                "status": "ERROR",
+                "error": "No URL configured and cannot construct from site name"
+            }
     
     health = {
         "site": site_name,
