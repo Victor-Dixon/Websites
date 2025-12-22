@@ -46,8 +46,8 @@ function crosbyultimateevents_scripts()
     // Enqueue theme stylesheet
     wp_enqueue_style('crosbyultimateevents-style', get_stylesheet_uri(), array(), '1.0.0');
 
-    // Enqueue theme JavaScript (if needed)
-    // wp_enqueue_script('crosbyultimateevents-script', get_template_directory_uri() . '/js/main.js', array('jquery'), '1.0.0', true);
+    // Enqueue theme JavaScript
+    wp_enqueue_script('crosbyultimateevents-portfolio-filter', get_template_directory_uri() . '/js/portfolio-filter.js', array(), '1.0.0', true);
 }
 add_action('wp_enqueue_scripts', 'crosbyultimateevents_scripts');
 
@@ -148,13 +148,16 @@ add_action('after_switch_theme', 'crosbyultimateevents_create_consultation_page'
  */
 function crosbyultimateevents_handle_contact_form()
 {
-    // Only process on contact page
-    if (!is_page('contact')) {
+    // Process on contact page or consultation page
+    if (!is_page('contact') && !is_page('consultation')) {
         return;
     }
 
-    // Check if form was submitted
-    if (!isset($_POST['contact_nonce']) || !wp_verify_nonce($_POST['contact_nonce'], 'contact_form')) {
+    // Check if form was submitted (contact form or consultation form)
+    $nonce_field = isset($_POST['contact_nonce']) ? 'contact_nonce' : (isset($_POST['consultation_nonce']) ? 'consultation_nonce' : null);
+    $nonce_action = isset($_POST['contact_nonce']) ? 'contact_form' : (isset($_POST['consultation_nonce']) ? (isset($_POST['front_page_consultation']) ? 'front_page_consultation' : 'consultation_request') : null);
+    
+    if (!$nonce_field || !wp_verify_nonce($_POST[$nonce_field], $nonce_action)) {
         return;
     }
 
@@ -163,12 +166,12 @@ function crosbyultimateevents_handle_contact_form()
         return; // Spam detected
     }
 
-    // Sanitize and validate input
-    $name = sanitize_text_field($_POST['contact_name'] ?? '');
-    $email = sanitize_email($_POST['contact_email'] ?? '');
-    $phone = sanitize_text_field($_POST['contact_phone'] ?? '');
-    $subject = sanitize_text_field($_POST['contact_subject'] ?? '');
-    $message = sanitize_textarea_field($_POST['contact_message'] ?? '');
+    // Sanitize and validate input (handle both contact and consultation forms)
+    $name = sanitize_text_field($_POST['contact_name'] ?? $_POST['name'] ?? $_POST['first_name'] . ' ' . ($_POST['last_name'] ?? ''));
+    $email = sanitize_email($_POST['contact_email'] ?? $_POST['email'] ?? '');
+    $phone = sanitize_text_field($_POST['contact_phone'] ?? $_POST['phone'] ?? '');
+    $subject = sanitize_text_field($_POST['contact_subject'] ?? $_POST['event_type'] ?? '');
+    $message = sanitize_textarea_field($_POST['contact_message'] ?? $_POST['message'] ?? '');
 
     // Validation
     $errors = array();

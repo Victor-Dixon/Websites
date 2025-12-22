@@ -10,12 +10,14 @@
 - **auto_deploy_hook.py** - Auto-deployment hook for git commits
 - **deploy_all_websites.py** - Deploy to all registered websites
 - **deploy_website_fixes.py** - Deploy fixes and updates
+- **deploy_and_activate_themes.py** - Deploy and activate WordPress themes automatically
 
 ### WordPress Management
 
 - **check_wordpress_updates.py** - Check for WordPress core updates
 - **check_wordpress_versions.py** - Check versions across sites
 - **wordpress_version_checker.py** - Version checking utility
+- **activate_themes.py** - Activate themes on WordPress sites (updated with WordPressManager support)
 
 ### Verification
 
@@ -35,6 +37,29 @@ python ops/deployment/auto_deploy_hook.py --auto-deploy
 
 ```bash
 python ops/deployment/deploy_all_websites.py
+```
+
+### Deploy and Activate Themes
+
+```bash
+# Deploy and activate theme for specific site
+python ops/deployment/deploy_and_activate_themes.py --site houstonsipqueen.com
+
+# Deploy themes for all configured sites
+python ops/deployment/deploy_and_activate_themes.py --all
+
+# Upload only, don't activate
+python ops/deployment/deploy_and_activate_themes.py --all --upload-only
+```
+
+### Activate Themes (Upload Already Complete)
+
+```bash
+# Activate theme for specific site
+python ops/deployment/activate_themes.py --site houstonsipqueen.com
+
+# Activate themes for all sites
+python ops/deployment/activate_themes.py --all
 ```
 
 ### Check WordPress Updates

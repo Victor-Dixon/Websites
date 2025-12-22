@@ -925,9 +925,9 @@ add_action('update_discord_invite_weekly', __NAMESPACE__ . '\\update_discord_inv
 function update_community_support_link()
 {
     $links = [
-        'https://freerideinvestor.com',
-        'https://freerideinvestor.com/services/trading-strategies',
-        'https://freerideinvestor.com/contact',
+        home_url('/'),
+        home_url('/services/trading-strategies'),
+        home_url('/contact'),
     ];
 
     $current_week = date('W');
@@ -1637,13 +1637,112 @@ add_shortcode('test_shortcode', function () {
 // Developer Tool - REMOVED (not supposed to be on this website)
 // require_once get_template_directory() . '/inc/developer-tool.php';
 
-// Template include filter for missing pages (Agent-6 Site Audit Fix)
+/**
+ * Create/Ensure Core Pages Exist (Contact, About, Blog)
+ * Fixes duplicate pages issue by ensuring single canonical pages
+ */
+function freerideinvestor_ensure_core_pages() {
+    $pages = array(
+        'contact' => array(
+            'title' => 'Contact',
+            'slug' => 'contact',
+            'template' => 'page-templates/page-contact.php',
+            'content' => 'Contact us for questions, support, or inquiries.'
+        ),
+        'about' => array(
+            'title' => 'About Us',
+            'slug' => 'about',
+            'template' => 'page-templates/page-about.php',
+            'content' => 'Learn about FreeRide Investor and our mission.'
+        ),
+        'blog' => array(
+            'title' => 'Blog',
+            'slug' => 'blog',
+            'template' => 'page-templates/page-blog.php',
+            'content' => 'Latest trading insights and market analysis.'
+        ),
+    );
+
+    foreach ($pages as $key => $page_data) {
+        $existing_page = get_page_by_path($page_data['slug']);
+        
+        if (!$existing_page) {
+            // Create the page
+            $page_id = wp_insert_post(array(
+                'post_title' => $page_data['title'],
+                'post_name' => $page_data['slug'],
+                'post_content' => $page_data['content'],
+                'post_status' => 'publish',
+                'post_type' => 'page',
+                'page_template' => $page_data['template'],
+            ));
+        } else {
+            // Update existing page to use correct template
+            update_post_meta($existing_page->ID, '_wp_page_template', $page_data['template']);
+        }
+    }
+}
+add_action('after_switch_theme', 'freerideinvestor_ensure_core_pages');
+add_action('admin_init', 'freerideinvestor_ensure_core_pages');
+
+/**
+ * Redirect duplicate page URLs to canonical versions
+ */
+function freerideinvestor_redirect_duplicate_pages() {
+    if (is_admin() || wp_doing_ajax() || wp_doing_cron()) {
+        return;
+    }
+
+    $request_uri = trim($_SERVER['REQUEST_URI'], '/');
+    
+    // Map of duplicate patterns to canonical URLs
+    $redirects = array(
+        'contact-us' => 'contact',
+        'contact-us/' => 'contact',
+        'about-us' => 'about',
+        'about-us/' => 'about',
+        'blog/' => 'blog',
+    );
+
+    // Check for exact matches
+    if (isset($redirects[$request_uri])) {
+        wp_redirect(home_url('/' . $redirects[$request_uri] . '/'), 301);
+        exit;
+    }
+
+    // Check for pages with same slug but different template
+    if (is_page()) {
+        global $post;
+        $page_template = get_page_template_slug($post->ID);
+        
+        // Ensure contact page uses correct template
+        if ($post->post_name === 'contact' && $page_template !== 'page-templates/page-contact.php') {
+            update_post_meta($post->ID, '_wp_page_template', 'page-templates/page-contact.php');
+        }
+        
+        // Ensure about page uses correct template
+        if ($post->post_name === 'about' && $page_template !== 'page-templates/page-about.php') {
+            update_post_meta($post->ID, '_wp_page_template', 'page-templates/page-about.php');
+        }
+        
+        // Ensure blog page uses correct template
+        if ($post->post_name === 'blog' && $page_template !== 'page-templates/page-blog.php') {
+            update_post_meta($post->ID, '_wp_page_template', 'page-templates/page-blog.php');
+        }
+    }
+}
+add_action('template_redirect', 'freerideinvestor_redirect_duplicate_pages', 1);
+
+/**
+ * Template include filter for missing pages (Agent-6 Site Audit Fix)
+ * Updated to use canonical page templates
+ */
 add_filter('template_include', function ($template) {
     if (is_404() && isset($_SERVER['REQUEST_URI'])) {
         $request_uri = trim($_SERVER['REQUEST_URI'], '/');
         $page_templates = array(
             'about' => 'page-templates/page-about.php',
-            'blog' => 'page-templates/page-dev-blog.php',
+            'blog' => 'page-templates/page-blog.php', // Changed from page-dev-blog.php
             'contact' => 'page-templates/page-contact.php',
         );
 
@@ -1664,4 +1763,4 @@ add_filter('template_include', function ($template) {
         }
     }
     return $template;
-});
+}, 20);
