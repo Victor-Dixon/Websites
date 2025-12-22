@@ -32,6 +32,105 @@ except ImportError:
     DEPLOYER_AVAILABLE = False
 
 
+def check_wp_config_syntax(deployer) -> Dict:
+    """Check wp-config.php for syntax errors."""
+    if not deployer or not deployer.connect():
+        return {"error": "Cannot connect"}
+    
+    try:
+        remote_path = getattr(deployer, 'remote_path', '') or "domains/freerideinvestor.com/public_html"
+        wp_config_path = f"{remote_path}/wp-config.php"
+        
+        # Check if file exists
+        command = f"test -f {wp_config_path} && echo 'EXISTS' || echo 'NOT_EXISTS'"
+        result = deployer.execute_command(command)
+        if "NOT_EXISTS" in result:
+            return {"error": "wp-config.php not found"}
+        
+        # Try to validate PHP syntax
+        command = f"php -l {wp_config_path} 2>&1"
+        syntax_check = deployer.execute_command(command)
+        
+        # Read wp-config.php content (first 100 lines to check structure)
+        command = f"head -n 100 {wp_config_path}"
+        config_content = deployer.execute_command(command)
+        
+        return {
+            "syntax_check": syntax_check,
+            "has_debug": "WP_DEBUG" in config_content,
+            "config_preview": config_content[:500] if config_content else ""
+        }
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        deployer.disconnect()
+
+
+def read_wp_config_full(deployer) -> Optional[str]:
+    """Read full wp-config.php file."""
+    if not deployer or not deployer.connect():
+        return None
+    
+    try:
+        remote_path = getattr(deployer, 'remote_path', '') or "domains/freerideinvestor.com/public_html"
+        wp_config_path = f"{remote_path}/wp-config.php"
+        
+        command = f"cat {wp_config_path}"
+        result = deployer.execute_command(command)
+        return result
+    except Exception as e:
+        print(f"   ❌ Error reading wp-config.php: {e}")
+        return None
+    finally:
+        deployer.disconnect()
+
+
+def fix_wp_config_syntax(deployer) -> bool:
+    """Attempt to fix wp-config.php syntax errors."""
+    if not deployer or not deployer.connect():
+        return False
+    
+    try:
+        remote_path = getattr(deployer, 'remote_path', '') or "domains/freerideinvestor.com/public_html"
+        wp_config_path = f"{remote_path}/wp-config.php"
+        
+        # Read current config
+        config_content = deployer.execute_command(f"cat {wp_config_path}")
+        if not config_content:
+            print("   ❌ Cannot read wp-config.php")
+            return False
+        
+        # Create backup
+        backup_command = f"cp {wp_config_path} {wp_config_path}.backup.$(date +%Y%m%d_%H%M%S)"
+        deployer.execute_command(backup_command)
+        print("   ✅ Created backup of wp-config.php")
+        
+        # Common syntax fixes
+        fixed_content = config_content
+        
+        # Fix 1: Check for unclosed quotes
+        # Fix 2: Check for missing semicolons
+        # Fix 3: Check for unclosed parentheses/brackets
+        
+        # For now, just report the issue - manual fix needed
+        print("   ⚠️  Syntax error detected in wp-config.php")
+        print("   📝 Manual fix required - check for:")
+        print("      - Unclosed quotes (single or double)")
+        print("      - Missing semicolons")
+        print("      - Unclosed parentheses or brackets")
+        print("      - Invalid PHP syntax")
+        print()
+        print("   💡 To view full wp-config.php, run:")
+        print(f"      ssh {deployer.site_key} 'cat {wp_config_path}'")
+        
+        return False  # Manual fix needed
+    except Exception as e:
+        print(f"   ❌ Error: {e}")
+        return False
+    finally:
+        deployer.disconnect()
+
+
 def enable_wp_debug(deployer) -> bool:
     """Enable WordPress debug mode in wp-config.php."""
     if not deployer or not deployer.connect():
@@ -177,6 +276,44 @@ def disable_plugins_via_rename(deployer) -> bool:
         deployer.disconnect()
 
 
+def check_error_logs(deployer) -> Dict:
+    """Check error logs for PHP fatal errors."""
+    if not deployer or not deployer.connect():
+        return {"error": "Cannot connect"}
+    
+    try:
+        remote_path = getattr(deployer, 'remote_path', '') or "domains/freerideinvestor.com/public_html"
+        
+        # Check common error log locations
+        log_paths = [
+            f"{remote_path}/wp-content/debug.log",  # WordPress debug log (most important)
+            f"{remote_path}/error_log",  # PHP error log
+            f"{remote_path}/wp-content/error_log",
+            f"{remote_path}/../error_log"
+        ]
+        
+        logs_found = []
+        for log_path in log_paths:
+            # Try to read last 100 lines (more for debug.log)
+            command = f"tail -n 100 {log_path} 2>/dev/null || echo 'LOG_NOT_FOUND'"
+            result = deployer.execute_command(command)
+            if result and "LOG_NOT_FOUND" not in result and result.strip():
+                lines = result.split('\n')
+                # Filter out empty lines
+                non_empty_lines = [line for line in lines if line.strip()]
+                if non_empty_lines:
+                    logs_found.append({
+                        "path": log_path,
+                        "last_lines": non_empty_lines[-30:] if len(non_empty_lines) > 30 else non_empty_lines  # Last 30 lines
+                    })
+        
+        return {"logs": logs_found} if logs_found else {"error": "No error logs found"}
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        deployer.disconnect()
+
+
 def check_htaccess_syntax(deployer) -> bool:
     """Check .htaccess for syntax errors."""
     if not deployer or not deployer.connect():
@@ -243,13 +380,26 @@ def main():
         print("❌ freerideinvestor.com not found in site configs")
         return 1
     
-    # Check SFTP credentials
-    sftp_config = site_config.get("sftp", {})
-    if not sftp_config.get("host") or not sftp_config.get("username"):
-        print("⚠️  SFTP credentials not configured")
-        print("   This tool requires SFTP/SSH access to fix the issue")
+    # Initialize deployer (it will load credentials from multiple sources)
+    print("🔑 Loading SFTP credentials...")
+    print("   Checking: HOSTINGER_* env vars → .deploy_credentials/sites.json → site_configs.json")
+    print()
+    
+    try:
+        deployer = SimpleWordPressDeployer("freerideinvestor.com", site_configs)
+    except Exception as e:
+        print(f"❌ Failed to initialize deployer: {e}")
         print()
-        print("📋 Manual Fix Steps (via hosting panel):")
+        print("💡 Credential Sources (checked in order):")
+        print("   1. Environment variables (.env file):")
+        print("      - HOSTINGER_HOST")
+        print("      - HOSTINGER_USER")
+        print("      - HOSTINGER_PASS")
+        print("      - HOSTINGER_PORT (default: 65002)")
+        print("   2. .deploy_credentials/sites.json (WordPressManager format)")
+        print("   3. site_configs.json (sftp section)")
+        print()
+        print("📋 Manual Fix Steps (if credentials unavailable):")
         print("   1. Log into hosting panel (cPanel/hPanel)")
         print("   2. Navigate to File Manager")
         print("   3. Open wp-config.php")
@@ -260,24 +410,8 @@ def main():
         print("   define('WP_DEBUG_DISPLAY', false);")
         print("   @ini_set('display_errors', 0);")
         print()
-        print("   5. Check error_log file in public_html directory")
-        print("   6. Check wp-content/debug.log for WordPress errors")
-        print()
-        print("🔧 Common Fixes:")
-        print("   - Check PHP version (WordPress requires PHP 7.4+)")
-        print("   - Verify database credentials in wp-config.php")
-        print("   - Disable plugins (rename wp-content/plugins to plugins.disabled)")
-        print("   - Switch to default theme (rename active theme folder)")
-        print("   - Check .htaccess for syntax errors")
-        print("   - Verify file permissions (644 for files, 755 for directories)")
         return 1
     
-    # Initialize deployer
-    try:
-        deployer = SimpleWordPressDeployer("freerideinvestor.com", site_configs)
-    except Exception as e:
-        print(f"❌ Failed to initialize deployer: {e}")
-        return 1
     
     print("🔍 Running diagnostic checks...")
     print()
@@ -298,20 +432,64 @@ def main():
     db_ok = check_database_connection(deployer)
     print()
     
-    # 3. Check .htaccess
-    print("3️⃣  Checking .htaccess syntax...")
+    print("3️⃣  Checking wp-config.php syntax...")
+    wp_config_check = check_wp_config_syntax(deployer)
+    if "error" in wp_config_check:
+        print(f"   ⚠️  {wp_config_check['error']}")
+    else:
+        if "syntax_check" in wp_config_check:
+            syntax_result = wp_config_check['syntax_check']
+            if "No syntax errors" in syntax_result or "syntax is OK" in syntax_result:
+                print("   ✅ wp-config.php syntax is valid")
+            else:
+                print(f"   ❌ wp-config.php syntax error detected:")
+                print(f"      {syntax_result[:200]}")
+                print()
+                print("   🔧 Attempting to read wp-config.php for analysis...")
+                config_content = read_wp_config_full(deployer)
+                if config_content:
+                    # Save to local file for analysis
+                    local_config_path = Path(__file__).parent.parent / "docs" / "freerideinvestor_wp_config.php"
+                    local_config_path.parent.mkdir(parents=True, exist_ok=True)
+                    with open(local_config_path, 'w', encoding='utf-8') as f:
+                        f.write(config_content)
+                    print(f"   ✅ wp-config.php saved to: {local_config_path}")
+                    print("   📝 Review file to identify syntax error")
+        if wp_config_check.get('has_debug'):
+            print("   ✅ Debug mode is enabled in wp-config.php")
+    print()
+    
+    print("4️⃣  Checking error logs...")
+    error_logs = check_error_logs(deployer)
+    if "error" in error_logs:
+        print(f"   ⚠️  {error_logs['error']}")
+    elif "logs" in error_logs:
+        print(f"   ✅ Found {len(error_logs['logs'])} error log(s)")
+        for log_info in error_logs['logs']:
+            print(f"   📄 {log_info['path']}:")
+            # Show last 5 lines of each log
+            for line in log_info['last_lines'][-5:]:
+                if line.strip():
+                    print(f"      {line[:100]}")
+    print()
+    
+    print("5️⃣  Checking .htaccess syntax...")
     htaccess_ok = check_htaccess_syntax(deployer)
     print()
     
-    # 4. Enable debug mode
-    print("4️⃣  Enabling WordPress debug mode...")
+    print("6️⃣  Enabling WordPress debug mode...")
     debug_enabled = enable_wp_debug(deployer)
     print()
     
-    # 5. Option to disable plugins
-    print("5️⃣  Plugin conflict check...")
-    print("   💡 To disable plugins (if needed), run:")
-    print("      python tools/fix_freerideinvestor_500.py --disable-plugins")
+    print("7️⃣  Plugin conflict check...")
+    print("   💡 Attempting to disable plugins to test for conflicts...")
+    plugins_disabled = disable_plugins_via_rename(deployer)
+    if plugins_disabled:
+        print("   ✅ Plugins disabled - test site now")
+        print("   💡 If site works, re-enable plugins one by one to find the culprit")
+    else:
+        print("   ⚠️  Could not disable plugins automatically")
+        print("   💡 Manual: rename wp-content/plugins to plugins.disabled")
     print()
     
     print("=" * 70)

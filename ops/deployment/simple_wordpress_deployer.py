@@ -260,34 +260,55 @@ class SimpleWordPressDeployer:
             return False
     
     def execute_command(self, command: str) -> str:
-        """Execute a command via SSH."""
+        """Execute a command via SSH using the same credential loading as connect()."""
         if not PARAMIKO_AVAILABLE:
             return ""
         
         try:
+            # Use same credential loading logic as connect() method
+            import os
+            from dotenv import load_dotenv
+            
+            env_path = Path("D:/Agent_Cellphone_V2_Repository/.env")
+            if env_path.exists():
+                load_dotenv(env_path)
+            
+            # Check environment variables first (Hostinger tool credentials)
+            host = os.getenv("HOSTINGER_HOST")
+            username = os.getenv("HOSTINGER_USER")
+            password = os.getenv("HOSTINGER_PASS")
+            port = int(os.getenv("HOSTINGER_PORT", "65002"))  # Hostinger uses 65002
+            
+            # If env vars not available, try site config
+            if not all([host, username, password]):
+                if 'sftp' in self.site_config:
+                    sftp_config = self.site_config.get('sftp', {})
+                    host = sftp_config.get('host') or host
+                    username = sftp_config.get('username') or username
+                    password = sftp_config.get('password') or password
+                    port = sftp_config.get('port', port or 65002)  # Default to Hostinger port
+                else:
+                    host = self.site_config.get('host') or host
+                    username = self.site_config.get('username') or username
+                    password = self.site_config.get('password') or password
+                    port = self.site_config.get('port', port or 65002)  # Default to Hostinger port
+            
+            if not all([host, username, password]):
+                print(f"⚠️  Incomplete SSH credentials for {self.site_key}")
+                return ""
+            
             ssh = paramiko.SSHClient()
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            ssh.connect(host, port=port, username=username, password=password, timeout=10)
+            stdin, stdout, stderr = ssh.exec_command(command, timeout=30)
             
-            # Get connection details
-            if 'sftp' in self.site_config:
-                sftp_config = self.site_config.get('sftp', {})
-                host = sftp_config.get('host')
-                username = sftp_config.get('username')
-                password = sftp_config.get('password')
-                port = sftp_config.get('port', 22)
-            else:
-                host = self.site_config.get('host')
-                username = self.site_config.get('username')
-                password = self.site_config.get('password')
-                port = self.site_config.get('port', 22)
-            
-            ssh.connect(host, port=port, username=username, password=password)
-            stdin, stdout, stderr = ssh.exec_command(command)
-            
-            output = stdout.read().decode()
-            error = stderr.read().decode()
+            output = stdout.read().decode('utf-8')
+            error = stderr.read().decode('utf-8')
             
             ssh.close()
+            
+            if error and "error" in error.lower():
+                print(f"⚠️  Command warning: {error[:200]}")
             
             return output if output else error
         except Exception as e:
