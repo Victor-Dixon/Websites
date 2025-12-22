@@ -17,22 +17,46 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Set
 
-# Add main repo tools to path for WordPressDeploymentManager
-MAIN_REPO_TOOLS = Path("D:/Agent_Cellphone_V2_Repository/tools")
-if MAIN_REPO_TOOLS.exists():
-    sys.path.insert(0, str(MAIN_REPO_TOOLS))
+# Add deployment tools to path
+DEPLOYMENT_TOOLS = Path(__file__).parent.parent / "ops" / "deployment"
+if DEPLOYMENT_TOOLS.exists():
+    sys.path.insert(0, str(DEPLOYMENT_TOOLS))
 
+# Try to use SimpleWordPressDeployer (local, preferred)
 try:
-    from wordpress_manager import WordPressManager
-    # Backward compatibility alias
-    WordPressDeploymentManager = WordPressManager
+    from simple_wordpress_deployer import SimpleWordPressDeployer
+    WordPressDeploymentManager = SimpleWordPressDeployer
+    DEPLOYER_AVAILABLE = True
 except ImportError:
+    DEPLOYER_AVAILABLE = False
+    # Fallback: Try main repo tools
+    MAIN_REPO_TOOLS = Path("D:/Agent_Cellphone_V2_Repository/tools")
+    if MAIN_REPO_TOOLS.exists():
+        sys.path.insert(0, str(MAIN_REPO_TOOLS))
+    
     try:
-        from wordpress_deployment_manager import WordPressDeploymentManager
+        from unified_wordpress_manager import UnifiedWordPressManager
+        # Create adapter class for compatibility
+        class WordPressDeploymentManagerAdapter:
+            def __init__(self, site_key: str):
+                self.manager = UnifiedWordPressManager(site_key)
+                self.site_key = site_key
+            
+            def deploy_file(self, local_path: Path) -> bool:
+                from tools.unified_wordpress_manager import DeploymentMethod
+                return self.manager.deploy_file(local_path, method=DeploymentMethod.SFTP)
+            
+            def close(self):
+                if hasattr(self.manager, 'deployer') and self.manager.deployer:
+                    self.manager.deployer.disconnect()
+        
+        WordPressDeploymentManager = WordPressDeploymentManagerAdapter
+        DEPLOYER_AVAILABLE = True
     except ImportError:
-        print("❌ ERROR: WordPressManager not found!")
-        print(f"   Expected at: {MAIN_REPO_TOOLS}/wordpress_manager.py")
-        sys.exit(1)
+        print("⚠️  WARNING: No WordPress deployer found!")
+        print("   Tried: simple_wordpress_deployer, unified_wordpress_manager")
+        print("   Deployment will be skipped. Files will still be committed.")
+        DEPLOYER_AVAILABLE = False
 
 
 # Site mapping: local directory → site key
@@ -198,22 +222,53 @@ def get_relative_theme_path(file_path: str, site_key: str) -> Optional[str]:
 
 def deploy_file_to_site(file_path: str, site_key: str) -> bool:
     """Deploy a single file to the appropriate site."""
+    if not DEPLOYER_AVAILABLE:
+        print(f"⚠️  Skipping deployment: No deployer available")
+        return True  # Don't fail commit if deployer unavailable
+    
     try:
-        manager = WordPressDeploymentManager(site_key)
+        # Load site configs for SimpleWordPressDeployer
+        import json
+        config_path = Path(__file__).parent.parent / "configs" / "site_configs.json"
+        if config_path.exists():
+            with open(config_path, 'r', encoding='utf-8') as f:
+                site_configs = json.load(f)
+        else:
+            site_configs = {}
+        
+        # Initialize manager (SimpleWordPressDeployer needs site_configs)
+        if WordPressDeploymentManager == SimpleWordPressDeployer:
+            manager = WordPressDeploymentManager(site_key, site_configs)
+        else:
+            # UnifiedWordPressManager adapter
+            manager = WordPressDeploymentManager(site_key)
         
         local_path = Path(__file__).parent.parent / file_path
         if not local_path.exists():
             print(f"⚠️  File not found: {local_path}")
             return False
         
-        # Use unified deploy_file method
+        # Connect before deploying
+        if hasattr(manager, 'connect'):
+            if not manager.connect():
+                print(f"⚠️  Could not connect to {site_key}")
+                return False
+        
+        # Use deploy_file method
         success = manager.deploy_file(local_path)
         
-        manager.close()
+        # Cleanup
+        if hasattr(manager, 'close'):
+            manager.close()
+        elif hasattr(manager, 'disconnect'):
+            manager.disconnect()
+        
         return success
         
     except Exception as e:
         print(f"❌ Error deploying {file_path} to {site_key}: {e}")
+        import traceback
+        traceback.print_exc()
         return False
 
 
