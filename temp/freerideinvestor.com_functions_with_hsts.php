@@ -34,16 +34,14 @@ namespace freerideinvestortheme;
 /**
  * Permission Callback to Ensure User is Logged In
  */
-function is_user_logged_in_rest()
-{
+function is_user_logged_in_rest() {
     return \is_user_logged_in();
 }
 
 /**
  * Get User's Checklist
  */
-function get_user_checklist($request)
-{
+function get_user_checklist($request) {
     $user_id = \get_current_user_id();
 
     // Fetch tasks from the database
@@ -61,8 +59,7 @@ function get_user_checklist($request)
 /**
  * Update User's Checklist
  */
-function update_user_checklist($request)
-{
+function update_user_checklist($request) {
     $user_id = \get_current_user_id();
     $params = json_decode(\wp_unslash($request->get_body()), true);
 
@@ -92,8 +89,7 @@ function update_user_checklist($request)
 /**
  * Get Trading Performance Data
  */
-function get_trading_performance($request)
-{
+function get_trading_performance($request) {
     $user_id = get_current_user_id();
 
     // Placeholder: Fetch real trading performance data
@@ -112,8 +108,7 @@ function get_trading_performance($request)
 /**
  * Generate AI-Powered Recommendations
  */
-function generate_ai_recommendations($request)
-{
+function generate_ai_recommendations($request) {
     $user_id = get_current_user_id();
     $params = json_decode(wp_unslash($request->get_body()), true);
 
@@ -137,13 +132,12 @@ function generate_ai_recommendations($request)
  */
 add_action('template_redirect', __NAMESPACE__ . '\\restrict_access_and_premium_content', 5);
 
-function restrict_access_and_premium_content()
-{
+function restrict_access_and_premium_content() {
     // Allow wp-admin and wp-login.php access (fix redirect loop)
     if (is_admin() || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/wp-admin') !== false) || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/wp-login.php') !== false)) {
         return;
     }
-
+    
     // Skip AJAX and REST requests
     if ((defined('DOING_AJAX') && DOING_AJAX) || (defined('REST_REQUEST') && REST_REQUEST)) {
         return;
@@ -208,10 +202,9 @@ function restrict_access_and_premium_content()
  */
 add_action('wp_logout', __NAMESPACE__ . '\\custom_logout_redirect');
 
-function custom_logout_redirect()
-{
+function custom_logout_redirect() {
     // Redirect to the home page after logging out, with a query parameter
-    wp_redirect(home_url('/?logged_out=true'));
+    wp_redirect( home_url('/?logged_out=true') ); 
     exit;
 }
 
@@ -219,8 +212,7 @@ function custom_logout_redirect()
  * 1. THEME SETUP & BASIC SUPPORT
  * ================================================== */
 
-function theme_setup()
-{
+function theme_setup() {
     // Core WP supports
     add_theme_support('title-tag');
     add_theme_support('custom-logo');
@@ -263,8 +255,7 @@ add_action('after_setup_theme', __NAMESPACE__ . '\\theme_setup');
  * Strip any "Developer Tools" entries from the primary navigation entirely.
  * Enhanced to remove ALL Developer Tool links with comprehensive matching.
  */
-function freeride_dedupe_developer_tools_menu(array $items, $args)
-{
+function freeride_dedupe_developer_tools_menu(array $items, $args) {
     if (!isset($args->theme_location) || $args->theme_location !== 'primary') {
         return $items;
     }
@@ -273,13 +264,13 @@ function freeride_dedupe_developer_tools_menu(array $items, $args)
 
     foreach ($items as $item) {
         $should_skip = false;
-
+        
         // Check URL for developer-tools path (multiple variations)
         if (isset($item->url)) {
             $url_lower = strtolower($item->url);
             $path = parse_url($item->url, PHP_URL_PATH);
             $normalized_path = strtolower(untrailingslashit($path ?? ''));
-
+            
             // Check for various developer-tools URL patterns
             if ($normalized_path !== '' && (
                 strpos($normalized_path, '/developer-tools') !== false ||
@@ -291,7 +282,7 @@ function freeride_dedupe_developer_tools_menu(array $items, $args)
                 $should_skip = true;
             }
         }
-
+        
         // Check title for "Developer Tool" text (multiple variations)
         if (isset($item->title)) {
             $title_lower = strtolower(trim($item->title));
@@ -306,7 +297,7 @@ function freeride_dedupe_developer_tools_menu(array $items, $args)
                 $should_skip = true;
             }
         }
-
+        
         // Check post name/slug
         if (isset($item->post_name)) {
             $post_name_lower = strtolower($item->post_name);
@@ -318,7 +309,7 @@ function freeride_dedupe_developer_tools_menu(array $items, $args)
                 $should_skip = true;
             }
         }
-
+        
         // Check object type and ID for developer tools page
         if (isset($item->object) && $item->object === 'page') {
             if (isset($item->object_id)) {
@@ -331,7 +322,7 @@ function freeride_dedupe_developer_tools_menu(array $items, $args)
                 }
             }
         }
-
+        
         // Skip this item if any match found
         if ($should_skip) {
             continue;
@@ -356,34 +347,33 @@ add_filter('wp_nav_menu_objects', __NAMESPACE__ . '\freeride_dedupe_developer_to
  * Removes ALL duplicate menu items (not just Developer Tools)
  * Prevents any duplicate menu items from appearing in navigation
  */
-function freeride_dedupe_all_menu_items(array $items, $args)
-{
+function freeride_dedupe_all_menu_items(array $items, $args) {
     if (!isset($args->theme_location) || $args->theme_location !== 'primary') {
         return $items;
     }
-
+    
     $seen = [];
     $filtered_items = [];
-
+    
     foreach ($items as $item) {
         // Create unique key from URL and title combination
         $url = isset($item->url) ? strtolower(trim($item->url)) : '';
         $title = isset($item->title) ? strtolower(trim($item->title)) : '';
         $key = md5($url . '|' . $title);
-
+        
         // Skip if we've seen this exact combination before
         if (!isset($seen[$key])) {
             $seen[$key] = true;
             $filtered_items[] = $item;
         }
     }
-
+    
     // Reorder menu items
     $menu_order = 1;
     foreach ($filtered_items as $filtered_item) {
         $filtered_item->menu_order = $menu_order++;
     }
-
+    
     return $filtered_items;
 }
 // Use priority 1000 to run after developer tools filter
@@ -393,26 +383,24 @@ add_filter('wp_nav_menu_objects', __NAMESPACE__ . '\freeride_dedupe_all_menu_ite
  * Additional filter to remove Developer Tools links from menu HTML output
  * This catches any items that might slip through the objects filter
  */
-function freeride_remove_developer_tools_from_menu_html($items, $args)
-{
+function freeride_remove_developer_tools_from_menu_html($items, $args) {
     if (!isset($args->theme_location) || $args->theme_location !== 'primary') {
         return $items;
     }
-
+    
     // Remove any menu items containing "developer tool" in the HTML
     $items = preg_replace(
         '/<li[^>]*>.*?developer[^<]*tool[^<]*<\/li>/is',
         '',
         $items
     );
-
+    
     return $items;
 }
 add_filter('wp_nav_menu_items', __NAMESPACE__ . '\freeride_remove_developer_tools_from_menu_html', 999, 2);
 
 // Enqueue main theme assets
-function freeride_enqueue_assets()
-{
+function freeride_enqueue_assets() {
     // Enqueue the main stylesheet if it exists
     $style_path = get_stylesheet_directory() . '/style.css';
     if (file_exists($style_path)) {
@@ -423,7 +411,7 @@ function freeride_enqueue_assets()
             wp_get_theme()->get('Version')
         );
     }
-
+    
     // Add inline CSS for text rendering fixes - Enhanced to fix spacing issues
     $text_rendering_css = "
         body, body * {
@@ -475,8 +463,7 @@ add_action('wp_enqueue_scripts', __NAMESPACE__ . '\\freeride_enqueue_assets');
 /**
  * Enqueue block editor assets for Gutenberg
  */
-function freeride_enqueue_block_editor_assets()
-{
+function freeride_enqueue_block_editor_assets() {
     $editor_style_path = get_template_directory() . '/assets/css/editor-style.css';
     if (file_exists($editor_style_path)) {
         wp_enqueue_style(
@@ -492,8 +479,7 @@ add_action('enqueue_block_editor_assets', __NAMESPACE__ . '\\freeride_enqueue_bl
 /**
  * Enqueue post-specific styles based on custom post meta
  */
-function freeride_enqueue_post_specific_styles()
-{
+function freeride_enqueue_post_specific_styles() {
     if (is_single()) {
         global $post;
 
@@ -516,8 +502,7 @@ add_action('wp_enqueue_scripts', __NAMESPACE__ . '\\freeride_enqueue_post_specif
 /**
  * Add meta box for custom post-specific styles
  */
-function freeride_add_post_styles_meta_box()
-{
+function freeride_add_post_styles_meta_box() {
     add_meta_box(
         'freeride_post_styles_meta',
         __('Post-Specific Styles', 'simplifiedtradingtheme'),
@@ -532,32 +517,64 @@ add_action('add_meta_boxes', __NAMESPACE__ . '\\freeride_add_post_styles_meta_bo
 /**
  * Render the custom post styles meta box
  */
-function freeride_render_post_styles_meta_box($post)
-{
+function freeride_render_post_styles_meta_box($post) {
     $value = get_post_meta($post->ID, 'custom_stylesheet', true);
     wp_nonce_field('save_custom_stylesheet', 'custom_stylesheet_nonce');
+    
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
+
 ?>
     <label for="custom_stylesheet">
-        <?php esc_html_e('Enter relative path to custom stylesheet:', 'simplifiedtradingtheme'); ?>
+        <?php esc_html_e('Enter relative path to custom stylesheet:', 'simplifiedtradingtheme'); 
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
+
+?>
     </label>
-    <input
-        type="text"
-        name="custom_stylesheet"
-        id="custom_stylesheet"
-        value="<?php echo esc_attr($value); ?>"
+    <input 
+        type="text" 
+        name="custom_stylesheet" 
+        id="custom_stylesheet" 
+        value="<?php echo esc_attr($value); 
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
+
+?>" 
         placeholder="/assets/css/posts/custom-style.css">
-<?php
+    <?php
 }
 
 /**
  * Save the custom post styles meta box data
  */
-function freeride_save_post_styles_meta_box($post_id)
-{
-    if (
-        !isset($_POST['custom_stylesheet_nonce']) ||
-        !wp_verify_nonce($_POST['custom_stylesheet_nonce'], 'save_custom_stylesheet')
-    ) {
+function freeride_save_post_styles_meta_box($post_id) {
+    if (!isset($_POST['custom_stylesheet_nonce']) || 
+        !wp_verify_nonce($_POST['custom_stylesheet_nonce'], 'save_custom_stylesheet')) {
         return;
     }
 
@@ -574,8 +591,7 @@ add_action('save_post', __NAMESPACE__ . '\\freeride_save_post_styles_meta_box');
 /**
  * Enqueue scripts for the signup page if it exists.
  */
-function freeride_enqueue_signup_scripts()
-{
+function freeride_enqueue_signup_scripts() {
     // Check if we're on the "signup" page
     if (is_page('signup')) {
         // Enqueue a dedicated signup stylesheet if it exists
@@ -607,31 +623,30 @@ add_action('wp_enqueue_scripts', __NAMESPACE__ . '\\freeride_enqueue_signup_scri
 /* ==================================================
  * 3. Handle Profile Updates
  * ================================================== */
+ 
+ 
+add_action( 'wp_ajax_frtc_profile_edit', 'frtc_handle_profile_edit' );
 
-
-add_action('wp_ajax_frtc_profile_edit', 'frtc_handle_profile_edit');
-
-function frtc_handle_profile_edit()
-{
+function frtc_handle_profile_edit() {
     // Verify nonce
     if (!\check_ajax_referer('frtc_profile_edit_action', 'security', false)) {
         \wp_send_json_error(['message' => 'Security check failed.']);
         return;
     }
-
+    
     // Verify user is logged in
     if (!\is_user_logged_in()) {
         \wp_send_json_error(['message' => 'You must be logged in to edit your profile.']);
         return;
     }
-
+    
     // Verify request origin
     $referer = \wp_get_referer();
     if (!$referer || !\wp_http_validate_url($referer)) {
         \wp_send_json_error(['message' => 'Invalid request origin.']);
         return;
     }
-
+    
     // Rate limiting
     $rate_limiter = new RateLimiter();
     $user_id = \get_current_user_id();
@@ -639,66 +654,66 @@ function frtc_handle_profile_edit()
         \wp_send_json_error(['message' => 'Too many profile edit attempts. Please try again later.']);
         return;
     }
-
+    
     // Validate and sanitize input
     $email = \sanitize_email($_POST['email'] ?? '');
     $first_name = \sanitize_text_field($_POST['first_name'] ?? '');
     $last_name = \sanitize_text_field($_POST['last_name'] ?? '');
     $bio = \sanitize_textarea_field($_POST['bio'] ?? '');
     $password = $_POST['password'] ?? '';
-
+    
     // Input validation
     if (!\is_email($email)) {
         \wp_send_json_error(['message' => 'Invalid email address.']);
         return;
     }
-
+    
     if (strlen($first_name) > 50 || strlen($last_name) > 50) {
         \wp_send_json_error(['message' => 'Invalid name length.']);
         return;
     }
-
+    
     if (strlen($bio) > 1000) {
         \wp_send_json_error(['message' => 'Bio too long.']);
         return;
     }
-
+    
     // Password validation if provided
     if (!empty($password)) {
         if (strlen($password) < 8) {
             \wp_send_json_error(['message' => 'Password must be at least 8 characters long.']);
             return;
         }
-
+        
         // Check password strength
         if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $password)) {
             \wp_send_json_error(['message' => 'Password must contain uppercase, lowercase, number, and special character.']);
             return;
         }
     }
-
+    
     // Update user data
     $user_data = ['ID' => $user_id, 'user_email' => $email];
-
+    
     if (!empty($password)) {
         \wp_set_password($password, $user_id);
     }
-
+    
     $result = \wp_update_user($user_data);
-
+    
     if (\is_wp_error($result)) {
         \wp_send_json_error(['message' => 'Error updating user: ' . $result->get_error_message()]);
         return;
     }
-
+    
     // Update user meta
     \update_user_meta($user_id, 'first_name', $first_name);
     \update_user_meta($user_id, 'last_name', $last_name);
     \update_user_meta($user_id, 'description', $bio);
-
+    
     // Log the action
     error_log("User {$user_id} updated their profile");
-
+    
     \wp_send_json_success(['message' => 'Profile updated successfully!']);
 }
 /* ==================================================
@@ -711,8 +726,7 @@ function frtc_handle_profile_edit()
 
 
 
-function freerideinvestor_enqueue_productivity_assets()
-{
+function freerideinvestor_enqueue_productivity_assets() {
     // Enqueue CSS
     wp_enqueue_style(
         'freeride-productivity-css',
@@ -738,8 +752,7 @@ function freerideinvestor_enqueue_productivity_assets()
     );
 }
 
-function maybe_enqueue_freeride_productivity_assets()
-{
+function maybe_enqueue_freeride_productivity_assets() {
     global $post;
     if (!is_singular() || !isset($post->post_content)) {
         return;
@@ -753,9 +766,20 @@ add_action('wp_enqueue_scripts', __NAMESPACE__ . '\\maybe_enqueue_freeride_produ
 /**
  * Shortcode to display the Productivity Board
  */
-function freeride_productivity_board_shortcode()
-{
+function freeride_productivity_board_shortcode() {
     ob_start();
+    
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
+
 ?>
     <!-- Productivity Board HTML Structure -->
     <div id="freeride-orb">
@@ -810,7 +834,7 @@ function freeride_productivity_board_shortcode()
         <canvas id="tasksChart" width="400" height="200"></canvas>
     </div>
     <button id="toggle-analytics" class="button">Show Analytics</button>
-<?php
+    <?php
     return ob_get_clean();
 }
 add_shortcode('freeride_productivity_board', __NAMESPACE__ . '\\freeride_productivity_board_shortcode');
@@ -850,8 +874,7 @@ add_action('wp_ajax_nopriv_save_tasks', __NAMESPACE__ . '\\freeride_save_tasks')
  * 6. DISCORD & COMMUNITY CRON LOGIC
  * ================================================== */
 
-function generate_discord_invite($channel_id, $bot_token)
-{
+function generate_discord_invite($channel_id, $bot_token) {
     $url = "https://discord.com/api/v10/channels/$channel_id/invites";
 
     $args = [
@@ -886,10 +909,9 @@ function generate_discord_invite($channel_id, $bot_token)
 }
 
 // Update Discord Invite Weekly with Retry
-function update_discord_invite()
-{
+function update_discord_invite() {
     $channel_id = '1317692261450121246';
-
+    
     // Token from constant or .env
     if (defined('DISCORD_BOT_TOKEN')) {
         $bot_token = DISCORD_BOT_TOKEN;
@@ -901,7 +923,7 @@ function update_discord_invite()
     }
 
     $max_retries = 3;
-    $retry_delay = 2;
+    $retry_delay = 2; 
     $attempt = 0;
     $new_invite = false;
 
@@ -922,12 +944,11 @@ function update_discord_invite()
 }
 add_action('update_discord_invite_weekly', __NAMESPACE__ . '\\update_discord_invite');
 
-function update_community_support_link()
-{
+function update_community_support_link() {
     $links = [
-        home_url('/'),
-        home_url('/services/trading-strategies'),
-        home_url('/contact'),
+        'https://freerideinvestor.com',
+        'https://freerideinvestor.com/services/trading-strategies',
+        'https://freerideinvestor.com/contact',
     ];
 
     $current_week = date('W');
@@ -938,8 +959,7 @@ function update_community_support_link()
 add_action('update_discord_invite_weekly', __NAMESPACE__ . '\\update_community_support_link');
 
 // Schedule Cron Job
-function schedule_discord_invite_update()
-{
+function schedule_discord_invite_update() {
     if (!wp_next_scheduled('update_discord_invite_weekly')) {
         // "weekly" schedule must exist or be custom-defined 
         // (some hosting environments define 'weekly' by default)
@@ -966,36 +986,31 @@ add_action('wp', __NAMESPACE__ . '\\schedule_discord_invite_update');
 /**
  * Rate Limiter Class for API endpoints
  */
-class RateLimiter
-{
+class RateLimiter {
     private $wpdb;
     private $table_name;
-
-    public function __construct()
-    {
+    
+    public function __construct() {
         global $wpdb;
         $this->wpdb = $wpdb;
         $this->table_name = $wpdb->prefix . 'rate_limits';
         $this->ensure_rate_limit_table();
     }
-
-    public function check_rate_limit($user_id, $endpoint, $max_requests = 10, $time_window = 3600)
-    {
+    
+    public function check_rate_limit($user_id, $endpoint, $max_requests = 10, $time_window = 3600) {
         $current_time = current_time('timestamp');
         $window_start = $current_time - $time_window;
-
+        
         $count = $this->wpdb->get_var($this->wpdb->prepare(
             "SELECT COUNT(*) FROM {$this->table_name} 
              WHERE user_id = %d AND endpoint = %s AND timestamp > %d",
-            $user_id,
-            $endpoint,
-            $window_start
+            $user_id, $endpoint, $window_start
         ));
-
+        
         if ($count >= $max_requests) {
             return false; // Rate limit exceeded
         }
-
+        
         // Record this request
         $this->wpdb->insert(
             $this->table_name,
@@ -1006,12 +1021,11 @@ class RateLimiter
             ),
             array('%d', '%s', '%d')
         );
-
+        
         return true;
     }
-
-    private function ensure_rate_limit_table()
-    {
+    
+    private function ensure_rate_limit_table() {
         if ($this->wpdb->get_var("SHOW TABLES LIKE '{$this->table_name}'") !== $this->table_name) {
             $charset_collate = $this->wpdb->get_charset_collate();
             $sql = "CREATE TABLE {$this->table_name} (
@@ -1022,7 +1036,7 @@ class RateLimiter
                 INDEX user_endpoint_idx (user_id, endpoint),
                 INDEX timestamp_idx (timestamp)
             ) $charset_collate;";
-
+            
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
             dbDelta($sql);
         }
@@ -1035,8 +1049,7 @@ class RateLimiter
 
 add_action('rest_api_init', __NAMESPACE__ . '\\register_trade_journal_endpoint');
 
-function register_trade_journal_endpoint()
-{
+function register_trade_journal_endpoint() {
     register_rest_route('simplifiedtrading/v1', '/trade-journal', [
         'methods'             => 'POST',
         'callback'            => __NAMESPACE__ . '\\process_trade_journal',
@@ -1044,13 +1057,12 @@ function register_trade_journal_endpoint()
     ]);
 }
 
-function verify_permission(\WP_REST_Request $request)
-{
+function verify_permission(\WP_REST_Request $request) {
     // Nonce check
     $nonce = $request->get_header('X-WP-Nonce');
     if (!wp_verify_nonce($nonce, 'wp_rest')) {
         return new \WP_REST_Response(
-            ['status' => 'error', 'message' => 'Invalid nonce'],
+            ['status' => 'error', 'message' => 'Invalid nonce'], 
             403
         );
     }
@@ -1061,15 +1073,14 @@ function verify_permission(\WP_REST_Request $request)
     }
 
     return new \WP_REST_Response(
-        ['status' => 'error', 'message' => 'Unauthorized access'],
+        ['status' => 'error', 'message' => 'Unauthorized access'], 
         403
     );
 }
 
-function process_trade_journal(\WP_REST_Request $request)
-{
+function process_trade_journal(\WP_REST_Request $request) {
     global $wpdb;
-
+    
     $user_id = \get_current_user_id();
     if (!$user_id) {
         return new \WP_REST_Response(
@@ -1077,7 +1088,7 @@ function process_trade_journal(\WP_REST_Request $request)
             401
         );
     }
-
+    
     // Check rate limit
     $rate_limiter = new RateLimiter();
     if (!$rate_limiter->check_rate_limit($user_id, 'trade_journal', 5, 3600)) {
@@ -1086,7 +1097,7 @@ function process_trade_journal(\WP_REST_Request $request)
             429
         );
     }
-
+    
     $params = $request->get_json_params();
     $trade_details = $params['trade_details'] ?? null;
 
@@ -1105,17 +1116,17 @@ function process_trade_journal(\WP_REST_Request $request)
             400
         );
     }
-
+    
     $entry = filter_var($trade_details['entry_price'], FILTER_VALIDATE_FLOAT);
     $exit = filter_var($trade_details['exit_price'], FILTER_VALIDATE_FLOAT);
-
+    
     if ($entry === false || $exit === false || $entry <= 0 || $exit <= 0) {
         return new \WP_REST_Response(
             ['status' => 'error', 'message' => 'Invalid price values'],
             400
         );
     }
-
+    
     $strategy = \sanitize_text_field($trade_details['strategy'] ?? '');
     if (strlen($strategy) > 500) {
         return new \WP_REST_Response(
@@ -1123,7 +1134,7 @@ function process_trade_journal(\WP_REST_Request $request)
             400
         );
     }
-
+    
     $comments = \sanitize_textarea_field($trade_details['comments'] ?? '');
     if (strlen($comments) > 2000) {
         return new \WP_REST_Response(
@@ -1140,8 +1151,8 @@ function process_trade_journal(\WP_REST_Request $request)
         "Entry Price: $entry, Exit Price: $exit",
         "Strategy: $strategy",
         "Comments: $comments",
-        "P/L: " . number_format($profit_loss, 2) .
-            ", P/L%: " . number_format($profit_loss_percentage, 2) . "%",
+        "P/L: " . number_format($profit_loss, 2) . 
+        ", P/L%: " . number_format($profit_loss_percentage, 2) . "%",
     ];
     $recommendations = "Focus on consistency with predefined strategies and risk management.";
 
@@ -1161,15 +1172,7 @@ function process_trade_journal(\WP_REST_Request $request)
             'recommendations'  => $recommendations,
             'created_at'       => current_time('mysql'),
         ], [
-            '%d',
-            '%s',
-            '%f',
-            '%f',
-            '%s',
-            '%s',
-            '%s',
-            '%s',
-            '%s',
+            '%d','%s','%f','%f','%s','%s','%s','%s','%s',
         ]);
 
         if (!$inserted) {
@@ -1181,7 +1184,7 @@ function process_trade_journal(\WP_REST_Request $request)
             'post_type'   => 'trade',
             'post_status' => 'publish',
             'post_title'  => "Trade: $symbol",
-            'post_content' => "Entry: $entry, Exit: $exit, Strategy: $strategy \nComments: $comments",
+            'post_content'=> "Entry: $entry, Exit: $exit, Strategy: $strategy \nComments: $comments",
             'post_author' => $user_id,
         ]);
 
@@ -1215,25 +1218,24 @@ function process_trade_journal(\WP_REST_Request $request)
 /**
  * Ensure the Trade Journal database table exists
  */
-function ensure_table_exists($table_name)
-{
+function ensure_table_exists($table_name) {
     global $wpdb;
-
+    
     // Validate table name format - only allow alphanumeric and underscores
     if (!preg_match('/^[a-zA-Z0-9_]+$/', $table_name)) {
         error_log('Invalid table name format: ' . $table_name);
         return false;
     }
-
+    
     // Check if table exists using WordPress functions
     $table_exists = $wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $table_name)) === $table_name;
-
+    
     if (!$table_exists) {
         // Use WordPress schema functions instead of raw SQL
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-
+        
         $charset_collate = $wpdb->get_charset_collate();
-
+        
         // Define schema using WordPress standards
         $schema = array(
             'id' => 'BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY',
@@ -1247,7 +1249,7 @@ function ensure_table_exists($table_name)
             'recommendations' => 'TEXT DEFAULT ""',
             'created_at' => 'DATETIME DEFAULT CURRENT_TIMESTAMP'
         );
-
+        
         // Create table using WordPress dbDelta with proper escaping
         $sql = "CREATE TABLE {$wpdb->prefix}{$table_name} (\n";
         foreach ($schema as $column => $definition) {
@@ -1256,7 +1258,7 @@ function ensure_table_exists($table_name)
         $sql .= "    INDEX user_id_idx (user_id),\n";
         $sql .= "    INDEX symbol_idx (symbol)\n";
         $sql .= ") $charset_collate;";
-
+        
         try {
             dbDelta($sql);
             return true;
@@ -1265,7 +1267,7 @@ function ensure_table_exists($table_name)
             return false;
         }
     }
-
+    
     return true;
 }
 
@@ -1276,8 +1278,7 @@ function ensure_table_exists($table_name)
 /**
  * Add a Trade Journal overview page to the WordPress admin menu
  */
-function add_trade_journal_admin_menu()
-{
+function add_trade_journal_admin_menu() {
     add_menu_page(
         __('Trade Journal', 'simplifiedtradingtheme'),
         __('Trade Journal', 'simplifiedtradingtheme'),
@@ -1293,8 +1294,7 @@ add_action('admin_menu', __NAMESPACE__ . '\\add_trade_journal_admin_menu');
 /**
  * Render the Trade Journal admin page
  */
-function render_trade_journal_admin()
-{
+function render_trade_journal_admin() {
     global $wpdb;
     $table_name = $wpdb->prefix . 'trade_journal';
 
@@ -1356,10 +1356,9 @@ function render_trade_journal_admin()
  */
 add_action('user_register', __NAMESPACE__ . '\\handle_user_register', 10, 1);
 
-function handle_user_register($user_id)
-{
+function handle_user_register($user_id) {
     // Start session if not already started
-    if (! session_id()) {
+    if ( ! session_id() ) {
         session_start();
     }
 
@@ -1371,7 +1370,7 @@ function handle_user_register($user_id)
     $_SESSION['user_email'] = $user_email;
 
     // Redirect to Thank You page
-    wp_redirect(home_url('/thank-you'));
+    wp_redirect( home_url('/thank-you') );
     exit;
 }
 
@@ -1382,63 +1381,180 @@ function handle_user_register($user_id)
 /**
  * Shortcode to display the Trade Journal submission form
  */
-function trade_journal_form_shortcode()
-{
+function trade_journal_form_shortcode() {
     $nonce = wp_create_nonce('wp_rest');
 
-    ob_start(); ?>
+    ob_start(); 
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
+
+?>
     <form id="trade-journal-form">
-        <label><?php esc_html_e('Symbol', 'simplifiedtradingtheme'); ?></label>
+        <label><?php esc_html_e('Symbol', 'simplifiedtradingtheme'); 
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
+
+?></label>
         <input type="text" name="symbol" required>
+        
+        <label><?php esc_html_e('Entry Price', 'simplifiedtradingtheme'); 
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
 
-        <label><?php esc_html_e('Entry Price', 'simplifiedtradingtheme'); ?></label>
+?></label>
         <input type="number" name="entry_price" step="0.01" required>
+        
+        <label><?php esc_html_e('Exit Price', 'simplifiedtradingtheme'); 
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
 
-        <label><?php esc_html_e('Exit Price', 'simplifiedtradingtheme'); ?></label>
+?></label>
         <input type="number" name="exit_price" step="0.01" required>
+        
+        <label><?php esc_html_e('Strategy', 'simplifiedtradingtheme'); 
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
 
-        <label><?php esc_html_e('Strategy', 'simplifiedtradingtheme'); ?></label>
+?></label>
         <input type="text" name="strategy" required>
+        
+        <label><?php esc_html_e('Comments', 'simplifiedtradingtheme'); 
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
 
-        <label><?php esc_html_e('Comments', 'simplifiedtradingtheme'); ?></label>
+?></label>
         <textarea name="comments"></textarea>
+        
+        <button type="submit"><?php esc_html_e('Submit', 'simplifiedtradingtheme'); 
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
 
-        <button type="submit"><?php esc_html_e('Submit', 'simplifiedtradingtheme'); ?></button>
+?></button>
     </form>
     <div id="response-message"></div>
     <script>
-        (function() {
-            const form = document.getElementById('trade-journal-form');
-            const resp = document.getElementById('response-message');
+    (function() {
+        const form = document.getElementById('trade-journal-form');
+        const resp = document.getElementById('response-message');
 
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                const formData = new FormData(form);
-                const tradeDetails = {};
-                formData.forEach((val, key) => tradeDetails[key] = val);
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const tradeDetails = {};
+            formData.forEach((val, key) => tradeDetails[key] = val);
 
-                const response = await fetch('<?php echo esc_url(rest_url('simplifiedtrading/v1/trade-journal')); ?>', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-WP-Nonce': '<?php echo esc_js($nonce); ?>'
-                    },
-                    body: JSON.stringify({
-                        trade_details: tradeDetails
-                    })
-                });
+            const response = await fetch('<?php echo esc_url(rest_url('simplifiedtrading/v1/trade-journal')); 
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
 
-                const data = await response.json();
-                if (data.status === 'success') {
-                    resp.innerHTML = '<?php esc_js_e("Trade saved successfully!", "simplifiedtradingtheme"); ?>';
-                    form.reset();
-                } else {
-                    resp.innerHTML = 'Error: ' + (data.message || 'Unknown error');
-                }
+?>', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-WP-Nonce': '<?php echo esc_js($nonce); 
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
+
+?>'
+                },
+                body: JSON.stringify({ trade_details: tradeDetails })
             });
-        })();
+
+            const data = await response.json();
+            if (data.status === 'success') {
+                resp.innerHTML = '<?php esc_js_e("Trade saved successfully!", "simplifiedtradingtheme"); 
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
+
+?>';
+                form.reset();
+            } else {
+                resp.innerHTML = 'Error: ' + (data.message || 'Unknown error');
+            }
+        });
+    })();
     </script>
-<?php
+    <?php
     return ob_get_clean();
 }
 add_shortcode('trade_journal_form', __NAMESPACE__ . '\\trade_journal_form_shortcode');
@@ -1450,44 +1566,163 @@ add_shortcode('trade_journal_form', __NAMESPACE__ . '\\trade_journal_form_shortc
 /**
  * Shortcode to display the eBook download form
  */
-function ebook_download_form_shortcode()
-{
+function ebook_download_form_shortcode() {
     ob_start();
-?>
-    <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="POST"
-        class="ebook-download-form"
-        aria-label="<?php esc_attr_e('eBook Download Form', 'simplifiedtradingtheme'); ?>">
-        <?php
-        // Nonce Field for Security
-        wp_nonce_field('ebook_download', 'ebook_download_nonce');
-        ?>
-        <input type="hidden" name="action" value="ebook_download_form">
-        <input type="hidden" name="redirect_to"
-            value="<?php echo esc_url(get_permalink()); ?>">
+    
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
 
+?>
+    <form action="<?php echo esc_url( admin_url('admin-post.php') ); 
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
+
+?>" method="POST" 
+          class="ebook-download-form" 
+          aria-label="<?php esc_attr_e('eBook Download Form', 'simplifiedtradingtheme'); 
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
+
+?>">
+        <?php 
+            // Nonce Field for Security
+            wp_nonce_field('ebook_download', 'ebook_download_nonce'); 
+        
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
+
+?>
+        <input type="hidden" name="action" value="ebook_download_form">
+        <input type="hidden" name="redirect_to" 
+               value="<?php echo esc_url( get_permalink() ); 
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
+
+?>">
+        
         <label for="ebook-email" class="screen-reader-text">
-            <?php esc_html_e('Email Address', 'simplifiedtradingtheme'); ?>
+            <?php esc_html_e('Email Address', 'simplifiedtradingtheme'); 
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
+
+?>
         </label>
-        <input type="email" id="ebook-email" name="ebook_email"
-            placeholder="<?php esc_attr_e('Your email', 'simplifiedtradingtheme'); ?>" required>
+        <input type="email" id="ebook-email" name="ebook_email" 
+               placeholder="<?php esc_attr_e('Your email', 'simplifiedtradingtheme'); 
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
+
+?>" required>
 
         <!-- Honeypot Field -->
         <div style="display:none;">
-            <label for="website"><?php esc_html_e('Website', 'simplifiedtradingtheme'); ?></label>
+            <label for="website"><?php esc_html_e('Website', 'simplifiedtradingtheme'); 
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
+
+?></label>
             <input type="text" id="website" name="website" />
         </div>
 
         <!-- Consent Checkbox -->
         <label for="consent">
             <input type="checkbox" id="consent" name="consent" required>
-            <?php esc_html_e('I agree to the Privacy Policy', 'simplifiedtradingtheme'); ?>
+            <?php esc_html_e('I agree to the Privacy Policy', 'simplifiedtradingtheme'); 
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
+
+?>
         </label>
 
         <button type="submit" class="cta-button">
-            <?php esc_html_e('Download Now', 'simplifiedtradingtheme'); ?>
+            <?php esc_html_e('Download Now', 'simplifiedtradingtheme'); 
+/**
+ * Add Strict-Transport-Security (HSTS) header
+ * Forces browsers to use HTTPS for all future requests
+ */
+function add_hsts_header() {
+    if (is_ssl() || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+    }
+}
+add_action('send_headers', 'add_hsts_header', 1);
+
+?>
         </button>
     </form>
-<?php
+    <?php
     return ob_get_clean();
 }
 add_shortcode('ebook_download_form', __NAMESPACE__ . '\\ebook_download_form_shortcode');
@@ -1495,13 +1730,10 @@ add_shortcode('ebook_download_form', __NAMESPACE__ . '\\ebook_download_form_shor
 /**
  * Handle the eBook download form submission
  */
-function handle_ebook_download_form()
-{
-    if (
-        isset($_POST['ebook_download_nonce']) &&
-        wp_verify_nonce($_POST['ebook_download_nonce'], 'ebook_download')
-    ) {
-
+function handle_ebook_download_form() {
+    if (isset($_POST['ebook_download_nonce']) && 
+        wp_verify_nonce($_POST['ebook_download_nonce'], 'ebook_download')) {
+        
         $email = isset($_POST['ebook_email']) ? sanitize_email($_POST['ebook_email']) : '';
 
         // Honeypot validation
@@ -1559,17 +1791,14 @@ add_action('admin_post_ebook_download_form', __NAMESPACE__ . '\\handle_ebook_dow
 /**
  * Optional: Restrict Non-Admins from Accessing WP Admin
  */
-function freeride_restrict_admin_access()
-{
+function freeride_restrict_admin_access() {
     // Allow wp-admin access for administrators and during login
-    if (
-        current_user_can('administrator') ||
+    if (current_user_can('administrator') || 
         (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/wp-login.php') !== false) ||
-        (defined('DOING_AJAX') && DOING_AJAX)
-    ) {
+        (defined('DOING_AJAX') && DOING_AJAX)) {
         return;
     }
-
+    
     // Only redirect non-admins trying to access wp-admin (not wp-login.php)
     if (is_admin() && !current_user_can('administrator')) {
         // Redirect to dashboard only if user is logged in, otherwise let them access wp-login
@@ -1630,194 +1859,9 @@ require_once get_template_directory() . '/inc/plugin-testing.php';
  * or the function is renamed. These are already handled above.
  * You can remove or replace them as needed.
  */
-add_shortcode('test_shortcode', function () {
+add_shortcode('test_shortcode', function() {
     return '<p>Shortcode is working!</p>';
 });
 
 // Developer Tool - REMOVED (not supposed to be on this website)
 // require_once get_template_directory() . '/inc/developer-tool.php';
-
-/**
- * Create/Ensure Core Pages Exist (Contact, About, Blog)
- * Fixes duplicate pages issue by ensuring single canonical pages
- */
-function freerideinvestor_ensure_core_pages() {
-    $pages = array(
-        'contact' => array(
-            'title' => 'Contact',
-            'slug' => 'contact',
-            'template' => 'page-templates/page-contact.php',
-            'content' => 'Contact us for questions, support, or inquiries.'
-        ),
-        'about' => array(
-            'title' => 'About Us',
-            'slug' => 'about',
-            'template' => 'page-templates/page-about.php',
-            'content' => 'Learn about FreeRide Investor and our mission.'
-        ),
-        'blog' => array(
-            'title' => 'Blog',
-            'slug' => 'blog',
-            'template' => 'page-templates/page-blog.php',
-            'content' => 'Latest trading insights and market analysis.'
-        ),
-    );
-
-    foreach ($pages as $key => $page_data) {
-        $existing_page = get_page_by_path($page_data['slug']);
-        
-        if (!$existing_page) {
-            // Create the page
-            $page_id = wp_insert_post(array(
-                'post_title' => $page_data['title'],
-                'post_name' => $page_data['slug'],
-                'post_content' => $page_data['content'],
-                'post_status' => 'publish',
-                'post_type' => 'page',
-                'page_template' => $page_data['template'],
-            ));
-        } else {
-            // Update existing page to use correct template
-            update_post_meta($existing_page->ID, '_wp_page_template', $page_data['template']);
-        }
-    }
-}
-add_action('after_switch_theme', 'freerideinvestor_ensure_core_pages');
-add_action('admin_init', 'freerideinvestor_ensure_core_pages');
-
-/**
- * Redirect duplicate page URLs to canonical versions
- */
-function freerideinvestor_redirect_duplicate_pages() {
-    if (is_admin() || wp_doing_ajax() || wp_doing_cron()) {
-        return;
-    }
-
-    $request_uri = trim($_SERVER['REQUEST_URI'], '/');
-    
-    // Map of duplicate patterns to canonical URLs
-    $redirects = array(
-        'contact-us' => 'contact',
-        'contact-us/' => 'contact',
-        'about-us' => 'about',
-        'about-us/' => 'about',
-        'blog/' => 'blog',
-    );
-
-    // Check for exact matches
-    if (isset($redirects[$request_uri])) {
-        wp_redirect(home_url('/' . $redirects[$request_uri] . '/'), 301);
-        exit;
-    }
-
-    // Check for pages with same slug but different template
-    if (is_page()) {
-        global $post;
-        $page_template = get_page_template_slug($post->ID);
-        
-        // Ensure contact page uses correct template
-        if ($post->post_name === 'contact' && $page_template !== 'page-templates/page-contact.php') {
-            update_post_meta($post->ID, '_wp_page_template', 'page-templates/page-contact.php');
-        }
-        
-        // Ensure about page uses correct template
-        if ($post->post_name === 'about' && $page_template !== 'page-templates/page-about.php') {
-            update_post_meta($post->ID, '_wp_page_template', 'page-templates/page-about.php');
-        }
-        
-        // Ensure blog page uses correct template
-        if ($post->post_name === 'blog' && $page_template !== 'page-templates/page-blog.php') {
-            update_post_meta($post->ID, '_wp_page_template', 'page-templates/page-blog.php');
-        }
-    }
-}
-add_action('template_redirect', 'freerideinvestor_redirect_duplicate_pages', 1);
-
-/**
- * Template include filter for missing pages (Agent-6 Site Audit Fix)
- * Updated to use canonical page templates
- */
-add_filter('template_include', function ($template) {
-    if (is_404() && isset($_SERVER['REQUEST_URI'])) {
-        $request_uri = trim($_SERVER['REQUEST_URI'], '/');
-        $page_templates = array(
-            'about' => 'page-templates/page-about.php',
-            'blog' => 'page-templates/page-blog.php', // Changed from page-dev-blog.php
-            'contact' => 'page-templates/page-contact.php',
-        );
-
-        if (isset($page_templates[$request_uri])) {
-            $new_template = locate_template($page_templates[$request_uri]);
-            if ($new_template) {
-                // Set up WordPress query to treat this as a page
-                global $wp_query;
-                $wp_query->is_404 = false;
-                $wp_query->is_page = true;
-                $wp_query->is_singular = true;
-                $wp_query->queried_object = (object) array(
-                    'post_type' => 'page',
-                    'post_name' => $request_uri,
-                );
-                return $new_template;
-            }
-        }
-    }
-    return $template;
-}, 20);
-
-/**
- * Add Google Analytics 4 and Facebook Pixel tracking codes
- * Generated by batch_analytics_setup.py
- */
-function add_analytics_tracking_codes() {
-    // Google Analytics 4 (GA4)
-        echo '<!-- Google Analytics 4 (GA4) -->\n';
-        echo '<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>\n';
-        echo '<script>\n';
-        echo 'window.dataLayer = window.dataLayer || [];\n';
-        echo 'function gtag(){dataLayer.push(arguments);}\n';
-        echo 'gtag(\'js\', new Date());\n';
-        echo 'gtag(\'config\', \'G-XXXXXXXXXX\', {\n';
-        echo '\'page_path\': window.location.pathname,\n';
-        echo '\'page_title\': document.title,\n';
-        echo '});\n';
-        echo '// Custom Events Tracking\n';
-        echo '// Track lead_magnet_submit event\n';
-        echo 'gtag("event", "lead_magnet_submit", {\n';
-        echo '"event_category": "engagement",\n';
-        echo '"event_label": "lead_magnet_submit"\n';
-        echo '});\n';
-        echo '// Track subscription_form_submit event\n';
-        echo 'gtag("event", "subscription_form_submit", {\n';
-        echo '"event_category": "engagement",\n';
-        echo '"event_label": "subscription_form_submit"\n';
-        echo '});\n';
-        echo '// Track premium_upgrade_click event\n';
-        echo 'gtag("event", "premium_upgrade_click", {\n';
-        echo '"event_category": "engagement",\n';
-        echo '"event_label": "premium_upgrade_click"\n';
-        echo '});\n';
-        echo '</script>\n';
-        echo '<!-- End GA4 -->\n';
-    
-    // Facebook Pixel
-        echo '<!-- Facebook Pixel Code -->\n';
-        echo '<script>\n';
-        echo '!function(f,b,e,v,n,t,s)\n';
-        echo '{{if(f.fbq)return;n=f.fbq=function(){{n.callMethod?\n';
-        echo 'n.callMethod.apply(n,arguments):n.queue.push(arguments)}};\n';
-        echo 'if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version=\'2.0\';\n';
-        echo 'n.queue=[];t=b.createElement(e);t.async=!0;\n';
-        echo 't.src=v;s=b.getElementsByTagName(e)[0];\n';
-        echo 's.parentNode.insertBefore(t,s)}}(window, document,\'script\',\n';
-        echo '\'https://connect.facebook.net/en_US/fbevents.js\');\n';
-        echo 'fbq(\'init\', \'YOUR_PIXEL_ID\');\n';
-        echo 'fbq(\'track\', \'PageView\');\n';
-        echo '</script>\n';
-        echo '<noscript>\n';
-        echo '<img height="1" width="1" style="display:none"\n';
-        echo 'src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"/>\n';
-        echo '</noscript>\n';
-        echo '<!-- End Facebook Pixel Code -->\n';
-}
-add_action('wp_head', 'add_analytics_tracking_codes', 99);
