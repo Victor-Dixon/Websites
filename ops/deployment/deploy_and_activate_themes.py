@@ -363,8 +363,18 @@ def deploy_and_activate_theme(site_domain: str, config: dict, activate: bool = T
                 command = f"cd {try_path} && wp theme activate {config['theme_name']} --allow-root 2>&1"
                 result = manager.execute_command(command)
                 
-                if result and ("Success" in result or "Activated" in result or "Theme activated" in result.lower()):
-                    print(f"✅ Theme '{config['theme_name']}' activated!")
+                # Check for success indicators: Success, Activated, or "already active" (which means it's active)
+                if result and (
+                    "Success" in result 
+                    or "Activated" in result 
+                    or "Theme activated" in result.lower()
+                    or "already active" in result.lower()
+                    or "is already active" in result.lower()
+                ):
+                    if "already active" in result.lower() or "is already active" in result.lower():
+                        print(f"✅ Theme '{config['theme_name']}' is already active!")
+                    else:
+                        print(f"✅ Theme '{config['theme_name']}' activated!")
                     activation_success = True
                     break
                 elif "Error" not in result and result.strip():
@@ -381,17 +391,6 @@ def deploy_and_activate_theme(site_domain: str, config: dict, activate: bool = T
                 return upload_success, False
             
             return upload_success, activation_success
-            result = manager.execute_command(command)
-            
-            if result and ("Success" in result or "Activated" in result or "Theme activated" in result.lower()):
-                print(f"✅ Theme '{config['theme_name']}' activated!")
-                activation_success = True
-            else:
-                print(f"⚠️  WP-CLI output: {result}")
-                print("   Theme uploaded successfully! Please activate manually:")
-                print(f"   1. Go to: https://{site_domain}/wp-admin/themes.php")
-                print(f"   2. Find theme: {config['theme_name']}")
-                print(f"   3. Click 'Activate'")
         else:
             print("\n⚠️  Automatic activation not available.")
             print("   Theme uploaded successfully! Please activate manually:")
