@@ -1,6 +1,7 @@
 <?php
 /**
- * Main Template File
+ * Main Template File - Chopped & Screwed DJ Theme
+ * Original theme restored from home.html
  * 
  * @package SouthWestSecret
  */
@@ -15,64 +16,17 @@ get_header();
             <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.svg" alt="<?php bloginfo('name'); ?>" class="main-logo">
         </div>
         <h1 class="graffiti-title">
-            <span class="graffiti">Welcome</span>
-            <span class="bubble">Inside</span>
+            <span class="graffiti">SOUTHWEST</span>
+            <span class="bubble">SECRET</span>
         </h1>
-        <p class="tagline">Houston chopped & screwed hospitality — slowed down, poured up, and ready for your next gathering.</p>
-        <p class="hero-subtitle">We open our door like a living room session: warm lighting, vinyl stories, and the city’s heartbeat looping in the background.</p>
-        <div class="hero-buttons">
-            <a href="#booking" class="btn-primary">Book a Home Session</a>
-            <a href="#music" class="btn-outline">Listen to the Tape Wall</a>
-        </div>
-        <div class="hero-badges">
-            <span>Third Ward energy</span>
-            <span>Analog soul & modern polish</span>
-            <span>Available for house parties, lounges & community pop-ups</span>
-        </div>
-    </div>
-</section>
-
-<section class="welcome-home">
-    <div class="container">
-        <div class="welcome-grid">
-            <div class="welcome-intro">
-                <h2>Step into our living room</h2>
-                <p>SouthWest Secret started as a Houston apartment hang — neighbors drifting in, lights low, bass hugging the walls. That same spirit rides with us to every lounge, wedding after-party, and back-yard cookout. When we play, you’re family.</p>
-                <ul class="welcome-list">
-                    <li><span>🎚️</span> Curated chopped & screwed journeys tailored to the room</li>
-                    <li><span>🪩</span> Mobile-friendly setup with warm lighting and analog visuals</li>
-                    <li><span>🤝</span> Community-first bookings — fundraisers, creatives, and cultural pop-ups welcome</li>
-                </ul>
-            </div>
-            <div class="welcome-card">
-                <h3>What you can expect</h3>
-                <p>We blend classics, underground gems, and hometown shout-outs to keep the night unhurried but unforgettable. Tell us the vibe and we’ll slow it down just right.</p>
-                <a href="#booking" class="btn-primary">Let’s plan your session</a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="neighborhood-sessions">
-    <div class="container">
-        <h2 class="section-heading">Sessions we host on the regular</h2>
-        <p class="section-description">Pick the vibe that fits your people — we’ll bring the speakers, the slowed-down remixes, and the southern hospitality.</p>
-        <div class="sessions-grid">
-            <article class="session-card">
-                <h3>House Sessions</h3>
-                <p>Invite the crew over and we transform your living room into a late-night Houston lounge with curated setlists and low-key lighting.</p>
-                <a href="#booking" class="session-link">Book a house night →</a>
-            </article>
-            <article class="session-card">
-                <h3>Private Events</h3>
-                <p>Birthdays, anniversaries, creative launches — we soundtrack the stories that matter with thoughtful pacing and personalized drops.</p>
-                <a href="#booking" class="session-link">Plan your event →</a>
-            </article>
-            <article class="session-card">
-                <h3>Community Pop-Ups</h3>
-                <p>Pop-up markets, art shows, and cultural nights. We love teaming up with local organizers to slow things down and keep it soulful.</p>
-                <a href="#booking" class="session-link">Partner with us →</a>
-            </article>
+        <p class="tagline">Chopped & Screwed DJ</p>
+        <div class="social-links">
+            <a href="https://www.youtube.com/@SouthWestSecret" target="_blank" class="btn-youtube">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+                Subscribe on YouTube
+            </a>
         </div>
     </div>
 </section>
@@ -81,10 +35,10 @@ get_header();
 <section id="music" class="screw-tapes-library">
     <div class="container">
         <h2 class="section-title">
-            <span class="graffiti-sub">THE</span>
-            <span class="bubble-sub">SOUND LIBRARY</span>
+            <span class="graffiti-sub">SCREW</span>
+            <span class="bubble-sub">TAPES</span>
         </h2>
-        <p class="library-subtitle">Our digital tape wall is always live. Scroll through volumes, press play, and imagine the room we’ll set up for you.</p>
+        <p class="library-subtitle">Click a tape to load it into the player below</p>
         
         <!-- Featured Tape -->
         <div class="featured-tape-container">
@@ -181,11 +135,13 @@ get_header();
         </h2>
         <div class="about-content">
             <p>
-                Welcome to <strong>SouthWest Secret</strong>, the portable living room for Houston’s chopped & screwed culture. 
-                We keep the warmth of home in every set: mindful pacing, storytelling transitions, and shout-outs that make your people feel seen.
+                Welcome to <strong>SouthWest Secret</strong>, where the art of chopped and screwed music lives on. 
+                Inspired by the legendary DJ Screw and the Houston sound, I bring you slowed-down, 
+                remixed versions of your favorite tracks.
             </p>
             <p>
-                Every mix is hand-built with local flair — a hypnotic blend perfect for cruising, unwinding, or celebrating the milestones that deserve to be remembered.
+                Each mix is carefully crafted with that signature screwed tempo, 
+                creating a hypnotic and laid-back vibe that's perfect for cruising or just vibing out.
             </p>
             <div class="features">
                 <div class="feature">
@@ -208,44 +164,6 @@ get_header();
     </div>
 </section>
 
-<section class="community-notes">
-    <div class="container">
-        <h2 class="section-heading">Neighbors who’ve pulled up</h2>
-        <div class="testimonials-grid">
-            <article class="testimonial-card">
-                <p>“SouthWest Secret turned our backyard into a late-night lounge. Guests kept asking for the playlist — there isn’t one. It’s a whole experience.”</p>
-                <span>— Bri, Third Ward house session</span>
-            </article>
-            <article class="testimonial-card">
-                <p>“The pacing, the blends, the storytelling… it felt like sitting on a Houston porch with family. We’ll be booking again.”</p>
-                <span>— Malik, community gallery pop-up</span>
-            </article>
-            <article class="testimonial-card">
-                <p>“Perfect balance of nostalgia and fresh cuts. The slowed-down transitions gave our dinner party the exact energy we wanted.”</p>
-                <span>— Janelle, private chef experience</span>
-            </article>
-        </div>
-    </div>
-</section>
-
-<!-- Booking Section -->
-<section id="booking" class="booking-strip">
-    <div class="container">
-        <div class="booking-content">
-            <h2>Ready to invite the city inside?</h2>
-            <p>Tell us about your space, your people, and the story you want to slow down. We’ll craft a set, bring the gear, and make it feel like home.</p>
-            <div class="booking-actions">
-                <a href="<?php echo home_url('/contact'); ?>" class="btn-primary">Request a date</a>
-                <a href="https://www.youtube.com/@SouthWestSecret" target="_blank" class="btn-outline">Preview our vibe</a>
-            </div>
-            <div class="booking-meta">
-                <span>Bookings open for Houston & surrounding cities</span>
-                <span>Available weeknights + weekends</span>
-            </div>
-        </div>
-    </div>
-</section>
-
 <!-- Contact/Subscribe Section -->
 <section id="contact" class="contact">
     <div class="container">
@@ -254,13 +172,12 @@ get_header();
             <span class="bubble-sub">CONNECTED</span>
         </h2>
         <div class="contact-content">
-            <p>Join the neighborhood list for mix drops, pop-up invites, and late-night set recaps.</p>
+            <p>Subscribe to the channel for the latest chopped and screwed mixes!</p>
             <a href="https://www.youtube.com/@SouthWestSecret" target="_blank" class="btn-subscribe">
-                Subscribe & Listen
+                Subscribe Now
             </a>
         </div>
     </div>
 </section>
 
 <?php get_footer(); ?>
-
