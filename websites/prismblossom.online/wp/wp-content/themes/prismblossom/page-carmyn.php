@@ -489,7 +489,7 @@ get_header();
             <div class="about-content">
                 <div class="carmyn-text" style="text-align: center; max-width: 800px; margin: 0 auto;">
                     <p style="font-size: 1.2em; margin-bottom: 20px;">
-                        Welcome to <strong style="color: #ffffff; text-shadow: 0 0 10px #ffffff;">Carmyn's</strong> space on PrismBlossom!
+                        Welcome to <strong style="color: #ffffff; text-shadow: 0 0 10px #ffffff;">Carmyn's</strong> space on Prism Blossom!
                     </p>
                     <p style="font-size: 1.1em; margin-bottom: 20px;">
                         I'm a DJ specializing in <strong style="color: #ffffff; text-shadow: 0 0 5px #ffffff;">R&B</strong>, <strong style="color: #ffffff; text-shadow: 0 0 5px #ffffff;">Dance</strong>, and <strong style="color: #ffffff; text-shadow: 0 0 5px #ffffff;">Jazz</strong> music. 
@@ -501,7 +501,7 @@ get_header();
                 </div>
                 <div class="website-link" style="margin-top: 30px; text-align: center;">
                     <a href="<?php echo home_url(); ?>" class="btn-subscribe" style="display: inline-block; background: rgba(255, 255, 255, 0.2); border: 2px solid #ffffff; color: #ffffff; text-shadow: 0 0 5px #ffffff; box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);">
-                        Back to PrismBlossom
+                        Back to Prism Blossom
                     </a>
                 </div>
             </div>
@@ -516,9 +516,9 @@ get_header();
                 <span class="bubble-sub">CONNECTED</span>
             </h2>
             <div class="contact-content">
-                <p class="carmyn-text">Subscribe on YouTube for the latest mixes!</p>
-                <a href="https://www.youtube.com/@prismblossom" target="_blank" class="btn-subscribe" style="background: rgba(255, 255, 255, 0.2); border: 2px solid #ffffff; color: #ffffff; text-shadow: 0 0 5px #ffffff; box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);">
-                    Subscribe Now
+                <p class="carmyn-text">Leave a note and sign the guestbook!</p>
+                <a href="<?php echo esc_url(home_url('/guestbook')); ?>" class="btn-subscribe" style="background: rgba(255, 255, 255, 0.2); border: 2px solid #ffffff; color: #ffffff; text-shadow: 0 0 5px #ffffff; box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);">
+                    Sign the Guestbook
                 </a>
             </div>
         </div>

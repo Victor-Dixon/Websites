@@ -12,8 +12,8 @@ get_header();
 <!-- Hero Section -->
 <section class="hero">
     <div class="container">
-        <h1 class="hero-title">Welcome to PrismBlossom</h1>
-        <p class="hero-subtitle">A celebration of life's special moments and milestones</p>
+        <h1 class="hero-title">Welcome to Prism Blossom</h1>
+        <p class="hero-subtitle">Sharing family joy and memories</p>
         <div class="hero-buttons">
             <a href="<?php echo home_url('/carmyn'); ?>" class="btn-primary">Visit Carmyn</a>
             <a href="<?php echo home_url('/guestbook'); ?>" class="btn-outline">Sign Guestbook</a>
@@ -93,8 +93,8 @@ get_header();
 <!-- About Section -->
 <section class="about">
     <div class="container">
-        <h2>About PrismBlossom</h2>
-        <p>PrismBlossom is a personal site dedicated to celebrating important moments, sharing memories, and bringing people together. This space serves as:</p>
+        <h2>About Prism Blossom</h2>
+        <p>Prism Blossom is a personal site for family and friends — a simple space to celebrate special moments, share memories, and stay connected.</p>
         <ul class="feature-list">
             <li>✨ A digital guestbook for special occasions</li>
             <li>📸 A photo gallery of cherished memories</li>
