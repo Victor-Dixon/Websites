@@ -29,6 +29,8 @@ function ariajet_studio_setup() {
     // Theme features
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
+    // Allow comments on pages (needed for About page comments)
+    add_post_type_support('page', 'comments');
     add_theme_support('custom-logo', array(
         'height'      => 80,
         'width'       => 200,
@@ -333,3 +335,46 @@ function ariajet_studio_nav_menu_icons($items, $args) {
     return $items;
 }
 add_filter('wp_nav_menu_objects', 'ariajet_studio_nav_menu_icons', 10, 2);
+
+/**
+ * Rewrite a "Capabilities" nav item to Home (/).
+ * (Menu labels usually live in the WordPress database.)
+ */
+function ariajet_studio_fix_capabilities_menu_item($items, $args) {
+    if (!isset($args->theme_location) || $args->theme_location !== 'primary') {
+        return $items;
+    }
+
+    foreach ($items as $item) {
+        $title = trim(wp_strip_all_tags($item->title));
+        $url = isset($item->url) ? trim((string) $item->url) : '';
+        $is_dead_link = ($url === '' || $url === '#' || strcasecmp($url, 'javascript:void(0)') === 0);
+
+        // If a menu item is labeled "Capabilities" or "Agents", make it Home → /
+        if (strcasecmp($title, 'Capabilities') === 0 || strcasecmp($title, 'Agents') === 0) {
+            $item->title = __('Home', 'ariajet-studio');
+            $item->url = home_url('/');
+            continue;
+        }
+
+        // If a menu item is labeled "Home" but points to a dead link, fix it.
+        if (strcasecmp($title, 'Home') === 0 && $is_dead_link) {
+            $item->url = home_url('/');
+        }
+    }
+
+    return $items;
+}
+add_filter('wp_nav_menu_objects', 'ariajet_studio_fix_capabilities_menu_item', 9, 2);
+
+/**
+ * Force comments open on the About page so the form is usable.
+ */
+function ariajet_studio_force_about_comments_open($open, $post_id) {
+    $slug = (string) get_post_field('post_name', $post_id);
+    if (strcasecmp($slug, 'about') === 0) {
+        return true;
+    }
+    return $open;
+}
+add_filter('comments_open', 'ariajet_studio_force_about_comments_open', 10, 2);
