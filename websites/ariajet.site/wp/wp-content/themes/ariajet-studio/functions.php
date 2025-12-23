@@ -319,6 +319,7 @@ function ariajet_studio_nav_menu_icons($items, $args) {
         $icons = array(
             'Home'   => '🏠',
             'Games'  => '🎮',
+            'Music'  => '🎵',
             'About'  => '✨',
             'Blog'   => '📝',
             'Contact' => '💌',
@@ -349,6 +350,27 @@ function ariajet_studio_fix_capabilities_menu_item($items, $args) {
         $title = trim(wp_strip_all_tags($item->title));
         $url = isset($item->url) ? trim((string) $item->url) : '';
         $is_dead_link = ($url === '' || $url === '#' || strcasecmp($url, 'javascript:void(0)') === 0);
+
+        // If a menu item is labeled "Live Activity", rename it to "Music".
+        // (On AriaJet, this typically links to the Playlists/Music page.)
+        if (strcasecmp($title, 'Live Activity') === 0) {
+            $item->title = __('Music', 'ariajet-studio');
+
+            // If the existing link is a placeholder or points at an old activity route, fix it.
+            if (
+                $is_dead_link ||
+                stripos($url, '#activity') !== false ||
+                preg_match('~/(live-activity|activity)/?$~i', $url)
+            ) {
+                $item->url = home_url('/playlists/');
+            }
+            continue;
+        }
+
+        // If a menu item is labeled "Music" but points to a dead link, fix it.
+        if (strcasecmp($title, 'Music') === 0 && $is_dead_link) {
+            $item->url = home_url('/playlists/');
+        }
 
         // If a menu item is labeled "Capabilities" or "Agents", make it Home → /
         if (strcasecmp($title, 'Capabilities') === 0 || strcasecmp($title, 'Agents') === 0) {
