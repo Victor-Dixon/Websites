@@ -13,6 +13,37 @@ if (!defined('ABSPATH')) {
 }
 
 /**
+ * Prefer a human-readable author name (avoid showing emails).
+ *
+ * WP will display whatever the user's "Display name publicly as" is set to.
+ * If that's an email, try to fall back to First+Last or Nickname when available.
+ */
+function digitaldreamscape_filter_author_display_name($display_name) {
+    $author_id = get_the_author_meta('ID');
+    if (!$author_id) {
+        return $display_name;
+    }
+
+    $user = get_user_by('id', $author_id);
+    if (!$user) {
+        return $display_name;
+    }
+
+    $full_name = trim((string) $user->first_name . ' ' . (string) $user->last_name);
+    if ($full_name !== '') {
+        return $full_name;
+    }
+
+    $nickname = trim((string) $user->nickname);
+    if ($nickname !== '' && strpos($nickname, '@') === false) {
+        return $nickname;
+    }
+
+    return $display_name;
+}
+add_filter('the_author', 'digitaldreamscape_filter_author_display_name');
+
+/**
  * Theme Setup
  */
 function digitaldreamscape_setup() {
