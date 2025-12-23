@@ -453,8 +453,8 @@ function ariajet_cosmic_fix_capabilities_menu_item($items, $args) {
         }
 
         // If a menu item is labeled "Capabilities" (or "Capabilitie", etc.), rename it to "Music".
-        // WordPress menu titles sometimes get truncated, so match on the "Capabilit" prefix.
-        if (preg_match('~^capabilit~i', $title)) {
+        // Match anywhere to handle labels like "🔥 Capabilities".
+        if (preg_match('~capabilit~i', $title)) {
             $item->title = __('Music', 'ariajet-cosmic');
             $item->url = home_url('/playlists/');
             continue;
