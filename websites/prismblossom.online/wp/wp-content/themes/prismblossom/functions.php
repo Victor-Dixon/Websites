@@ -670,6 +670,110 @@ add_action('wp_ajax_prismblossom_submit_invitation_message', 'prismblossom_ajax_
 add_action('wp_ajax_nopriv_prismblossom_submit_invitation_message', 'prismblossom_ajax_invitation_message_submission');
 
 // ============================================
+// CARMYN PAGE PROFILE FIELDS
+// ============================================
+
+function prismblossom_add_carmyn_meta_box()
+{
+    add_meta_box(
+        'prismblossom_carmyn_profile',
+        'Carmyn Profile',
+        'prismblossom_carmyn_meta_box_callback',
+        'page',
+        'normal',
+        'high'
+    );
+}
+add_action('add_meta_boxes', 'prismblossom_add_carmyn_meta_box');
+
+function prismblossom_carmyn_meta_box_callback($post)
+{
+    if (get_page_template_slug($post->ID) !== 'page-carmyn.php') {
+        echo '<p>This meta box is only available on the Carmyn page template.</p>';
+        return;
+    }
+
+    wp_nonce_field('prismblossom_save_carmyn_profile', 'prismblossom_carmyn_nonce');
+
+    $tagline = get_post_meta($post->ID, '_carmyn_tagline', true);
+    $highlights = get_post_meta($post->ID, '_carmyn_highlights', true);
+    $lofi_youtube_id = get_post_meta($post->ID, '_carmyn_lofi_youtube_id', true);
+
+    $tagline = $tagline ?: 'Family & friends';
+    $highlights = $highlights ?: 'Family, Memories, Music';
+    $lofi_youtube_id = $lofi_youtube_id ?: 'sF80I-TQiW0';
+?>
+    <table class="form-table">
+        <tr>
+            <th><label for="carmyn_tagline">Tagline</label></th>
+            <td>
+                <input type="text" id="carmyn_tagline" name="carmyn_tagline"
+                    value="<?php echo esc_attr($tagline); ?>"
+                    class="regular-text"
+                    placeholder="e.g., Family & friends">
+                <p class="description">Short line shown under the page title.</p>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="carmyn_highlights">Highlights (comma-separated)</label></th>
+            <td>
+                <input type="text" id="carmyn_highlights" name="carmyn_highlights"
+                    value="<?php echo esc_attr($highlights); ?>"
+                    class="regular-text"
+                    placeholder="e.g., Family, Memories, Music">
+                <p class="description">Displayed as badges on the page.</p>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="carmyn_lofi_youtube_id">Background Music YouTube Video ID</label></th>
+            <td>
+                <input type="text" id="carmyn_lofi_youtube_id" name="carmyn_lofi_youtube_id"
+                    value="<?php echo esc_attr($lofi_youtube_id); ?>"
+                    class="regular-text"
+                    placeholder="e.g., sF80I-TQiW0">
+                <p class="description">Used by the “Play Music” button. (Video ID only, not full URL.)</p>
+            </td>
+        </tr>
+    </table>
+<?php
+}
+
+function prismblossom_save_carmyn_meta($post_id)
+{
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    if (
+        !isset($_POST['prismblossom_carmyn_nonce']) ||
+        !wp_verify_nonce($_POST['prismblossom_carmyn_nonce'], 'prismblossom_save_carmyn_profile')
+    ) {
+        return;
+    }
+
+    if (!current_user_can('edit_page', $post_id)) {
+        return;
+    }
+
+    if (get_page_template_slug($post_id) !== 'page-carmyn.php') {
+        return;
+    }
+
+    if (isset($_POST['carmyn_tagline'])) {
+        update_post_meta($post_id, '_carmyn_tagline', sanitize_text_field($_POST['carmyn_tagline']));
+    }
+
+    if (isset($_POST['carmyn_highlights'])) {
+        update_post_meta($post_id, '_carmyn_highlights', sanitize_text_field($_POST['carmyn_highlights']));
+    }
+
+    if (isset($_POST['carmyn_lofi_youtube_id'])) {
+        update_post_meta($post_id, '_carmyn_lofi_youtube_id', sanitize_text_field($_POST['carmyn_lofi_youtube_id']));
+    }
+}
+add_action('save_post', 'prismblossom_save_carmyn_meta');
+
+// ============================================
 // FUTURE BLOG STRUCTURE (Not implemented yet)
 // ============================================
 
