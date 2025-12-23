@@ -319,6 +319,7 @@ function ariajet_studio_nav_menu_icons($items, $args) {
         $icons = array(
             'Home'   => '🏠',
             'Games'  => '🎮',
+            'Music'  => '🎵',
             'About'  => '✨',
             'Blog'   => '📝',
             'Contact' => '💌',
@@ -354,6 +355,12 @@ function ariajet_studio_fix_capabilities_menu_item($items, $args) {
         if (strcasecmp($title, 'Capabilities') === 0 || strcasecmp($title, 'Agents') === 0) {
             $item->title = __('Home', 'ariajet-studio');
             $item->url = home_url('/');
+            continue;
+        }
+
+        // Rename "Live Activity" to "Music" (keep existing URL).
+        if (strcasecmp($title, 'Live Activity') === 0) {
+            $item->title = __('Music', 'ariajet-studio');
             continue;
         }
 

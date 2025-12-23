@@ -438,6 +438,12 @@ function ariajet_cosmic_fix_capabilities_menu_item($items, $args) {
             continue;
         }
 
+        // Rename "Live Activity" to "Music" (keep existing URL).
+        if (strcasecmp($title, 'Live Activity') === 0) {
+            $item->title = __('Music', 'ariajet-cosmic');
+            continue;
+        }
+
         // If a menu item is labeled "Home" but points to a dead link, fix it.
         if (strcasecmp($title, 'Home') === 0 && $is_dead_link) {
             $item->url = home_url('/');
