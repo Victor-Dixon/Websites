@@ -346,6 +346,16 @@ function ariajet_studio_fix_capabilities_menu_item($items, $args) {
         return $items;
     }
 
+    // Avoid creating duplicate "Music" links if a real Music item already exists.
+    $has_music = false;
+    foreach ($items as $scan_item) {
+        $scan_title = trim(wp_strip_all_tags($scan_item->title));
+        if (strcasecmp($scan_title, 'Music') === 0) {
+            $has_music = true;
+            break;
+        }
+    }
+
     foreach ($items as $item) {
         $title = trim(wp_strip_all_tags($item->title));
         $url = isset($item->url) ? trim((string) $item->url) : '';
@@ -372,8 +382,21 @@ function ariajet_studio_fix_capabilities_menu_item($items, $args) {
             $item->url = home_url('/playlists/');
         }
 
-        // If a menu item is labeled "Capabilities" or "Agents", make it Home → /
-        if (strcasecmp($title, 'Capabilities') === 0 || strcasecmp($title, 'Agents') === 0) {
+        // If a menu item is labeled "Capabilities", rename it to "Music" (unless Music already exists).
+        if (strcasecmp($title, 'Capabilities') === 0) {
+            if ($has_music) {
+                // Keep a sane Home link instead of duplicating Music.
+                $item->title = __('Home', 'ariajet-studio');
+                $item->url = home_url('/');
+            } else {
+                $item->title = __('Music', 'ariajet-studio');
+                $item->url = home_url('/playlists/');
+            }
+            continue;
+        }
+
+        // If a menu item is labeled "Agents", make it Home → /
+        if (strcasecmp($title, 'Agents') === 0) {
             $item->title = __('Home', 'ariajet-studio');
             $item->url = home_url('/');
             continue;
