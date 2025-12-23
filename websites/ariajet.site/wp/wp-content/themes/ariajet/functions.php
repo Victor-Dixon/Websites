@@ -256,8 +256,18 @@ function ariajet_fix_capabilities_menu_item($items, $args) {
 
     foreach ($items as $item) {
         $title = trim(wp_strip_all_tags($item->title));
-        if (strcasecmp($title, 'Capabilities') === 0) {
+        $url = isset($item->url) ? trim((string) $item->url) : '';
+        $is_dead_link = ($url === '' || $url === '#' || strcasecmp($url, 'javascript:void(0)') === 0);
+
+        // If a menu item is labeled "Capabilities" or "Agents", make it Home → /
+        if (strcasecmp($title, 'Capabilities') === 0 || strcasecmp($title, 'Agents') === 0) {
             $item->title = __('Home', 'ariajet');
+            $item->url = home_url('/');
+            continue;
+        }
+
+        // If a menu item is labeled "Home" but points to a dead link, fix it.
+        if (strcasecmp($title, 'Home') === 0 && $is_dead_link) {
             $item->url = home_url('/');
         }
     }
