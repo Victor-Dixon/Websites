@@ -1,8 +1,9 @@
 <?php
 /**
- * Template Name: Stunning Blog Archive
+ * Archive Template - Stunning Blog Archive
  * 
- * A stunning, modern blog archive page that matches the front page design.
+ * Displays blog posts with stunning design matching the front page.
+ * This template handles pagination correctly for archive URLs.
  * 
  * @package FreeRideInvestor
  */
@@ -192,6 +193,46 @@ get_header();
     font-size: 1.1rem;
 }
 
+/* Pagination */
+.stunning-pagination {
+    margin-top: 60px;
+    text-align: center;
+}
+
+.stunning-pagination ul {
+    display: inline-flex;
+    list-style: none;
+    padding: 0;
+    gap: 10px;
+}
+
+.stunning-pagination li {
+    display: inline-block;
+}
+
+.stunning-pagination a,
+.stunning-pagination span {
+    display: inline-block;
+    padding: 10px 16px;
+    background: rgba(240, 246, 252, 0.03);
+    border: 1px solid var(--fri-border);
+    color: var(--fri-text-light);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.stunning-pagination a:hover {
+    background: rgba(240, 246, 252, 0.06);
+    border-color: var(--fri-primary);
+}
+
+.stunning-pagination .current {
+    background: var(--fri-primary);
+    border-color: var(--fri-primary);
+    color: white;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .stunning-blog-hero {
@@ -218,27 +259,9 @@ get_header();
     
     <!-- Blog Content -->
     <div class="stunning-blog-content">
-        <?php
-        // Get pagination correctly for page templates
-        $paged = 1;
-        if (isset($_GET['paged']) && is_numeric($_GET['paged'])) {
-            $paged = max(1, intval($_GET['paged']));
-        }
-        
-        $blog_query_args = array(
-            'post_type' => 'post',
-            'posts_per_page' => 12,
-            'paged' => $paged,
-            'post_status' => 'publish',
-            'ignore_sticky_posts' => true,
-            'no_found_rows' => false,
-        );
-        
-        $blog_query = new WP_Query($blog_query_args);
-        
-        if ($blog_query->have_posts()) : ?>
+        <?php if (have_posts()) : ?>
             <div class="stunning-posts-grid">
-                <?php while ($blog_query->have_posts()) : $blog_query->the_post(); 
+                <?php while (have_posts()) : the_post(); 
                     $categories = get_the_category();
                     $category_name = !empty($categories) ? $categories[0]->name : '';
                 ?>
@@ -268,7 +291,9 @@ get_header();
                                 if (has_excerpt()) {
                                     the_excerpt();
                                 } else {
-                                    echo wp_trim_words(get_the_content(), 25);
+                                    $content = get_the_content();
+                                    $content = wp_strip_all_tags($content);
+                                    echo wp_trim_words($content, 25);
                                 }
                                 ?>
                             </div>
@@ -282,78 +307,15 @@ get_header();
             </div>
             
             <!-- Pagination -->
-            <?php 
-            if ($blog_query->max_num_pages > 1) : 
-                $page_url = trailingslashit(get_permalink());
-            ?>
-                <nav class="pagination" style="margin-top: 60px; text-align: center;">
-                    <ul style="display: inline-flex; list-style: none; padding: 0; gap: 10px;">
-                        <?php
-                        // Previous link
-                        if ($paged > 1) {
-                            $prev_url = ($paged == 2) ? $page_url : add_query_arg('paged', $paged - 1, $page_url);
-                            echo '<li><a href="' . esc_url($prev_url) . '" style="display: inline-block; padding: 10px 16px; background: rgba(240, 246, 252, 0.03); border: 1px solid var(--fri-border); color: var(--fri-text-light); text-decoration: none; border-radius: 8px;">« Previous</a></li>';
-                        }
-                        
-                        // Page numbers
-                        for ($i = 1; $i <= $blog_query->max_num_pages; $i++) {
-                            if ($i == 1) {
-                                $link_url = $page_url;
-                            } else {
-                                $link_url = add_query_arg('paged', $i, $page_url);
-                            }
-                            
-                            $style = 'display: inline-block; padding: 10px 16px; background: rgba(240, 246, 252, 0.03); border: 1px solid var(--fri-border); color: var(--fri-text-light); text-decoration: none; border-radius: 8px;';
-                            if ($i == $paged) {
-                                $style = 'display: inline-block; padding: 10px 16px; background: var(--fri-primary); border: 1px solid var(--fri-primary); color: white; text-decoration: none; border-radius: 8px;';
-                                echo '<li><span style="' . $style . '">' . $i . '</span></li>';
-                            } else {
-                                echo '<li><a href="' . esc_url($link_url) . '" style="' . $style . '">' . $i . '</a></li>';
-                            }
-                        }
-                        
-                        // Next link
-                        if ($paged < $blog_query->max_num_pages) {
-                            $next_url = add_query_arg('paged', $paged + 1, $page_url);
-                            echo '<li><a href="' . esc_url($next_url) . '" style="display: inline-block; padding: 10px 16px; background: rgba(240, 246, 252, 0.03); border: 1px solid var(--fri-border); color: var(--fri-text-light); text-decoration: none; border-radius: 8px;">Next »</a></li>';
-                        }
-                        ?>
-                    </ul>
-                    <style>
-                    .pagination ul {
-                        display: inline-flex;
-                        list-style: none;
-                        padding: 0;
-                        gap: 10px;
-                    }
-                    .pagination li {
-                        display: inline-block;
-                    }
-                    .pagination a,
-                    .pagination span {
-                        display: inline-block;
-                        padding: 10px 16px;
-                        background: rgba(240, 246, 252, 0.03);
-                        border: 1px solid var(--fri-border);
-                        color: var(--fri-text-light);
-                        text-decoration: none;
-                        border-radius: 8px;
-                        transition: all 0.3s ease;
-                    }
-                    .pagination a:hover {
-                        background: rgba(240, 246, 252, 0.06);
-                        border-color: var(--fri-primary);
-                    }
-                    .pagination .current {
-                        background: var(--fri-primary);
-                        border-color: var(--fri-primary);
-                        color: white;
-                    }
-                    </style>
-                </nav>
-            <?php endif; ?>
-            
-            <?php wp_reset_postdata(); ?>
+            <nav class="stunning-pagination">
+                <?php
+                the_posts_pagination([
+                    'mid_size' => 2,
+                    'prev_text' => '« Previous',
+                    'next_text' => 'Next »',
+                ]);
+                ?>
+            </nav>
         <?php else : ?>
             <div class="stunning-blog-empty">
                 <h2>Welcome to the FreeRide Investor Blog</h2>

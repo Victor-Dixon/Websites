@@ -24,7 +24,7 @@ if DEPLOYMENT_TOOLS.exists():
 
 # Try to use SimpleWordPressDeployer (local, preferred)
 try:
-    from simple_wordpress_deployer import SimpleWordPressDeployer
+    from simple_wordpress_deployer import SimpleWordPressDeployer, load_site_configs
     WordPressDeploymentManager = SimpleWordPressDeployer
     DEPLOYER_AVAILABLE = True
 except ImportError:
@@ -227,17 +227,13 @@ def deploy_file_to_site(file_path: str, site_key: str) -> bool:
         return True  # Don't fail commit if deployer unavailable
     
     try:
-        # Load site configs for SimpleWordPressDeployer
-        import json
-        config_path = Path(__file__).parent.parent / "configs" / "site_configs.json"
-        if config_path.exists():
-            with open(config_path, 'r', encoding='utf-8') as f:
-                site_configs = json.load(f)
-        else:
-            site_configs = {}
-        
-        # Initialize manager (SimpleWordPressDeployer needs site_configs)
+        # Load site configs using proper priority order (env vars → sites.json → site_configs.json)
         if WordPressDeploymentManager == SimpleWordPressDeployer:
+            # Use load_site_configs() which checks all credential sources in priority order
+            site_configs = load_site_configs()
+            if not site_configs:
+                print(f"⚠️  No site configurations found for {site_key}")
+                return False
             manager = WordPressDeploymentManager(site_key, site_configs)
         else:
             # UnifiedWordPressManager adapter

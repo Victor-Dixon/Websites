@@ -589,7 +589,7 @@ get_header();
                 <span class="graffiti-sub">BIRTHDAY</span>
                 <span class="bubble-sub">GUESTBOOK</span>
             </h2>
-            <p class="carmyn-text" style="margin-bottom: 30px;">Leave a birthday message! Your message will appear after approval.</p>
+            <p class="carmyn-text" style="margin-bottom: 30px;">Leave a birthday message! Your message will appear immediately below.</p>
 
             <!-- Guestbook Form -->
             <div class="guestbook-form-container">
@@ -792,6 +792,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Guestbook Script -->
 <script>
+// Helper function to escape HTML
+function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('guestbook-form');
     const messageDiv = document.getElementById('form-message');
@@ -819,20 +831,39 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
+                if (data.success && data.data && data.data.entry) {
                     messageDiv.className = 'form-message success';
-                    messageDiv.textContent = 'Thank you! Your message has been submitted and will appear after approval.';
+                    messageDiv.textContent = 'Thank you! Your message has been posted!';
                     form.reset();
-                    charCount.textContent = '0 / 500 characters';
+                    if (charCount) charCount.textContent = '0 / 500 characters';
                     
-                    setTimeout(() => {
-                        location.reload();
-                    }, 2000);
+                    // Add the new message to the top of the list immediately
+                    const entriesContainer = document.getElementById('guestbook-entries');
+                    const entry = data.data.entry;
+                    
+                    const messageCard = document.createElement('div');
+                    messageCard.className = 'message-card';
+                    messageCard.innerHTML = `
+                        <div class="message-header">
+                            <span class="message-name carmyn-text" style="font-weight: bold; font-size: 1.1rem;">${escapeHtml(entry.guest_name)}</span>
+                            <span class="message-date carmyn-text" style="font-size: 0.9rem; opacity: 0.8;">${entry.date_formatted}</span>
+                        </div>
+                        <div class="message-content carmyn-text" style="line-height: 1.6; margin-top: 10px;">${escapeHtml(entry.message)}</div>
+                    `;
+                    
+                    // Insert at the top
+                    if (entriesContainer) {
+                        entriesContainer.insertBefore(messageCard, entriesContainer.firstChild);
+                        
+                        // Remove "no messages" text if present
+                        const noMessages = entriesContainer.querySelector('.no-messages');
+                        if (noMessages) {
+                            noMessages.remove();
+                        }
+                    }
                 } else {
                     messageDiv.className = 'form-message error';
-                    // Fix error message text rendering
-                    const errorMsg = data.data || 'There was an error submitting your message. Please try again.';
-                    messageDiv.textContent = errorMsg.replace(/\s+/g, ' ').trim();
+                    messageDiv.textContent = data.data && data.data.message ? data.data.message : 'There was an error submitting your message. Please try again.';
                 }
             })
             .catch(error => {
@@ -845,4 +876,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <?php get_footer(); ?>
-

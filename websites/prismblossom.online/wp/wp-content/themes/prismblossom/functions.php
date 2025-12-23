@@ -204,19 +204,26 @@ function prismblossom_add_artist_menu_items($items, $args)
 }
 add_filter('wp_nav_menu_items', 'prismblossom_add_artist_menu_items', 10, 2);
 
-// Remove unwanted menu items from navigation
+// Remove unwanted menu items from navigation - ENHANCED
 function prismblossom_remove_menu_items($items, $args)
 {
     // Only filter primary menu
     if (isset($args->theme_location) && $args->theme_location == 'primary') {
-        // Items to remove (case-insensitive matching)
-        $items_to_remove = array('Capabilities', 'Capabilitie', 'Live Activity', 'Agent', 'Agents', 'Aria');
+        // Items to remove (case-insensitive matching with variations)
+        $items_to_remove = array(
+            'Capabilities', 'Capabilitie', 'Capability',
+            'Live Activity', 'Live Activity', 'LiveActivity',
+            'Agent', 'Agents', 'Agent', 
+            'Aria', 'Aria', 'aria'
+        );
         
         foreach ($items_to_remove as $item_to_remove) {
             // More robust regex to match menu items with the text
             $patterns = array(
                 '/<li[^>]*>.*?<a[^>]*>.*?' . preg_quote($item_to_remove, '/') . '.*?<\/a>.*?<\/li>/is',
-                '/<li[^>]*>.*?<a[^>]*>' . preg_quote($item_to_remove, '/') . '<\/a>.*?<\/li>/is'
+                '/<li[^>]*>.*?<a[^>]*>' . preg_quote($item_to_remove, '/') . '<\/a>.*?<\/li>/is',
+                '/<li[^>]*>.*?<a[^>]*>.*?' . preg_quote(ucfirst($item_to_remove), '/') . '.*?<\/a>.*?<\/li>/is',
+                '/<li[^>]*>.*?<a[^>]*>.*?' . preg_quote(strtolower($item_to_remove), '/') . '.*?<\/a>.*?<\/li>/is'
             );
             
             foreach ($patterns as $pattern) {
@@ -231,7 +238,7 @@ function prismblossom_remove_menu_items($items, $args)
 }
 add_filter('wp_nav_menu_items', 'prismblossom_remove_menu_items', 20, 2);
 
-// Alternative approach: Filter menu objects before rendering
+// Alternative approach: Filter menu objects before rendering - ENHANCED
 function prismblossom_filter_menu_objects($sorted_menu_items, $args)
 {
     // Only filter primary menu
@@ -239,22 +246,163 @@ function prismblossom_filter_menu_objects($sorted_menu_items, $args)
         $items_to_remove = array('Capabilities', 'Capabilitie', 'Live Activity', 'Agent', 'Agents', 'Aria');
         
         foreach ($sorted_menu_items as $key => $item) {
-            // Remove items by title (case-insensitive)
-            if (in_array(strtolower($item->title), array_map('strtolower', $items_to_remove))) {
-                unset($sorted_menu_items[$key]);
-            }
-            // Also check for partial matches in title
+            $item_title_lower = strtolower(trim($item->title));
+            $item_slug_lower = isset($item->post_name) ? strtolower(trim($item->post_name)) : '';
+            
+            // Remove items by exact title match (case-insensitive)
             foreach ($items_to_remove as $remove_item) {
-                if (stripos($item->title, $remove_item) !== false) {
+                $remove_item_lower = strtolower(trim($remove_item));
+                
+                // Check title
+                if ($item_title_lower === $remove_item_lower || stripos($item_title_lower, $remove_item_lower) !== false) {
                     unset($sorted_menu_items[$key]);
                     break;
+                }
+                
+                // Check slug/post_name
+                if (!empty($item_slug_lower)) {
+                    if ($item_slug_lower === $remove_item_lower || 
+                        $item_slug_lower === str_replace(' ', '-', $remove_item_lower) ||
+                        stripos($item_slug_lower, $remove_item_lower) !== false) {
+                        unset($sorted_menu_items[$key]);
+                        break;
+                    }
                 }
             }
         }
     }
     return $sorted_menu_items;
 }
-add_filter('wp_nav_menu_objects', 'prismblossom_filter_menu_objects', 10, 2);
+add_filter('wp_nav_menu_objects', 'prismblossom_filter_menu_objects', 999, 2); // Higher priority
+
+/**
+ * Delete unwanted pages (Capabilities, Live Activity, Agents, Aria)
+ * Runs on theme activation and admin_init to ensure they're removed
+ */
+function prismblossom_delete_unwanted_pages()
+{
+    // Pages to delete
+    $pages_to_delete = array(
+        'capabilities',
+        'live-activity',
+        'liveactivity',
+        'agent',
+        'agents',
+        'aria'
+    );
+    
+    foreach ($pages_to_delete as $page_slug) {
+        $page = get_page_by_path($page_slug);
+        if ($page) {
+            // Force delete (bypass trash)
+            wp_delete_post($page->ID, true);
+        }
+        
+        // Also try case variations
+        $page = get_page_by_path(ucfirst($page_slug));
+        if ($page) {
+            wp_delete_post($page->ID, true);
+        }
+    }
+    
+    // Also search all pages by title (not using 'title' parameter as it's not reliable)
+    $titles_to_delete = array('Capabilities', 'Live Activity', 'Agent', 'Agents', 'Aria');
+    $all_pages = get_pages(array(
+        'post_status' => 'any', // Include all statuses
+        'number' => -1,
+        'post_type' => 'page'
+    ));
+    
+    foreach ($all_pages as $page) {
+        $page_title_lower = strtolower(trim($page->post_title));
+        $page_slug_lower = strtolower(trim($page->post_name));
+        
+        // Check if title or slug matches unwanted pages
+        foreach ($titles_to_delete as $unwanted_title) {
+            $unwanted_title_lower = strtolower(trim($unwanted_title));
+            
+            if ($page_title_lower === $unwanted_title_lower || 
+                stripos($page_title_lower, $unwanted_title_lower) !== false ||
+                in_array($page_slug_lower, $page_slugs_to_delete)) {
+                
+                wp_delete_post($page->ID, true); // Force delete
+                break;
+            }
+        }
+    }
+    
+    // Clear menu cache
+    wp_cache_delete('alloptions', 'options');
+}
+/**
+ * Remove unwanted menu items from WordPress menus
+ */
+function prismblossom_remove_unwanted_menu_items()
+{
+    $menu_ids_to_check = array('primary', 'Primary Menu', 1); // Common menu locations/IDs
+    
+    $items_to_remove = array('Capabilities', 'Capabilitie', 'Live Activity', 'Agent', 'Agents', 'Aria');
+    
+    foreach ($menu_ids_to_check as $menu_id) {
+        $menu = wp_get_nav_menu_object($menu_id);
+        if (!$menu && is_numeric($menu_id)) {
+            $menus = wp_get_nav_menus();
+            if (isset($menus[$menu_id - 1])) {
+                $menu = $menus[$menu_id - 1];
+            }
+        }
+        
+        if ($menu) {
+            $menu_items = wp_get_nav_menu_items($menu->term_id);
+            
+            if ($menu_items) {
+                foreach ($menu_items as $menu_item) {
+                    $title_lower = strtolower(trim($menu_item->title));
+                    
+                    foreach ($items_to_remove as $unwanted_item) {
+                        $unwanted_lower = strtolower(trim($unwanted_item));
+                        
+                        if ($title_lower === $unwanted_lower || 
+                            stripos($title_lower, $unwanted_lower) !== false) {
+                            wp_delete_post($menu_item->ID, true); // Delete menu item
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // Also check all menus
+    $all_menus = wp_get_nav_menus();
+    foreach ($all_menus as $menu) {
+        $menu_items = wp_get_nav_menu_items($menu->term_id);
+        
+        if ($menu_items) {
+            foreach ($menu_items as $menu_item) {
+                $title_lower = strtolower(trim($menu_item->title));
+                
+                foreach ($items_to_remove as $unwanted_item) {
+                    $unwanted_lower = strtolower(trim($unwanted_item));
+                    
+                    if ($title_lower === $unwanted_lower || 
+                        stripos($title_lower, $unwanted_lower) !== false) {
+                        wp_delete_post($menu_item->ID, true);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+
+add_action('after_switch_theme', 'prismblossom_delete_unwanted_pages');
+add_action('admin_init', 'prismblossom_delete_unwanted_pages');
+add_action('template_redirect', 'prismblossom_delete_unwanted_pages', 1); // Run on every page load
+
+add_action('after_switch_theme', 'prismblossom_remove_unwanted_menu_items');
+add_action('admin_init', 'prismblossom_remove_unwanted_menu_items');
+add_action('template_redirect', 'prismblossom_remove_unwanted_menu_items', 1);
 
 // ============================================
 // GUESTBOOK FUNCTIONALITY
@@ -308,7 +456,7 @@ function prismblossom_handle_guestbook_submission()
         array(
             'guest_name' => $guest_name,
             'message' => $message,
-            'status' => 'pending'
+            'status' => 'approved'  // Auto-approve messages so they appear immediately
         ),
         array('%s', '%s', '%s')
     );
@@ -352,13 +500,26 @@ function prismblossom_ajax_guestbook_submission()
         array(
             'guest_name' => $guest_name,
             'message' => $message,
-            'status' => 'pending'
+            'status' => 'approved'  // Auto-approve messages so they appear immediately
         ),
         array('%s', '%s', '%s')
     );
 
     if ($result) {
-        wp_send_json_success('Message submitted successfully');
+        // Return the new entry data so it can be displayed immediately
+        $entry_id = $wpdb->insert_id;
+        $new_entry = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_name WHERE id = %d", $entry_id));
+        
+        wp_send_json_success(array(
+            'message' => 'Message submitted successfully',
+            'entry' => array(
+                'id' => $new_entry->id,
+                'guest_name' => $new_entry->guest_name,
+                'message' => $new_entry->message,
+                'created_at' => $new_entry->created_at,
+                'date_formatted' => date('M j, Y', strtotime($new_entry->created_at))
+            )
+        ));
     } else {
         wp_send_json_error('Database error');
     }
