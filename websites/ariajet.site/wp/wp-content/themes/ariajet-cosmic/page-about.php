@@ -27,29 +27,43 @@ get_header();
 
                     <?php
                     $raw_content = trim((string) get_the_content());
-                    if ($raw_content !== '') :
+                    $content_text = strtolower(wp_strip_all_tags($raw_content));
+                    $looks_like_demo_content = (
+                        $raw_content === '' ||
+                        str_contains($content_text, 'best irish pub') ||
+                        str_contains($content_text, 'bar in florida') ||
+                        str_contains($content_text, 'vel vestibulum') ||
+                        str_contains($content_text, 'maecenas') ||
+                        str_contains($content_text, 'parturient accumsan')
+                    );
+
+                    if (!$looks_like_demo_content) :
                         the_content();
                     else :
                         $playlists_page = get_page_by_path('playlists');
                         $playlists_url = $playlists_page ? get_permalink($playlists_page) : home_url('/playlists/');
                         ?>
                         <p class="about-lede">
-                            <?php echo esc_html(get_bloginfo('name')); ?> is a little launchpad for creative work—games, prototypes, and the music that powers it.
+                            <?php _e('Hi, I’m Aria.', 'ariajet-cosmic'); ?>
+                            <?php _e('AriaJet is my protected creative space for games, projects, and creative expression—no funnel, no pressure, just making things.', 'ariajet-cosmic'); ?>
                         </p>
 
                         <div class="about-grid">
                             <section class="about-card">
-                                <h2 class="about-heading"><?php _e('Orbit map', 'ariajet-cosmic'); ?></h2>
+                                <h2 class="about-heading"><?php _e('What AriaJet is', 'ariajet-cosmic'); ?></h2>
+                                <p>
+                                    <?php _e('A home for 2D games, prototypes, experiments, and the little details that go into building them.', 'ariajet-cosmic'); ?>
+                                </p>
                                 <ul class="about-list">
-                                    <li><?php _e('Play the latest 2D games and prototypes', 'ariajet-cosmic'); ?></li>
-                                    <li><?php _e('Browse projects and experiments', 'ariajet-cosmic'); ?></li>
-                                    <li><?php _e('Listen to playlists and music', 'ariajet-cosmic'); ?></li>
+                                    <li><?php _e('Games: playable builds, demos, and prototypes', 'ariajet-cosmic'); ?></li>
+                                    <li><?php _e('Projects: experiments, tools, and creative work', 'ariajet-cosmic'); ?></li>
+                                    <li><?php _e('Music: playlists that set the vibe while I build', 'ariajet-cosmic'); ?></li>
                                 </ul>
                             </section>
 
                             <section class="about-card">
-                                <h2 class="about-heading"><?php _e('Explore', 'ariajet-cosmic'); ?></h2>
-                                <p><?php _e('Start with the games, then wander through projects and playlists. New things land here over time.', 'ariajet-cosmic'); ?></p>
+                                <h2 class="about-heading"><?php _e('Start here', 'ariajet-cosmic'); ?></h2>
+                                <p><?php _e('If you’re new: start with the latest games, then check out projects and music. I update things as I go.', 'ariajet-cosmic'); ?></p>
                                 <p class="about-links">
                                     <a class="about-link" href="<?php echo esc_url(get_post_type_archive_link('game')); ?>"><?php _e('Games', 'ariajet-cosmic'); ?></a>
                                     <span class="about-link-sep" aria-hidden="true">•</span>

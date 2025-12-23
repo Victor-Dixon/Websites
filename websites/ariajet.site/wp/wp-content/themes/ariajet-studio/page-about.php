@@ -28,12 +28,23 @@ get_header();
 
                         <?php
                         $raw_content = trim((string) get_the_content());
-                        if ($raw_content !== '') :
+                        $content_text = strtolower(wp_strip_all_tags($raw_content));
+                        $looks_like_demo_content = (
+                            $raw_content === '' ||
+                            str_contains($content_text, 'best irish pub') ||
+                            str_contains($content_text, 'bar in florida') ||
+                            str_contains($content_text, 'vel vestibulum') ||
+                            str_contains($content_text, 'maecenas') ||
+                            str_contains($content_text, 'parturient accumsan')
+                        );
+
+                        if (!$looks_like_demo_content) :
                             the_content();
                         else :
                             ?>
                             <p class="about-lede">
-                                <?php echo esc_html(get_bloginfo('name')); ?> is a small corner of the internet for creative work—games, prototypes, and ideas in progress.
+                                <?php _e('Hi, I’m Aria.', 'ariajet-studio'); ?>
+                                <?php _e('AriaJet is my protected creative space for games, projects, and creative expression—no funnel, no pressure, just making things.', 'ariajet-studio'); ?>
                             </p>
 
                             <div class="about-grid">

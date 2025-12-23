@@ -27,28 +27,39 @@ get_header();
 
                     <?php
                     $raw_content = trim((string) get_the_content());
-                    if ($raw_content !== '') :
+                    $content_text = strtolower(wp_strip_all_tags($raw_content));
+                    $looks_like_demo_content = (
+                        $raw_content === '' ||
+                        str_contains($content_text, 'best irish pub') ||
+                        str_contains($content_text, 'bar in florida') ||
+                        str_contains($content_text, 'vel vestibulum') ||
+                        str_contains($content_text, 'maecenas') ||
+                        str_contains($content_text, 'parturient accumsan')
+                    );
+
+                    if (!$looks_like_demo_content) :
                         the_content();
                     else :
                         ?>
                         <p class="about-lede">
-                            <?php echo esc_html(get_bloginfo('name')); ?> is a personal studio site for creative work—games, prototypes, and experiments.
+                            <?php _e('Hi, I’m Aria.', 'ariajet'); ?>
+                            <?php _e('AriaJet is my protected creative space for games, projects, and creative expression—no funnel, no pressure, just making things.', 'ariajet'); ?>
                         </p>
 
                         <div class="about-grid">
                             <section class="about-card">
                                 <h2 class="about-heading"><?php _e('What you’ll find here', 'ariajet'); ?></h2>
                                 <ul class="about-list">
-                                    <li><?php _e('2D games and interactive prototypes', 'ariajet'); ?></li>
-                                    <li><?php _e('Dev notes, updates, and small experiments', 'ariajet'); ?></li>
-                                    <li><?php _e('Music and playlists that inspire the work', 'ariajet'); ?></li>
+                                    <li><?php _e('Games: 2D projects, prototypes, and playable builds', 'ariajet'); ?></li>
+                                    <li><?php _e('Projects: experiments and creative work in progress', 'ariajet'); ?></li>
+                                    <li><?php _e('Music: playlists that set the vibe while I build', 'ariajet'); ?></li>
                                 </ul>
                             </section>
 
                             <section class="about-card">
                                 <h2 class="about-heading"><?php _e('A quick hello', 'ariajet'); ?></h2>
                                 <p>
-                                    <?php _e('I build things that feel playful, polished, and a little surprising. If you’re visiting from a project link, welcome—take a look around and check out the latest work.', 'ariajet'); ?>
+                                    <?php _e('I build things that feel playful, polished, and a little surprising. If you’re visiting from a project link, welcome—take a look around and check out what’s new.', 'ariajet'); ?>
                                 </p>
                                 <p class="about-links">
                                     <a class="about-link" href="<?php echo esc_url(home_url('/')); ?>"><?php _e('Back to Home', 'ariajet'); ?></a>
