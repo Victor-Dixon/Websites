@@ -250,7 +250,8 @@ add_filter('body_class', 'ariajet_body_classes');
  * (Menu labels usually live in the WordPress database.)
  */
 function ariajet_fix_capabilities_menu_item($items, $args) {
-    if (!isset($args->theme_location) || $args->theme_location !== 'primary') {
+    // Only affect frontend menus. (Avoid rewriting labels in WP Admin > Appearance > Menus.)
+    if (is_admin()) {
         return $items;
     }
 

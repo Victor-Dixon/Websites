@@ -422,7 +422,8 @@ add_action('admin_head', 'ariajet_cosmic_admin_styles');
  * (In WordPress, menu labels usually live in the database, not theme files.)
  */
 function ariajet_cosmic_fix_capabilities_menu_item($items, $args) {
-    if (!isset($args->theme_location) || $args->theme_location !== 'primary') {
+    // Only affect frontend menus. (Avoid rewriting labels in WP Admin > Appearance > Menus.)
+    if (is_admin()) {
         return $items;
     }
 
