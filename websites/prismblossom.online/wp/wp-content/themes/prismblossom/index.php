@@ -262,10 +262,170 @@ endif;
 </script>
 
 <style>
+    /* Homepage Neon Purple Background */
+    body {
+        background: #bf00ff !important; /* Neon purple */
+        background: linear-gradient(135deg, #bf00ff 0%, #9d00ff 50%, #7d00ff 100%) !important;
+        min-height: 100vh;
+    }
+    
+    html {
+        background: #bf00ff !important;
+    }
+    
+    /* Hero Section */
+    .hero {
+        background: transparent;
+        color: white;
+        padding: 80px 20px;
+        text-align: center;
+    }
+    
+    .hero-title {
+        color: white !important;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+        font-size: 3rem;
+        margin-bottom: 20px;
+    }
+    
+    .hero-subtitle {
+        color: rgba(255, 255, 255, 0.9) !important;
+        font-size: 1.5rem;
+        margin-bottom: 30px;
+    }
+    
+    /* About Section */
+    .about {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 60px 20px;
+        border-radius: 15px;
+        margin: 40px 0;
+        color: white;
+    }
+    
+    .about h2 {
+        color: white !important;
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+    }
+    
+    .about p,
+    .about li {
+        color: rgba(255, 255, 255, 0.9) !important;
+    }
+    
+    /* Featured Pages Section */
+    .featured-pages {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 60px 20px;
+        border-radius: 15px;
+        margin: 40px 0;
+    }
+    
+    .featured-pages h2 {
+        color: white !important;
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .pages-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .page-card {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        padding: 30px;
+        border-radius: 15px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .page-card:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .page-card h3 a {
+        color: white !important;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+        font-size: 1.5rem;
+    }
+    
+    .page-card p {
+        color: rgba(255, 255, 255, 0.9) !important;
+        margin-top: 10px;
+    }
+    
+    /* Blog Posts Section */
+    .blog-posts {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 60px 20px;
+        border-radius: 15px;
+        margin: 40px 0;
+    }
+    
+    .blog-posts h2 {
+        color: white !important;
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .posts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .post-card {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        padding: 25px;
+        border-radius: 15px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .post-card h3 a {
+        color: white !important;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+    }
+    
+    .post-card .post-meta,
+    .post-card .post-excerpt {
+        color: rgba(255, 255, 255, 0.9) !important;
+    }
+    
     /* Moods Library Styles */
     .moods-library {
         padding: 60px 20px;
-        background: var(--celebration-bg, #fff5f8);
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        margin: 40px 0;
+    }
+    
+    .moods-library .section-title {
+        color: white !important;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    }
+    
+    .moods-library .section-title .subtitle {
+        color: rgba(255, 255, 255, 0.9) !important;
+    }
+    
+    .library-subtitle {
+        color: rgba(255, 255, 255, 0.9) !important;
     }
 
     .moods-library .section-title {

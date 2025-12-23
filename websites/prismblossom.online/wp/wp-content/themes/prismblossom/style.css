@@ -93,6 +93,14 @@ body {
     background-color: var(--celebration-bg);
 }
 
+/* Homepage specific - Neon Purple Background */
+body.home,
+body.page-template-default:not(.page-template-page-carmyn):not(.page-template-page-guestbook):not(.page-template-page-invitation):not(.page-template-page-birthday-fun) {
+    background: #bf00ff !important; /* Neon purple */
+    background: linear-gradient(135deg, #bf00ff 0%, #9d00ff 50%, #7d00ff 100%) !important;
+    min-height: 100vh;
+}
+
 /* Fix for specific text rendering issues */
 h1, h2, h3, h4, h5, h6, p, span, div, a, label, button {
     letter-spacing: 0 !important;
