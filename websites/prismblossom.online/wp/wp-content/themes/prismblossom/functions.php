@@ -1,9 +1,9 @@
 <?php
 
 /**
- * SouthWest Secret Theme Functions
+ * PrismBlossom Theme Functions
  * 
- * @package SouthWestSecret
+ * @package PrismBlossom
  * @version 1.0.0
  */
 
@@ -18,7 +18,7 @@ function prismblossom_setup()
 
     // Register navigation menus
     register_nav_menus(array(
-        'primary' => __('Primary Menu', 'southwestsecret'),
+        'primary' => __('Primary Menu', 'prismblossom'),
     ));
 }
 add_action('after_setup_theme', 'prismblossom_setup');
@@ -26,20 +26,20 @@ add_action('after_setup_theme', 'prismblossom_setup');
 // Enqueue styles and scripts
 function prismblossom_scripts()
 {
-    // Main stylesheet
-    wp_enqueue_style('southwestsecret-style', get_template_directory_uri() . '/css/style.css', array(), '1.0.0');
+    // Main stylesheet (theme root style.css)
+    wp_enqueue_style('prismblossom-style', get_stylesheet_uri(), array(), '1.0.0');
 
     // Google Fonts with fallback
-    wp_enqueue_style('southwestsecret-fonts', 'https://fonts.googleapis.com/css2?family=Rubik+Doodle+Shadow&family=Permanent+Marker&family=Rubik+Bubbles&display=swap', array(), null);
+    wp_enqueue_style('prismblossom-fonts', 'https://fonts.googleapis.com/css2?family=Rubik+Doodle+Shadow&family=Permanent+Marker&family=Rubik+Bubbles&display=swap', array(), null);
 
     // jQuery (WordPress includes it, but ensure it's available)
     wp_enqueue_script('jquery');
 
     // Main JavaScript
-    wp_enqueue_script('southwestsecret-script', get_template_directory_uri() . '/js/script.js', array('jquery'), '1.0.0', true);
+    wp_enqueue_script('prismblossom-script', get_template_directory_uri() . '/js/script.js', array('jquery'), '1.0.0', true);
 
     // Localize script for AJAX
-    wp_localize_script('southwestsecret-script', 'prismblossomAjax', array(
+    wp_localize_script('prismblossom-script', 'prismblossomAjax', array(
         'ajaxurl' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('prismblossom_nonce')
     ));
@@ -72,7 +72,7 @@ function prismblossom_scripts()
             font-display: swap;
         }
     ";
-    wp_add_inline_style('southwestsecret-style', $text_rendering_css);
+    wp_add_inline_style('prismblossom-style', $text_rendering_css);
 }
 add_action('wp_enqueue_scripts', 'prismblossom_scripts');
 

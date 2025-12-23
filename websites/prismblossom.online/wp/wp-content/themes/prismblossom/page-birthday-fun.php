@@ -4,7 +4,7 @@
  * 
  * Interactive birthday fun page with animated cat
  * 
- * @package SouthWestSecret
+ * @package PrismBlossom
  */
 
 get_header();
