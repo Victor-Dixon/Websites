@@ -138,28 +138,6 @@ function prismblossom_save_youtube_meta($post_id)
 }
 add_action('save_post', 'prismblossom_save_youtube_meta');
 
-// Create Aria page on theme activation
-function prismblossom_create_aria_page()
-{
-    if (get_page_by_path('aria')) {
-        return; // Page already exists
-    }
-
-    $aria_page = array(
-        'post_title'    => 'Aria',
-        'post_name'     => 'aria',
-        'post_content'  => '',
-        'post_status'   => 'publish',
-        'post_type'     => 'page',
-        'page_template' => 'page-aria.php'
-    );
-
-    wp_insert_post($aria_page);
-}
-
-// Run on theme activation
-add_action('after_switch_theme', 'prismblossom_create_aria_page');
-
 // Create Carmyn page on theme activation
 function prismblossom_create_carmyn_page()
 {
@@ -182,56 +160,53 @@ function prismblossom_create_carmyn_page()
 // Run on theme activation
 add_action('after_switch_theme', 'prismblossom_create_carmyn_page');
 
-// Add Aria, Carmyn, and Invitation links to navigation menu
-function prismblossom_add_artist_menu_items($items, $args)
+// Remove unwanted pages from menus (even if they exist in WP)
+function prismblossom_filter_nav_menu_objects($sorted_menu_items, $args)
 {
-    // Only add to primary menu
-    if ($args->theme_location == 'primary') {
-        // Get Aria page URL
-        $aria_page = get_page_by_path('aria');
-        if ($aria_page) {
-            $aria_url = get_permalink($aria_page->ID);
-        } else {
-            $aria_url = home_url('/aria');
-        }
-
-        // Get Carmyn page URL
-        $carmyn_page = get_page_by_path('carmyn');
-        if ($carmyn_page) {
-            $carmyn_url = get_permalink($carmyn_page->ID);
-        } else {
-            $carmyn_url = home_url('/carmyn');
-        }
-
-        // Get Invitation page URL
-        $invitation_page = get_page_by_path('invitation');
-        if ($invitation_page) {
-            $invitation_url = get_permalink($invitation_page->ID);
-        } else {
-            $invitation_url = home_url('/invitation');
-        }
-
-        $aria_item = '<li><a href="' . esc_url($aria_url) . '">Aria</a></li>';
-        $carmyn_item = '<li><a href="' . esc_url($carmyn_url) . '">Carmyn</a></li>';
-        $invitation_item = '<li><a href="' . esc_url($invitation_url) . '">Invitation</a></li>';
-
-        // Find Submit link and insert Aria right after it, then Carmyn, then Invitation
-        $submit_pos = stripos($items, '>Submit<');
-        if ($submit_pos !== false) {
-            // Find the closing </a></li> after Submit
-            $after_submit = strpos($items, '</a></li>', $submit_pos);
-            if ($after_submit !== false) {
-                $after_submit += 9; // Length of '</a></li>'
-                $items = substr($items, 0, $after_submit) . $aria_item . $carmyn_item . $invitation_item . substr($items, $after_submit);
-            }
-        } else {
-            // If no Submit link found, just append to end
-            $items .= $aria_item . $carmyn_item . $invitation_item;
-        }
+    if (!is_array($sorted_menu_items)) {
+        return $sorted_menu_items;
     }
-    return $items;
+
+    $blocked_slugs = array(
+        'agents',
+        'live-activity',
+        'capabilities',
+        'about',
+        'aria',
+    );
+
+    $filtered = array();
+    foreach ($sorted_menu_items as $item) {
+        $url = isset($item->url) ? (string) $item->url : '';
+
+        $path = (string) wp_parse_url($url, PHP_URL_PATH);
+        $path = trim($path, '/');
+
+        $last_segment = $path !== '' ? basename($path) : '';
+        if ($last_segment !== '' && in_array($last_segment, $blocked_slugs, true)) {
+            continue;
+        }
+
+        $filtered[] = $item;
+    }
+
+    return $filtered;
 }
-add_filter('wp_nav_menu_items', 'prismblossom_add_artist_menu_items', 10, 2);
+add_filter('wp_nav_menu_objects', 'prismblossom_filter_nav_menu_objects', 10, 2);
+
+// Block direct access to unwanted pages (redirect to home)
+function prismblossom_block_unwanted_pages()
+{
+    if (!is_page()) {
+        return;
+    }
+
+    if (is_page(array('agents', 'live-activity', 'capabilities', 'about', 'aria'))) {
+        wp_safe_redirect(home_url('/'), 301);
+        exit;
+    }
+}
+add_action('template_redirect', 'prismblossom_block_unwanted_pages');
 
 // ============================================
 // GUESTBOOK FUNCTIONALITY
