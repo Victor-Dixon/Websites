@@ -548,6 +548,42 @@ function prismblossom_guestbook_admin_page()
     global $wpdb;
     $table_name = $wpdb->prefix . 'guestbook_entries';
 
+    // Handle bulk actions
+    if (isset($_POST['bulk_action']) && isset($_POST['entry_ids']) && check_admin_referer('guestbook_bulk_action')) {
+        $bulk_action = $_POST['bulk_action'];
+        $entry_ids = array_map('intval', $_POST['entry_ids']);
+        $deleted = 0;
+        
+        foreach ($entry_ids as $entry_id) {
+            if ($bulk_action === 'delete') {
+                $wpdb->delete($table_name, array('id' => $entry_id), array('%d'));
+                $deleted++;
+            } elseif ($bulk_action === 'approve') {
+                $wpdb->update(
+                    $table_name,
+                    array('status' => 'approved'),
+                    array('id' => $entry_id),
+                    array('%s'),
+                    array('%d')
+                );
+            } elseif ($bulk_action === 'reject') {
+                $wpdb->update(
+                    $table_name,
+                    array('status' => 'rejected'),
+                    array('id' => $entry_id),
+                    array('%s'),
+                    array('%d')
+                );
+            }
+        }
+        
+        if ($bulk_action === 'delete') {
+            echo '<div class="notice notice-success"><p>' . $deleted . ' message(s) deleted!</p></div>';
+        } else {
+            echo '<div class="notice notice-success"><p>Bulk action completed!</p></div>';
+        }
+    }
+
     // Handle approve/reject actions
     if (isset($_GET['action']) && isset($_GET['entry_id']) && check_admin_referer('guestbook_action')) {
         $entry_id = intval($_GET['entry_id']);
@@ -583,48 +619,71 @@ function prismblossom_guestbook_admin_page()
 ?>
     <div class="wrap">
         <h1>Guestbook Management</h1>
-        <p>Review and approve birthday messages from visitors.</p>
+        <p>Review and manage birthday messages from visitors.</p>
 
-        <table class="wp-list-table widefat fixed striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Message</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if ($entries) : ?>
-                    <?php foreach ($entries as $entry) : ?>
-                        <tr>
-                            <td><?php echo $entry->id; ?></td>
-                            <td><strong><?php echo esc_html($entry->guest_name); ?></strong></td>
-                            <td><?php echo esc_html(wp_trim_words($entry->message, 20)); ?></td>
-                            <td>
-                                <span class="status-<?php echo esc_attr($entry->status); ?>">
-                                    <?php echo ucfirst($entry->status); ?>
-                                </span>
-                            </td>
-                            <td><?php echo date('M j, Y g:i A', strtotime($entry->created_at)); ?></td>
-                            <td>
-                                <?php if ($entry->status === 'pending') : ?>
-                                    <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=guestbook&action=approve&entry_id=' . $entry->id), 'guestbook_action'); ?>" class="button button-primary">Approve</a>
-                                    <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=guestbook&action=reject&entry_id=' . $entry->id), 'guestbook_action'); ?>" class="button">Reject</a>
-                                <?php endif; ?>
-                                <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=guestbook&action=delete&entry_id=' . $entry->id), 'guestbook_action'); ?>" class="button button-link-delete" onclick="return confirm('Are you sure?');">Delete</a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else : ?>
+        <form method="post" id="guestbook-bulk-form">
+            <?php wp_nonce_field('guestbook_bulk_action'); ?>
+            
+            <div class="tablenav top">
+                <div class="alignleft actions bulkactions">
+                    <label for="bulk-action-selector" class="screen-reader-text">Select bulk action</label>
+                    <select name="bulk_action" id="bulk-action-selector">
+                        <option value="">Bulk Actions</option>
+                        <option value="delete">Delete</option>
+                        <option value="approve">Approve</option>
+                        <option value="reject">Reject</option>
+                    </select>
+                    <input type="submit" class="button action" value="Apply" onclick="return confirm('Are you sure you want to perform this bulk action?');">
+                </div>
+            </div>
+
+            <table class="wp-list-table widefat fixed striped">
+                <thead>
                     <tr>
-                        <td colspan="6">No guestbook entries yet.</td>
+                        <td class="manage-column column-cb check-column">
+                            <input type="checkbox" id="cb-select-all">
+                        </td>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Message</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
                     </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php if ($entries) : ?>
+                        <?php foreach ($entries as $entry) : ?>
+                            <tr>
+                                <th scope="row" class="check-column">
+                                    <input type="checkbox" name="entry_ids[]" value="<?php echo $entry->id; ?>">
+                                </th>
+                                <td><?php echo $entry->id; ?></td>
+                                <td><strong><?php echo esc_html($entry->guest_name); ?></strong></td>
+                                <td><?php echo esc_html(wp_trim_words($entry->message, 20)); ?></td>
+                                <td>
+                                    <span class="status-<?php echo esc_attr($entry->status); ?>">
+                                        <?php echo ucfirst($entry->status); ?>
+                                    </span>
+                                </td>
+                                <td><?php echo date('M j, Y g:i A', strtotime($entry->created_at)); ?></td>
+                                <td>
+                                    <?php if ($entry->status === 'pending') : ?>
+                                        <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=guestbook&action=approve&entry_id=' . $entry->id), 'guestbook_action'); ?>" class="button button-primary">Approve</a>
+                                        <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=guestbook&action=reject&entry_id=' . $entry->id), 'guestbook_action'); ?>" class="button">Reject</a>
+                                    <?php endif; ?>
+                                    <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=guestbook&action=delete&entry_id=' . $entry->id), 'guestbook_action'); ?>" class="button button-link-delete" onclick="return confirm('Are you sure?');">Delete</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <tr>
+                            <td colspan="7">No guestbook entries yet.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </form>
     </div>
 
     <style>
@@ -642,7 +701,28 @@ function prismblossom_guestbook_admin_page()
             color: #ff0000;
             font-weight: bold;
         }
+        
+        .tablenav {
+            margin: 6px 0 4px;
+        }
+        
+        .bulkactions {
+            padding: 8px 0;
+        }
     </style>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectAll = document.getElementById('cb-select-all');
+        const checkboxes = document.querySelectorAll('input[name="entry_ids[]"]');
+        
+        if (selectAll) {
+            selectAll.addEventListener('change', function() {
+                checkboxes.forEach(cb => cb.checked = this.checked);
+            });
+        }
+    });
+    </script>
 <?php
 }
 

@@ -593,7 +593,7 @@ get_header();
 
             <!-- Guestbook Form -->
             <div class="guestbook-form-container">
-                <form id="guestbook-form" class="guestbook-form" method="post">
+                <form id="guestbook-form" class="guestbook-form" method="post" action="#" onsubmit="return false;">
                     <?php wp_nonce_field('guestbook_submit', 'guestbook_nonce'); ?>
                     
                     <div class="form-group">
@@ -822,15 +822,36 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             
             const formData = new FormData(form);
+            
+            // Get nonce from form and append as 'nonce' (AJAX handler expects 'nonce', not 'guestbook_nonce')
+            const nonceField = form.querySelector('input[name="guestbook_nonce"]');
+            if (nonceField) {
+                formData.append('nonce', nonceField.value);
+            } else {
+                formData.append('nonce', '<?php echo wp_create_nonce('guestbook_submit'); ?>');
+            }
+            
             formData.append('action', 'prismblossom_submit_guestbook');
-            formData.append('nonce', '<?php echo wp_create_nonce('guestbook_submit'); ?>');
             
             fetch('<?php echo esc_url(admin_url('admin-ajax.php')); ?>', {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
+                console.log('Full response:', data); // Debug log
+                
+                // Re-enable submit button
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Message';
+                }
+                
                 if (data.success && data.data && data.data.entry) {
                     messageDiv.className = 'form-message success';
                     messageDiv.textContent = 'Thank you! Your message has been posted!';
@@ -853,22 +874,41 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Insert at the top
                     if (entriesContainer) {
-                        entriesContainer.insertBefore(messageCard, entriesContainer.firstChild);
-                        
                         // Remove "no messages" text if present
                         const noMessages = entriesContainer.querySelector('.no-messages');
                         if (noMessages) {
                             noMessages.remove();
                         }
+                        
+                        // Insert new message at the top
+                        if (entriesContainer.firstChild) {
+                            entriesContainer.insertBefore(messageCard, entriesContainer.firstChild);
+                        } else {
+                            entriesContainer.appendChild(messageCard);
+                        }
+                        
+                        // Scroll to the new message
+                        messageCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     }
+                } else if (data.success) {
+                    // Success but no entry data - might need page reload
+                    messageDiv.className = 'form-message success';
+                    messageDiv.textContent = 'Thank you! Your message has been posted! Refreshing...';
+                    setTimeout(() => location.reload(), 1500);
                 } else {
                     messageDiv.className = 'form-message error';
                     messageDiv.textContent = data.data && data.data.message ? data.data.message : 'There was an error submitting your message. Please try again.';
                 }
             })
             .catch(error => {
+                console.error('Error:', error); // Debug log
+                // Re-enable submit button on error
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Message';
+                }
                 messageDiv.className = 'form-message error';
-                messageDiv.textContent = 'Network error. Please try again.';
+                messageDiv.textContent = 'Network error. Please try again. Error: ' + error.message;
             });
         });
     }

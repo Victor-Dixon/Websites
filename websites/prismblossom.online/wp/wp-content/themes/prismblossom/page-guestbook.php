@@ -21,7 +21,7 @@ get_header();
 
         <!-- Guestbook Form -->
         <div class="guestbook-form-container">
-            <form id="guestbook-form" class="guestbook-form" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+            <form id="guestbook-form" class="guestbook-form" method="post" action="#" onsubmit="return false;">
                 <?php wp_nonce_field('guestbook_submit', 'guestbook_nonce'); ?>
                 <input type="hidden" name="action" value="submit_guestbook_entry">
 
@@ -277,49 +277,78 @@ get_header();
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        const form = document.getElementById('guestbook-form');
-        const messageDiv = document.getElementById('form-message');
-        const charCount = document.querySelector('.char-count');
-        const textarea = document.getElementById('guest_message');
+                const form = document.getElementById('guestbook-form');
+                const messageDiv = document.getElementById('form-message');
+                const charCount = document.querySelector('.char-count');
+                const textarea = document.getElementById('guest_message');
 
-        // Character counter
-        if (textarea && charCount) {
-            textarea.addEventListener('input', function() {
-                const count = this.value.length;
-                charCount.textContent = count + ' / 500 characters';
-            });
-        }
+                // Character counter
+                if (textarea && charCount) {
+                    textarea.addEventListener('input', function() {
+                        const count = this.value.length;
+                        charCount.textContent = count + ' / 500 characters';
+                    });
+                }
 
-        // Form submission
-        if (form) {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
+                // Form submission
+                if (form) {
+                    form.addEventListener('submit', function(e) {
+                            e.preventDefault();
 
-                const formData = new FormData(form);
+                            // Disable submit button to prevent double submission
+                            const submitBtn = form.querySelector('button[type="submit"]');
+                            if (submitBtn) {
+                                submitBtn.disabled = true;
+                                submitBtn.textContent = 'Submitting...';
+                            }
 
-                // Use AJAX endpoint instead
-                formData.append('action', 'prismblossom_submit_guestbook');
-                formData.append('nonce', '<?php echo wp_create_nonce('guestbook_submit'); ?>');
+                            const formData = new FormData(form);
 
-                fetch('<?php echo esc_url(admin_url('admin-ajax.php')); ?>', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success && data.data && data.data.entry) {
-                            messageDiv.className = 'form-message success';
-                            messageDiv.textContent = 'Thank you! Your message has been posted!';
-                            form.reset();
-                            if (charCount) charCount.textContent = '0 / 500 characters';
+                            // Get nonce from form and append as 'nonce' (AJAX handler expects 'nonce', not 'guestbook_nonce')
+                            const nonceField = form.querySelector('input[name="guestbook_nonce"]');
+                            if (nonceField) {
+                                formData.append('nonce', nonceField.value);
+                            } else {
+                                formData.append('nonce', '<?php echo wp_create_nonce('guestbook_submit'); ?>');
+                            }
 
-                            // Add the new message to the top of the list immediately
-                            const entriesContainer = document.getElementById('guestbook-entries');
-                            const entry = data.data.entry;
+                            // Use AJAX endpoint instead
+                            formData.append('action', 'prismblossom_submit_guestbook');
 
-                            const messageCard = document.createElement('div');
-                            messageCard.className = 'message-card';
-                            messageCard.innerHTML = `
+                            fetch('<?php echo esc_url(admin_url('admin-ajax.php')); ?>', {
+                                    method: 'POST',
+                                    body: formData
+                                })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                        console.log('Response data:', data); // Debug log
+                                        console.log('Full response:', data); // Debug
+
+                                        if (data.success && data.data) {
+                                            // Re-enable submit button
+                                            if (submitBtn) {
+                                                submitBtn.disabled = false;
+                                                submitBtn.textContent = 'Submit Message';
+                                            }
+
+                                            if (data.data.entry) {
+                                                messageDiv.className = 'form-message success';
+                                                messageDiv.textContent = 'Thank you! Your message has been posted!';
+                                                form.reset();
+                                                if (charCount) charCount.textContent = '0 / 500 characters';
+
+                                                // Add the new message to the top of the list immediately
+                                                const entriesContainer = document.getElementById('guestbook-entries');
+                                                const entry = data.data.entry;
+
+                                                const messageCard = document.createElement('div');
+                                                messageCard.className = 'message-card';
+                                                messageCard.innerHTML = `
                         <div class="message-header">
                             <span class="message-name">${escapeHtml(entry.guest_name)}</span>
                             <span class="message-date">${entry.date_formatted}</span>
@@ -327,39 +356,69 @@ get_header();
                         <div class="message-content">${escapeHtml(entry.message)}</div>
                     `;
 
-                            // Insert at the top
-                            if (entriesContainer) {
-                                // Remove placeholder messages if they exist
-                                const placeholders = entriesContainer.querySelectorAll('.message-card');
-                                const firstRealMessage = Array.from(placeholders).find(card => {
-                                    return !card.querySelector('.message-name') ||
-                                        card.querySelector('.message-name').textContent !== 'Sarah M.';
+                                                // Insert at the top
+                                                if (entriesContainer) {
+                                                    // Remove all placeholder messages (Sarah M., Mike T., Jessica L.)
+                                                    const placeholderNames = ['Sarah M.', 'Mike T.', 'Jessica L.'];
+                                                    const allCards = entriesContainer.querySelectorAll('.message-card');
+
+                                                    allCards.forEach(card => {
+                                                        const nameElement = card.querySelector('.message-name');
+                                                        if (nameElement) {
+                                                            const nameText = nameElement.textContent.trim();
+                                                            if (placeholderNames.includes(nameText)) {
+                                                                card.remove();
+                                                            }
+                                                        }
+                                                    });
+
+                                                    // Remove "no messages" text if present
+                                                    const noMessages = entriesContainer.querySelector('.no-messages');
+                                                    if (noMessages) {
+                                                        noMessages.remove();
+                                                    }
+
+                                                    // Insert new message at the top
+                                                    if (entriesContainer.firstChild) {
+                                                        entriesContainer.insertBefore(messageCard, entriesContainer.firstChild);
+                                                    } else {
+                                                        entriesContainer.appendChild(messageCard);
+                                                    }
+
+                                                    // Scroll to the new message
+                                                    messageCard.scrollIntoView({
+                                                        behavior: 'smooth',
+                                                        block: 'nearest'
+                                                    });
+                                                } else {
+                                                    // Success but no entry data - might need page reload
+                                                    messageDiv.className = 'form-message success';
+                                                    messageDiv.textContent = 'Thank you! Your message has been posted! Refreshing...';
+                                                    setTimeout(() => location.reload(), 1500);
+                                                }
+                                            } else {
+                                                // Re-enable submit button on error
+                                                if (submitBtn) {
+                                                    submitBtn.disabled = false;
+                                                    submitBtn.textContent = 'Submit Message';
+                                                }
+                                                messageDiv.className = 'form-message error';
+                                                messageDiv.textContent = data.data && data.data.message ? data.data.message : 'There was an error submitting your message. Please try again.';
+                                            }
+                                        })
+                                    .catch(error => {
+                                        console.error('Error:', error); // Debug log
+                                        // Re-enable submit button on error
+                                        if (submitBtn) {
+                                            submitBtn.disabled = false;
+                                            submitBtn.textContent = 'Submit Message';
+                                        }
+                                        messageDiv.className = 'form-message error';
+                                        messageDiv.textContent = 'Network error. Please try again. Error: ' + error.message;
+                                    });
                                 });
-
-                                if (firstRealMessage) {
-                                    entriesContainer.insertBefore(messageCard, firstRealMessage);
-                                } else {
-                                    entriesContainer.insertBefore(messageCard, entriesContainer.firstChild);
-                                }
-
-                                // Remove "no messages" text if present
-                                const noMessages = entriesContainer.querySelector('.no-messages');
-                                if (noMessages) {
-                                    noMessages.remove();
-                                }
-                            }
-                        } else {
-                            messageDiv.className = 'form-message error';
-                            messageDiv.textContent = data.data && data.data.message ? data.data.message : 'There was an error submitting your message. Please try again.';
-                        }
-                    })
-                    .catch(error => {
-                        messageDiv.className = 'form-message error';
-                        messageDiv.textContent = 'Network error. Please try again.';
-                    });
-            });
-        }
-    });
+                    }
+                });
 </script>
 
 <?php get_footer(); ?>
