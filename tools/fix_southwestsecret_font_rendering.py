@@ -156,3 +156,4 @@ add_action('wp_head', 'southwestsecret_fix_encoding', 1);
 if __name__ == "__main__":
     sys.exit(0 if fix_font_rendering() else 1)
 
+

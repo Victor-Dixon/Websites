@@ -135,3 +135,4 @@
 
 **Next Agent Action:** Investigate why PHP template execution stops before rendering main content, or why a different template is being used.
 
+

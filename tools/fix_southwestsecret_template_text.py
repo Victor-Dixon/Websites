@@ -167,3 +167,4 @@ def fix_template_text():
 if __name__ == "__main__":
     sys.exit(0 if fix_template_text() else 1)
 
+

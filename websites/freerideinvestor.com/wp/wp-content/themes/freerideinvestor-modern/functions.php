@@ -1686,6 +1686,26 @@ add_action('after_switch_theme', 'freerideinvestor_ensure_core_pages');
 add_action('admin_init', 'freerideinvestor_ensure_core_pages');
 
 /**
+ * Clear cache when functions.php is updated (for development)
+ * This helps ensure template changes take effect immediately
+ */
+function freerideinvestor_clear_template_cache() {
+    // Clear object cache
+    if (function_exists('wp_cache_flush')) {
+        wp_cache_flush();
+    }
+    
+    // Clear LiteSpeed Cache if active
+    if (class_exists('LiteSpeed_Cache') && method_exists('LiteSpeed_Cache', 'purge_all')) {
+        LiteSpeed_Cache::purge_all();
+    }
+    
+    // Clear rewrite rules to ensure permalinks work
+    flush_rewrite_rules(false);
+}
+add_action('after_switch_theme', 'freerideinvestor_clear_template_cache');
+
+/**
  * Redirect duplicate page URLs to canonical versions
  */
 function freerideinvestor_redirect_duplicate_pages() {
@@ -1736,19 +1756,68 @@ add_action('template_redirect', 'freerideinvestor_redirect_duplicate_pages', 1);
 /**
  * Template include filter for missing pages (Agent-6 Site Audit Fix)
  * Updated to use canonical page templates
+ * Also ensures pages load correct templates even if not 404
+ */
+/**
+ * Force correct page templates for Blog, About, and Contact pages
+ * Priority 999 ensures this runs before most other template filters
  */
 add_filter('template_include', function ($template) {
+    // Skip admin and AJAX requests
+    if (is_admin() || wp_doing_ajax() || wp_doing_cron()) {
+        return $template;
+    }
+    
+    // Get the page slug from URL or post object
+    $page_slug = null;
+    
+    if (is_page()) {
+        global $post;
+        if ($post && isset($post->post_name)) {
+            $page_slug = $post->post_name;
+        }
+    }
+    
+    // Fallback: Check URL directly
+    if (!$page_slug && isset($_SERVER['REQUEST_URI'])) {
+        $request_uri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+        $request_parts = explode('/', $request_uri);
+        $page_slug = end($request_parts);
+    }
+    
+    // Map page slugs to templates
+    $page_templates = array(
+        'about' => 'page-templates/page-about.php',
+        'blog' => 'page-templates/page-blog.php',
+        'contact' => 'page-templates/page-contact.php',
+    );
+    
+    if ($page_slug && isset($page_templates[$page_slug])) {
+        $custom_template = locate_template($page_templates[$page_slug]);
+        
+        if ($custom_template && file_exists($custom_template)) {
+            // If page exists but template isn't set, update it
+            if (is_page()) {
+                global $post;
+                $current_template = get_page_template_slug($post->ID);
+                if ($current_template !== $page_templates[$page_slug]) {
+                    update_post_meta($post->ID, '_wp_page_template', $page_templates[$page_slug]);
+                }
+            }
+            
+            return $custom_template;
+        }
+    }
+    
+    // Handle 404 cases (fallback for pages that don't exist yet)
     if (is_404() && isset($_SERVER['REQUEST_URI'])) {
-        $request_uri = trim($_SERVER['REQUEST_URI'], '/');
-        $page_templates = array(
-            'about' => 'page-templates/page-about.php',
-            'blog' => 'page-templates/page-blog.php', // Changed from page-dev-blog.php
-            'contact' => 'page-templates/page-contact.php',
-        );
-
-        if (isset($page_templates[$request_uri])) {
-            $new_template = locate_template($page_templates[$request_uri]);
-            if ($new_template) {
+        $request_uri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+        $request_parts = explode('/', $request_uri);
+        $uri_slug = end($request_parts);
+        
+        if (isset($page_templates[$uri_slug])) {
+            $new_template = locate_template($page_templates[$uri_slug]);
+            if ($new_template && file_exists($new_template)) {
                 // Set up WordPress query to treat this as a page
                 global $wp_query;
                 $wp_query->is_404 = false;
@@ -1756,14 +1825,15 @@ add_filter('template_include', function ($template) {
                 $wp_query->is_singular = true;
                 $wp_query->queried_object = (object) array(
                     'post_type' => 'page',
-                    'post_name' => $request_uri,
+                    'post_name' => $uri_slug,
                 );
                 return $new_template;
             }
         }
     }
+    
     return $template;
-}, 20);
+}, 999);
 
 /**
  * Add Google Analytics 4 and Facebook Pixel tracking codes

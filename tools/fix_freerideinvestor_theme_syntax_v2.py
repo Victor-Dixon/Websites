@@ -146,3 +146,4 @@ def fix_theme_syntax_error():
 if __name__ == "__main__":
     sys.exit(fix_theme_syntax_error())
 
+

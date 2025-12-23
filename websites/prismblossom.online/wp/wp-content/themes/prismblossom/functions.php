@@ -138,27 +138,7 @@ function prismblossom_save_youtube_meta($post_id)
 }
 add_action('save_post', 'prismblossom_save_youtube_meta');
 
-// Create Aria page on theme activation
-function prismblossom_create_aria_page()
-{
-    if (get_page_by_path('aria')) {
-        return; // Page already exists
-    }
-
-    $aria_page = array(
-        'post_title'    => 'Aria',
-        'post_name'     => 'aria',
-        'post_content'  => '',
-        'post_status'   => 'publish',
-        'post_type'     => 'page',
-        'page_template' => 'page-aria.php'
-    );
-
-    wp_insert_post($aria_page);
-}
-
-// Run on theme activation
-add_action('after_switch_theme', 'prismblossom_create_aria_page');
+// Aria page creation removed - no longer needed
 
 // Create Carmyn page on theme activation
 function prismblossom_create_carmyn_page()
@@ -182,19 +162,11 @@ function prismblossom_create_carmyn_page()
 // Run on theme activation
 add_action('after_switch_theme', 'prismblossom_create_carmyn_page');
 
-// Add Aria, Carmyn, and Invitation links to navigation menu
+// Add Carmyn and Invitation links to navigation menu (Aria removed)
 function prismblossom_add_artist_menu_items($items, $args)
 {
     // Only add to primary menu
     if ($args->theme_location == 'primary') {
-        // Get Aria page URL
-        $aria_page = get_page_by_path('aria');
-        if ($aria_page) {
-            $aria_url = get_permalink($aria_page->ID);
-        } else {
-            $aria_url = home_url('/aria');
-        }
-
         // Get Carmyn page URL
         $carmyn_page = get_page_by_path('carmyn');
         if ($carmyn_page) {
@@ -211,27 +183,78 @@ function prismblossom_add_artist_menu_items($items, $args)
             $invitation_url = home_url('/invitation');
         }
 
-        $aria_item = '<li><a href="' . esc_url($aria_url) . '">Aria</a></li>';
         $carmyn_item = '<li><a href="' . esc_url($carmyn_url) . '">Carmyn</a></li>';
         $invitation_item = '<li><a href="' . esc_url($invitation_url) . '">Invitation</a></li>';
 
-        // Find Submit link and insert Aria right after it, then Carmyn, then Invitation
+        // Find Submit link and insert Carmyn and Invitation after it
         $submit_pos = stripos($items, '>Submit<');
         if ($submit_pos !== false) {
             // Find the closing </a></li> after Submit
             $after_submit = strpos($items, '</a></li>', $submit_pos);
             if ($after_submit !== false) {
                 $after_submit += 9; // Length of '</a></li>'
-                $items = substr($items, 0, $after_submit) . $aria_item . $carmyn_item . $invitation_item . substr($items, $after_submit);
+                $items = substr($items, 0, $after_submit) . $carmyn_item . $invitation_item . substr($items, $after_submit);
             }
         } else {
             // If no Submit link found, just append to end
-            $items .= $aria_item . $carmyn_item . $invitation_item;
+            $items .= $carmyn_item . $invitation_item;
         }
     }
     return $items;
 }
 add_filter('wp_nav_menu_items', 'prismblossom_add_artist_menu_items', 10, 2);
+
+// Remove unwanted menu items from navigation
+function prismblossom_remove_menu_items($items, $args)
+{
+    // Only filter primary menu
+    if (isset($args->theme_location) && $args->theme_location == 'primary') {
+        // Items to remove (case-insensitive matching)
+        $items_to_remove = array('Capabilities', 'Capabilitie', 'Live Activity', 'Agent', 'Agents', 'Aria');
+        
+        foreach ($items_to_remove as $item_to_remove) {
+            // More robust regex to match menu items with the text
+            $patterns = array(
+                '/<li[^>]*>.*?<a[^>]*>.*?' . preg_quote($item_to_remove, '/') . '.*?<\/a>.*?<\/li>/is',
+                '/<li[^>]*>.*?<a[^>]*>' . preg_quote($item_to_remove, '/') . '<\/a>.*?<\/li>/is'
+            );
+            
+            foreach ($patterns as $pattern) {
+                $items = preg_replace($pattern, '', $items);
+            }
+        }
+        
+        // Clean up any empty list items
+        $items = preg_replace('/<li[^>]*>\s*<\/li>/is', '', $items);
+    }
+    return $items;
+}
+add_filter('wp_nav_menu_items', 'prismblossom_remove_menu_items', 20, 2);
+
+// Alternative approach: Filter menu objects before rendering
+function prismblossom_filter_menu_objects($sorted_menu_items, $args)
+{
+    // Only filter primary menu
+    if (isset($args->theme_location) && $args->theme_location == 'primary') {
+        $items_to_remove = array('Capabilities', 'Capabilitie', 'Live Activity', 'Agent', 'Agents', 'Aria');
+        
+        foreach ($sorted_menu_items as $key => $item) {
+            // Remove items by title (case-insensitive)
+            if (in_array(strtolower($item->title), array_map('strtolower', $items_to_remove))) {
+                unset($sorted_menu_items[$key]);
+            }
+            // Also check for partial matches in title
+            foreach ($items_to_remove as $remove_item) {
+                if (stripos($item->title, $remove_item) !== false) {
+                    unset($sorted_menu_items[$key]);
+                    break;
+                }
+            }
+        }
+    }
+    return $sorted_menu_items;
+}
+add_filter('wp_nav_menu_objects', 'prismblossom_filter_menu_objects', 10, 2);
 
 // ============================================
 // GUESTBOOK FUNCTIONALITY
