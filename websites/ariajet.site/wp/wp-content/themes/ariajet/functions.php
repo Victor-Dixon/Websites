@@ -255,16 +255,6 @@ function ariajet_fix_capabilities_menu_item($items, $args) {
         return $items;
     }
 
-    // Avoid creating duplicate "Music" links if a real Music item already exists.
-    $has_music = false;
-    foreach ($items as $scan_item) {
-        $scan_title = trim(wp_strip_all_tags($scan_item->title));
-        if (strcasecmp($scan_title, 'Music') === 0) {
-            $has_music = true;
-            break;
-        }
-    }
-
     foreach ($items as $item) {
         $title = trim(wp_strip_all_tags($item->title));
         $url = isset($item->url) ? trim((string) $item->url) : '';
@@ -291,16 +281,11 @@ function ariajet_fix_capabilities_menu_item($items, $args) {
             $item->url = home_url('/playlists/');
         }
 
-        // If a menu item is labeled "Capabilities", rename it to "Music" (unless Music already exists).
-        if (strcasecmp($title, 'Capabilities') === 0) {
-            if ($has_music) {
-                // Keep a sane Home link instead of duplicating Music.
-                $item->title = __('Home', 'ariajet');
-                $item->url = home_url('/');
-            } else {
-                $item->title = __('Music', 'ariajet');
-                $item->url = home_url('/playlists/');
-            }
+        // If a menu item is labeled "Capabilities" (or "Capabilitie", etc.), rename it to "Music".
+        // WordPress menu titles sometimes get truncated, so match on the "Capabilit" prefix.
+        if (preg_match('~^capabilit~i', $title)) {
+            $item->title = __('Music', 'ariajet');
+            $item->url = home_url('/playlists/');
             continue;
         }
 
