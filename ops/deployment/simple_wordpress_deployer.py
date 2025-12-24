@@ -12,6 +12,8 @@ Date: 2025-12-21
 
 import json
 import sys
+import os
+import re
 from pathlib import Path
 from typing import Dict, Optional
 
@@ -22,16 +24,59 @@ except ImportError:
     PARAMIKO_AVAILABLE = False
 
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+
+
+def _normalize_site_key(site_key: str) -> str:
+    """Normalize a domain/site key into an ENV-safe token (e.g. ariajet.site -> ARIAJET_SITE)."""
+    token = re.sub(r"[^A-Za-z0-9]+", "_", site_key).upper().strip("_")
+    return token or "SITE"
+
+
+def _load_dotenv_if_available(*candidate_paths: Path) -> None:
+    """
+    Best-effort .env loading.
+
+    - Does nothing if python-dotenv isn't installed.
+    - Does nothing if no candidate path exists.
+    - Never raises.
+    """
+    try:
+        from dotenv import load_dotenv  # type: ignore
+    except Exception:
+        return
+
+    for p in candidate_paths:
+        try:
+            if p and p.exists():
+                load_dotenv(p, override=False)
+        except Exception:
+            # Best-effort only
+            continue
+
+
+def _get_env_credential(site_key: str, name: str) -> Optional[str]:
+    """
+    Credential lookup with site-specific override.
+
+    Priority:
+    1) {NORMALIZED_SITE_KEY}_{NAME}
+    2) HOSTINGER_* (legacy)
+    3) generic {NAME}
+    """
+    norm = _normalize_site_key(site_key)
+    return (
+        os.getenv(f"{norm}_{name}")
+        or os.getenv(f"HOSTINGER_{name.replace('SFTP_', '')}")  # e.g. HOSTINGER_HOST
+        or os.getenv(name)
+    )
+
+
 def load_hostinger_env_credentials():
     """Load Hostinger credentials from environment variables or .env file."""
-    import os
-    from dotenv import load_dotenv
-    
-    # Try to load .env from main repository
-    env_path = Path("D:/Agent_Cellphone_V2_Repository/.env")
-    if env_path.exists():
-        load_dotenv(env_path)
-    
+    # Try to load .env from this repository root
+    _load_dotenv_if_available(REPO_ROOT / ".env")
+
     host = os.getenv("HOSTINGER_HOST")
     username = os.getenv("HOSTINGER_USER")
     password = os.getenv("HOSTINGER_PASS")
@@ -64,7 +109,7 @@ def load_site_configs():
         }
     
     # Priority 2: .deploy_credentials/sites.json (WordPressManager format)
-    sites_json_path = Path("D:/Agent_Cellphone_V2_Repository/.deploy_credentials/sites.json")
+    sites_json_path = REPO_ROOT / ".deploy_credentials" / "sites.json"
     if sites_json_path.exists():
         try:
             with open(sites_json_path, 'r') as f:
@@ -82,9 +127,7 @@ def load_site_configs():
             print(f"⚠️  Could not load sites.json: {e}")
     
     # Priority 3: site_configs.json
-    config_path = Path("D:/websites/configs/site_configs.json")
-    if not config_path.exists():
-        config_path = Path(__file__).parent.parent.parent / "configs" / "site_configs.json"
+    config_path = Path(os.getenv("SITE_CONFIGS_PATH", str(REPO_ROOT / "configs" / "site_configs.json")))
     
     if config_path.exists():
         try:
@@ -139,19 +182,23 @@ class SimpleWordPressDeployer:
             print("❌ paramiko library not installed. Install with: pip install paramiko")
             return False
         
-        # Try to get credentials from Hostinger environment variables first
-        import os
-        from dotenv import load_dotenv
-        
-        env_path = Path("D:/Agent_Cellphone_V2_Repository/.env")
-        if env_path.exists():
-            load_dotenv(env_path)
-        
-        # Check environment variables first (Hostinger tool credentials)
-        host = os.getenv("HOSTINGER_HOST")
-        username = os.getenv("HOSTINGER_USER")
-        password = os.getenv("HOSTINGER_PASS")
-        port = int(os.getenv("HOSTINGER_PORT", "65002"))
+        # Load .env (best effort)
+        _load_dotenv_if_available(REPO_ROOT / ".env")
+
+        # Environment variable support (site-specific first)
+        # Supported:
+        # - {SITE}_SFTP_HOST / _SFTP_USER / _SFTP_PASS / _SFTP_PORT
+        # - HOSTINGER_HOST / HOSTINGER_USER / HOSTINGER_PASS / HOSTINGER_PORT (legacy)
+        # - SFTP_HOST / SFTP_USER / SFTP_PASS / SFTP_PORT (generic)
+        host = _get_env_credential(self.site_key, "SFTP_HOST") or os.getenv("HOSTINGER_HOST")
+        username = _get_env_credential(self.site_key, "SFTP_USER") or os.getenv("HOSTINGER_USER")
+        password = _get_env_credential(self.site_key, "SFTP_PASS") or os.getenv("HOSTINGER_PASS")
+        port_str = (
+            _get_env_credential(self.site_key, "SFTP_PORT")
+            or os.getenv("HOSTINGER_PORT")
+            or "65002"
+        )
+        port = int(port_str)
         
         # If env vars not available, try site config
         if not all([host, username, password]):
@@ -186,6 +233,11 @@ class SimpleWordPressDeployer:
             print(f"      - HOSTINGER_USER: {'✅ Set' if username else '❌ Missing'}")
             print(f"      - HOSTINGER_PASS: {'✅ Set' if password else '❌ Missing'}")
             print(f"      - HOSTINGER_PORT: {port if port else '❌ Missing (default: 65002)'}")
+            norm = _normalize_site_key(self.site_key)
+            print("   📋 Site-specific ENV option:")
+            print(f"      - {norm}_SFTP_HOST / {norm}_SFTP_USER / {norm}_SFTP_PASS / {norm}_SFTP_PORT")
+            print("   📋 Generic ENV option:")
+            print("      - SFTP_HOST / SFTP_USER / SFTP_PASS / SFTP_PORT")
             print("   📋 Configuration Sources Checked:")
             print("      1. Environment variables (.env file)")
             if 'sftp' in self.site_config:
@@ -325,18 +377,17 @@ class SimpleWordPressDeployer:
         
         try:
             # Use same credential loading logic as connect() method
-            import os
-            from dotenv import load_dotenv
-            
-            env_path = Path("D:/Agent_Cellphone_V2_Repository/.env")
-            if env_path.exists():
-                load_dotenv(env_path)
-            
-            # Check environment variables first (Hostinger tool credentials)
-            host = os.getenv("HOSTINGER_HOST")
-            username = os.getenv("HOSTINGER_USER")
-            password = os.getenv("HOSTINGER_PASS")
-            port = int(os.getenv("HOSTINGER_PORT", "65002"))  # Hostinger uses 65002
+            _load_dotenv_if_available(REPO_ROOT / ".env")
+
+            host = _get_env_credential(self.site_key, "SFTP_HOST") or os.getenv("HOSTINGER_HOST")
+            username = _get_env_credential(self.site_key, "SFTP_USER") or os.getenv("HOSTINGER_USER")
+            password = _get_env_credential(self.site_key, "SFTP_PASS") or os.getenv("HOSTINGER_PASS")
+            port_str = (
+                _get_env_credential(self.site_key, "SFTP_PORT")
+                or os.getenv("HOSTINGER_PORT")
+                or "65002"
+            )
+            port = int(port_str)  # Hostinger uses 65002
             
             # If env vars not available, try site config
             if not all([host, username, password]):
