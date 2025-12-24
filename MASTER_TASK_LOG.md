@@ -1,6 +1,6 @@
 # MASTER TASK LOG
 
-**Last Updated:** 2025-12-22  
+**Last Updated:** 2025-12-23  
 **Project State:** See `docs/PROJECT_STATE_2025-12-22.md` for comprehensive status  
 **Completed Tasks:** 64 tasks archived to COMPLETED TASKS ARCHIVE section below
 
@@ -23,6 +23,58 @@
 - [ ] **MEDIUM**: Implement visual QA process - Before any deployment, visually inspect the site in a browser to catch presentation issues. **Priority:** MEDIUM - Prevent future quality issues.  **Tags:** #deployment [Agent-7]
 
 - [ ] **HIGH**: Monitor V2 compliance refactoring progress - Agent-1 (Batch 2 Phase 2D, Batch 4), Agent-2 (architecture support), correct dashboard compliance numbers (110 violations, 87.6% compliance) [Agent-6 CLAIMED] **Tags:** #onboarding #v2-compliance
+
+### DIGITAL DREAMSCAPE SITE IMPROVEMENTS
+
+**Source:** Digital Dreamscape Site Update blog post (2025-12-23)  
+**Status:** Stabilization needed - Theme hit fatal errors, modularization required  
+**Reference:** https://digitaldreamscape.site/digital-dreamscape-site-update/?v=facecards1
+
+#### Phase 1: Stabilize (Fast, Minimal) - HIGH PRIORITY
+- [ ] **CRITICAL**: Fix `dd_safe_avatar()` fatal error on digitaldreamscape.site - Template `template-parts/card-episode.php` calls undefined function `dd_safe_avatar()`. Function missing from functions.php or not included properly. **Priority:** IMMEDIATE - Site may be down. **Tags:** #deployment #website-quality [Agent-7]
+- [ ] **HIGH**: Add missing helper functions to digitaldreamscape.site - Add `dd_safe_avatar()` and any other missing helper functions referenced in templates. Verify all template parts have required functions available. **Tags:** #deployment [Agent-7]
+- [ ] **HIGH**: Modularize digitaldreamscape.site functions.php - Break down into `inc/` files: `inc/setup.php`, `inc/enqueue.php`, `inc/template-tags.php`, `inc/filters.php`, `inc/security.php`. Ensure all includes are properly loaded. **Tags:** #deployment [Agent-7]
+- [ ] **MEDIUM**: Fix asset references in digitaldreamscape.site - JS referenced in enqueue logic but no real assets directory/files. Either create proper `/assets/js/` structure or remove fake enqueue references. **Tags:** #deployment [Agent-7]
+- [ ] **MEDIUM**: Move debug configuration out of theme files - Debug configuration belongs in wp-config.php, not theme files. Remove debug config from functions.php/theme files if present. **Tags:** #deployment [Agent-7]
+
+#### Phase 2: Modular Theme Architecture - MEDIUM PRIORITY
+- [ ] **MEDIUM**: Split digitaldreamscape.site CSS into modular structure - Move from single `style.css` to: `assets/css/base.css` (reset, tokens, typography), `assets/css/layout.css` (container, header, footer), `assets/css/components/*.css` (cards, buttons, hero, pagination), `assets/css/pages/*.css` (home, archive, single, page). Build step optional. **Tags:** #deployment [Agent-7]
+- [ ] **MEDIUM**: Organize digitaldreamscape.site PHP into inc/ modules - Complete modularization: `inc/setup.php` (theme support, menus), `inc/enqueue.php` (styles/scripts), `inc/template-tags.php` (template helper functions), `inc/filters.php` (WordPress filters), `inc/security.php` (security functions). **Tags:** #deployment [Agent-7]
+- [ ] **LOW**: Document modular architecture pattern - Create documentation for modular theme structure to use as template for other sites. Include file organization, include patterns, best practices. **Tags:** #documentation [Agent-2]
+
+#### Phase 3: Make Digital Dreamscape Portfolio-Grade - MEDIUM PRIORITY
+- [ ] **MEDIUM**: Create strong Digital Dreamscape homepage - Homepage should explain the product/system in 5 seconds. Clear value proposition, narrative identity, CTAs. **Tags:** #website-quality [Agent-7]
+- [ ] **MEDIUM**: Add "Work / Builds" section to digitaldreamscape.site - Create case-study cards showing builds and projects. Clean, professional presentation. **Tags:** #website-quality [Agent-7]
+- [ ] **MEDIUM**: Add "Start Here" path for new visitors - Clear onboarding flow for new visitors to understand the site and system. **Tags:** #website-quality [Agent-7]
+- [ ] **MEDIUM**: Add clear CTAs to digitaldreamscape.site - Newsletter, Discord, GitHub, Twitch links prominently displayed. **Tags:** #website-quality [Agent-7]
+- [ ] **MEDIUM**: Performance polish for digitaldreamscape.site - Image size optimization, caching improvements, minimal JavaScript, performance monitoring. **Tags:** #performance [Agent-7]
+
+### FUNCTIONS.PHP MODULARIZATION (ALL WEBSITES)
+
+**Priority:** HIGH - Improve maintainability and prevent fatal errors  
+**Approach:** Modularize largest to smallest, ensure no functionality breaks  
+**Order:** Largest files first to tackle most complex refactoring early
+
+#### Large Files (>500 lines) - HIGH PRIORITY
+- [ ] **HIGH**: Modularize prismblossom.online functions.php (1,028 lines, 36.2 KB) - Break into `inc/` files: `inc/setup.php`, `inc/enqueue.php`, `inc/template-tags.php`, `inc/filters.php`, `inc/guestbook.php`, `inc/security.php`. Test all functionality (guestbook, menu filtering, template loading, cache clearing). **Tags:** #deployment [Agent-7]
+- [ ] **HIGH**: Modularize ariajet-cosmic functions.php (721 lines, 27.5 KB) - Break into organized modules. Verify all theme functionality works after modularization. **Tags:** #deployment [Agent-7]
+- [ ] **HIGH**: Modularize ariajet functions.php (580 lines, 24.0 KB) - Break into organized modules. Test all functionality. **Tags:** #deployment [Agent-7]
+- [ ] **HIGH**: Modularize southwestsecret.com functions.php (559 lines, 20.0 KB) - Break into organized modules. Ensure all functionality preserved. **Tags:** #deployment [Agent-7]
+- [ ] **HIGH**: Modularize digitaldreamscape.site functions.php (547 lines, 20.7 KB) - Break into organized modules as part of Phase 1 stabilization. Fix missing functions, organize includes. **Tags:** #deployment [Agent-7]
+- [ ] **HIGH**: Modularize swarm-theme (weareswarm.site) functions.php (511 lines, 17.6 KB) - Break into organized modules. Test all theme features. **Tags:** #deployment [Agent-7]
+
+#### Medium Files (300-500 lines) - MEDIUM PRIORITY
+- [ ] **MEDIUM**: Modularize ariajet-studio functions.php (482 lines, 16.2 KB) - Break into organized modules. **Tags:** #deployment [Agent-7]
+- [ ] **MEDIUM**: Modularize tradingrobotplug-theme functions.php (413 lines, 14.9 KB) - Break into organized modules. Ensure trading robot integrations still work. **Tags:** #deployment #trading-robot [Agent-7]
+- [ ] **MEDIUM**: Modularize houstonsipqueen.com functions.php (349 lines, 11.7 KB) - Break into organized modules. **Tags:** #deployment [Agent-7]
+
+#### Small Files (<300 lines) - LOW PRIORITY
+- [ ] **LOW**: Modularize freerideinvestor-modern functions.php (250 lines, 7.8 KB) - Break into organized modules. Verify template loading and cache clearing functionality preserved. **Tags:** #deployment [Agent-7]
+
+#### Modularization Requirements (Apply to All)
+- [ ] **CRITICAL**: Create modularization testing checklist - Checklist to verify no functionality breaks: test all template loading, test all hooks/filters, test all custom functions, test AJAX endpoints, test admin functionality, test front-end display. **Tags:** #testing [Agent-7]
+- [ ] **HIGH**: Document modular structure pattern - Standard `inc/` structure: `inc/setup.php`, `inc/enqueue.php`, `inc/template-tags.php`, `inc/filters.php`, `inc/security.php`, plus site-specific modules. Include loading order, best practices. **Tags:** #documentation [Agent-2]
+- [ ] **MEDIUM**: Create modularization tool/script - Automated tool to help modularize functions.php: identify function groups, suggest file organization, create include structure, verify no broken references. **Tags:** #tooling [Agent-1]
 
 ## THIS_WEEK
 
