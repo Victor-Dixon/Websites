@@ -26,6 +26,25 @@ get_header();
                         <?php if (!empty($tagline)) : ?>
                             <p class="about-tagline"><?php echo esc_html($tagline); ?></p>
                         <?php endif; ?>
+
+                        <?php
+                        // Summary: use page excerpt if set, otherwise derive from content.
+                        $summary = trim((string) get_the_excerpt());
+                        if (empty($summary)) {
+                            $summary = wp_strip_all_tags((string) get_the_content());
+                            $summary = trim(preg_replace('/\s+/', ' ', $summary));
+                            $max_len = 190;
+                            if (function_exists('mb_substr')) {
+                                $summary = mb_substr($summary, 0, $max_len);
+                            } else {
+                                $summary = substr($summary, 0, $max_len);
+                            }
+                            $summary = rtrim($summary, " \t\n\r\0\x0B.,;:!-–—") . '…';
+                        }
+                        ?>
+                        <?php if (!empty($summary)) : ?>
+                            <p class="about-summary"><?php echo esc_html($summary); ?></p>
+                        <?php endif; ?>
                     </header>
 
                     <div class="about-body reveal">
@@ -123,6 +142,15 @@ get_header();
     max-width: 60ch;
     font-size: 1.05rem;
     opacity: 0.92;
+    font-family: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+.page-about-template .about-summary {
+    margin: var(--space-4) auto 0;
+    max-width: 70ch;
+    font-size: 1.02rem;
+    line-height: 1.6;
+    opacity: 0.95;
+    color: rgba(255, 255, 255, 0.92);
     font-family: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
 .page-about-template .about-body {
