@@ -275,9 +275,21 @@ section:last-child {
 }
 
 /* Hide any direct children of navigation that aren't ul lists */
-/* Note: Menu cleanup is handled in PHP via functions.php filter */
-nav.main-navigation>*:not(ul) {
-    display: none;
+/* Aggressively hide nav-cta divs and other non-menu elements */
+nav.main-navigation>*:not(ul),
+.main-navigation>*:not(ul),
+.main-navigation>div.nav-cta,
+.main-navigation .nav-cta,
+nav.main-navigation .nav-cta {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    overflow: hidden !important;
+    position: absolute !important;
+    left: -9999px !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
 }
 
 .main-navigation>ul {

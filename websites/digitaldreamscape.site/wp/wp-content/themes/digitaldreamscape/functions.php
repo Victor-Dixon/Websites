@@ -414,13 +414,19 @@ function digitaldreamscape_clean_nav_menu_html($nav_menu, $args)
         $nav = $xpath->query("//nav[contains(@class, 'main-navigation') or contains(@class, 'nav')]")->item(0);
         if ($nav) {
             $children = $xpath->query("./*", $nav);
+            $children_to_remove = array();
             foreach ($children as $child) {
                 // Remove nav-cta div and any other non-ul elements
-                if (
-                    $child->tagName !== 'ul' || $child->getAttribute('class') === 'nav-cta' ||
-                    ($child->tagName === 'div' && $child->getAttribute('class') === 'nav-cta')
-                ) {
-                    $nav->removeChild($child);
+                if ($child->tagName !== 'ul') {
+                    $children_to_remove[] = $child;
+                } elseif ($child->getAttribute('class') === 'nav-cta') {
+                    $children_to_remove[] = $child;
+                }
+            }
+            // Remove children after iteration to avoid modifying collection during iteration
+            foreach ($children_to_remove as $child) {
+                if ($child->parentNode) {
+                    $child->parentNode->removeChild($child);
                 }
             }
         }

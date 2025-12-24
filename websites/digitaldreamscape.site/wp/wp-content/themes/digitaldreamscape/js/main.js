@@ -54,7 +54,32 @@
             }
         });
 
-        // Remove links containing "Watch Live" or "Read Episodes"
+        // Remove nav-cta div completely (contains Watch Live and Read Episodes)
+        var navCtaDivs = navigation.querySelectorAll('.nav-cta, div.nav-cta');
+        navCtaDivs.forEach(function (div) {
+            div.style.display = 'none';
+            div.style.visibility = 'hidden';
+            div.style.height = '0';
+            div.style.width = '0';
+            div.style.overflow = 'hidden';
+            div.style.position = 'absolute';
+            div.style.left = '-9999px';
+            div.style.opacity = '0';
+            div.style.pointerEvents = 'none';
+            setTimeout(function () {
+                try {
+                    if (div.parentNode) {
+                        div.parentNode.removeChild(div);
+                    } else {
+                        div.remove();
+                    }
+                } catch (e) {
+                    // Ignore if already removed
+                }
+            }, 50);
+        });
+
+        // Also remove links containing "Watch Live" or "Read Episodes" as backup
         var allLinks = navigation.querySelectorAll('a');
         allLinks.forEach(function (link) {
             var linkText = link.textContent.trim().toLowerCase();
@@ -62,16 +87,21 @@
                 linkText.includes('watch live →') ||
                 (linkText.includes('read epi') && !linkText.includes('read the blog'))) {
                 var parent = link.parentElement;
-                if (parent) {
+                if (parent && !parent.classList.contains('menu') && parent.tagName !== 'LI') {
+                    // Remove if parent is not a menu item
                     parent.style.display = 'none';
                     parent.style.visibility = 'hidden';
                     setTimeout(function () {
                         try {
-                            parent.remove();
+                            if (parent.parentNode) {
+                                parent.parentNode.removeChild(parent);
+                            } else {
+                                parent.remove();
+                            }
                         } catch (e) {
                             // Ignore if already removed
                         }
-                    }, 100);
+                    }, 50);
                 }
             }
         });
