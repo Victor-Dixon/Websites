@@ -203,6 +203,10 @@ def main():
     print("FIX DIGITALDREAMSCAPE.SITE POST VOCAL PATTERNS")
     print("=" * 70)
     print()
+    print("⚠️  DEPRECATED: This tool is deprecated.")
+    print("   Use generic_update_post_content.py instead:")
+    print("   python tools/generic_update_post_content.py --site digitaldreamscape.site --post-slug digital-dreamscape-site-update --content-file rewritten_content.html")
+    print()
     
     # Load site configs
     site_configs = load_site_configs()
