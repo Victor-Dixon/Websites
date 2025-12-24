@@ -3,7 +3,8 @@
 **Goal:** Transform freerideinvestor.com into a professional, polished website we can be proud of  
 **Date Created:** 2025-12-22  
 **Contributors:** Agent-5 (Business Intelligence), Agent-7 (Web Development)  
-**Status:** 🎯 IN PROGRESS
+**Status:** 🎯 IN PROGRESS  
+**📋 Linked from:** [MASTER_TASK_LOG.md](../../MASTER_TASK_LOG.md#freerideinvestorcom)
 
 ## Executive Summary
 
