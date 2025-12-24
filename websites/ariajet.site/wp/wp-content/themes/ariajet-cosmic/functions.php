@@ -378,6 +378,163 @@ function ariajet_cosmic_excerpt_more($more) {
 add_filter('excerpt_more', 'ariajet_cosmic_excerpt_more');
 
 /**
+ * Music tracks helper for the Music page template.
+ *
+ * Priority:
+ * 1) Theme-curated list: wp-content/themes/ariajet-cosmic/data/music-tracks.json
+ * 2) uploads/music/tracks.json (optional curated list)
+ * 3) Scan uploads/music for audio files
+ * 4) WordPress Media Library audio attachments
+ *
+ * @return array<int, array{title:string, artist:string, url:string, mime:string, icon:string, emojis:array<int,string>}>
+ */
+if (!function_exists('ariajet_get_music_tracks')) {
+    function ariajet_get_music_tracks(): array {
+        $upload = wp_upload_dir();
+        $music_dir = trailingslashit($upload['basedir']) . 'music/';
+        $music_url = trailingslashit($upload['baseurl']) . 'music/';
+
+        $default_emojis = array('🌙', '✨', '🎶');
+        $default_artist = 'Aria';
+        $default_icon = '🎧';
+
+        $tracks = array();
+
+        // Theme-curated list (ships with the theme).
+        $theme_tracks_path = trailingslashit(get_template_directory()) . 'data/music-tracks.json';
+        if (is_readable($theme_tracks_path)) {
+            $json = file_get_contents($theme_tracks_path);
+            $data = json_decode($json, true);
+            if (is_array($data)) {
+                foreach ($data as $row) {
+                    if (!is_array($row) || empty($row['url'])) {
+                        continue;
+                    }
+                    $url = (string) $row['url'];
+                    $mime = !empty($row['mime']) ? (string) $row['mime'] : null;
+
+                    $tracks[] = array(
+                        'title'  => !empty($row['title']) ? (string) $row['title'] : (string) wp_basename($url),
+                        'artist' => !empty($row['artist']) ? (string) $row['artist'] : $default_artist,
+                        'url'    => $url,
+                        'mime'   => $mime ?: 'audio/mpeg',
+                        'icon'   => !empty($row['icon']) ? (string) $row['icon'] : $default_icon,
+                        'emojis' => (!empty($row['emojis']) && is_array($row['emojis'])) ? array_values($row['emojis']) : $default_emojis,
+                    );
+                }
+            }
+        }
+
+        // uploads/music/tracks.json (optional curated list).
+        $tracks_json_path = $music_dir . 'tracks.json';
+        if (is_dir($music_dir) && is_readable($tracks_json_path)) {
+            $json = file_get_contents($tracks_json_path);
+            $data = json_decode($json, true);
+            if (is_array($data)) {
+                foreach ($data as $row) {
+                    if (!is_array($row) || empty($row['file'])) {
+                        continue;
+                    }
+                    $file = (string) $row['file'];
+                    $abs = $music_dir . $file;
+                    if (!is_file($abs)) {
+                        continue;
+                    }
+
+                    $mime = wp_check_filetype($file);
+                    $tracks[] = array(
+                        'title'  => !empty($row['title']) ? (string) $row['title'] : (string) pathinfo($file, PATHINFO_FILENAME),
+                        'artist' => !empty($row['artist']) ? (string) $row['artist'] : $default_artist,
+                        'url'    => $music_url . rawurlencode($file),
+                        'mime'   => !empty($mime['type']) ? (string) $mime['type'] : 'audio/mpeg',
+                        'icon'   => !empty($row['icon']) ? (string) $row['icon'] : $default_icon,
+                        'emojis' => (!empty($row['emojis']) && is_array($row['emojis'])) ? array_values($row['emojis']) : $default_emojis,
+                    );
+                }
+            }
+        }
+
+        // Scan uploads/music directory for audio files.
+        if (empty($tracks) && is_dir($music_dir)) {
+            $files = glob($music_dir . '*.{mp3,MP3,m4a,M4A,ogg,OGG,wav,WAV}', GLOB_BRACE);
+            if (is_array($files) && !empty($files)) {
+                natsort($files);
+                foreach ($files as $abs) {
+                    if (!is_string($abs) || !is_file($abs)) {
+                        continue;
+                    }
+                    $basename = wp_basename($abs);
+                    $title_raw = (string) pathinfo($basename, PATHINFO_FILENAME);
+                    $title_raw = urldecode($title_raw);
+                    $title_raw = str_replace(array('_', '-'), ' ', $title_raw);
+                    $title = trim(preg_replace('/\s+/', ' ', $title_raw) ?: $title_raw);
+
+                    $mime = wp_check_filetype($basename);
+                    $tracks[] = array(
+                        'title'  => $title !== '' ? $title : $basename,
+                        'artist' => $default_artist,
+                        'url'    => $music_url . rawurlencode($basename),
+                        'mime'   => !empty($mime['type']) ? (string) $mime['type'] : 'audio/mpeg',
+                        'icon'   => $default_icon,
+                        'emojis' => $default_emojis,
+                    );
+                }
+            }
+        }
+
+        // WordPress Media Library audio attachments.
+        if (empty($tracks)) {
+            $attachments = get_posts(array(
+                'post_type'      => 'attachment',
+                'post_status'    => 'inherit',
+                'post_mime_type' => 'audio',
+                'posts_per_page' => 50,
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+                'fields'         => 'ids',
+            ));
+
+            if (is_array($attachments) && !empty($attachments)) {
+                foreach ($attachments as $attachment_id) {
+                    $url = wp_get_attachment_url($attachment_id);
+                    if (!$url) {
+                        continue;
+                    }
+                    $mime = get_post_mime_type($attachment_id);
+                    $title = get_the_title($attachment_id);
+
+                    $tracks[] = array(
+                        'title'  => $title ? (string) $title : (string) wp_basename((string) $url),
+                        'artist' => $default_artist,
+                        'url'    => (string) $url,
+                        'mime'   => $mime ? (string) $mime : 'audio/mpeg',
+                        'icon'   => $default_icon,
+                        'emojis' => $default_emojis,
+                    );
+                }
+            }
+        }
+
+        // Dedupe by URL (prevents duplicates if the same song is found multiple ways).
+        if (!empty($tracks)) {
+            $seen = array();
+            $unique = array();
+            foreach ($tracks as $track) {
+                $url = isset($track['url']) ? (string) $track['url'] : '';
+                if ($url === '' || isset($seen[$url])) {
+                    continue;
+                }
+                $seen[$url] = true;
+                $unique[] = $track;
+            }
+            $tracks = $unique;
+        }
+
+        return $tracks;
+    }
+}
+
+/**
  * Register Widget Areas
  */
 function ariajet_cosmic_widgets_init() {
@@ -496,6 +653,7 @@ add_filter('template_include', function ($template) {
         // Add site-specific page templates here
         // Example: 'about' => 'page-templates/page-about.php',
         // Example: 'blog' => 'page-templates/page-blog.php',
+        'music' => 'page-music.php',
     );
     
     if ($page_slug && isset($page_templates[$page_slug])) {
