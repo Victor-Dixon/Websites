@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Digital Dreamscape Theme Functions
  * 
@@ -15,7 +16,8 @@ if (!defined('ABSPATH')) {
 /**
  * Theme Setup
  */
-function digitaldreamscape_setup() {
+function digitaldreamscape_setup()
+{
     // Add theme support
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
@@ -45,13 +47,14 @@ add_action('after_setup_theme', 'digitaldreamscape_setup');
 /**
  * Enqueue Styles and Scripts
  */
-function digitaldreamscape_scripts() {
+function digitaldreamscape_scripts()
+{
     // Enqueue theme stylesheet
     wp_enqueue_style('digitaldreamscape-style', get_stylesheet_uri(), array(), '2.0.0');
 
     // Enqueue theme JavaScript
     wp_enqueue_script('digitaldreamscape-script', get_template_directory_uri() . '/js/main.js', array('jquery'), '2.0.0', true);
-    
+
     // Add Digital Dreamscape context to page
     wp_localize_script('digitaldreamscape-script', 'dreamscapeContext', array(
         'isEpisode' => is_single(),
@@ -64,7 +67,8 @@ add_action('wp_enqueue_scripts', 'digitaldreamscape_scripts');
 /**
  * Register Widget Areas
  */
-function digitaldreamscape_widgets_init() {
+function digitaldreamscape_widgets_init()
+{
     register_sidebar(array(
         'name' => __('Sidebar', 'digitaldreamscape'),
         'id' => 'sidebar-1',
@@ -80,7 +84,8 @@ add_action('widgets_init', 'digitaldreamscape_widgets_init');
 /**
  * Add Digital Dreamscape meta description to posts
  */
-function digitaldreamscape_post_meta_description() {
+function digitaldreamscape_post_meta_description()
+{
     if (is_single()) {
         $description = 'Digital Dreamscape is a living, narrative-driven AI world where real actions become story, and story feeds back into execution. This episode is part of the persistent simulation of self + system.';
         echo '<meta name="description" content="' . esc_attr($description) . '">';
@@ -101,34 +106,34 @@ add_filter('template_include', function ($template) {
     if (is_admin() || wp_doing_ajax() || wp_doing_cron()) {
         return $template;
     }
-    
+
     // Get the page slug from URL or post object
     $page_slug = null;
-    
+
     if (is_page()) {
         global $post;
         if ($post && isset($post->post_name)) {
             $page_slug = $post->post_name;
         }
     }
-    
+
     // Fallback: Check URL directly
     if (!$page_slug && isset($_SERVER['REQUEST_URI'])) {
         $request_uri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
         $request_parts = explode('/', $request_uri);
         $page_slug = end($request_parts);
     }
-    
+
     // Map page slugs to templates (customize per site)
     $page_templates = array(
         // Add site-specific page templates here
         // Example: 'about' => 'page-templates/page-about.php',
         // Example: 'blog' => 'page-templates/page-blog.php',
     );
-    
+
     if ($page_slug && isset($page_templates[$page_slug])) {
         $custom_template = locate_template($page_templates[$page_slug]);
-        
+
         if ($custom_template && file_exists($custom_template)) {
             // If page exists but template isn't set, update it
             if (is_page()) {
@@ -138,17 +143,17 @@ add_filter('template_include', function ($template) {
                     update_post_meta($post->ID, '_wp_page_template', $page_templates[$page_slug]);
                 }
             }
-            
+
             return $custom_template;
         }
     }
-    
+
     // Handle 404 cases (fallback for pages that don't exist yet)
     if (is_404() && isset($_SERVER['REQUEST_URI'])) {
         $request_uri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
         $request_parts = explode('/', $request_uri);
         $uri_slug = end($request_parts);
-        
+
         if (isset($page_templates[$uri_slug])) {
             $new_template = locate_template($page_templates[$uri_slug]);
             if ($new_template && file_exists($new_template)) {
@@ -165,7 +170,7 @@ add_filter('template_include', function ($template) {
             }
         }
     }
-    
+
     return $template;
 }, 999);
 
@@ -173,19 +178,35 @@ add_filter('template_include', function ($template) {
  * Clear cache when theme is activated or updated
  * This helps ensure template changes take effect immediately
  */
-function clear_template_cache_on_theme_change() {
+function clear_template_cache_on_theme_change()
+{
     // Clear object cache
     if (function_exists('wp_cache_flush')) {
         wp_cache_flush();
     }
-    
+
     // Clear LiteSpeed Cache if active
     if (class_exists('LiteSpeed_Cache') && method_exists('LiteSpeed_Cache', 'purge_all')) {
         LiteSpeed_Cache::purge_all();
     }
-    
+
     // Clear rewrite rules to ensure permalinks work
     flush_rewrite_rules(false);
 }
 add_action('after_switch_theme', 'clear_template_cache_on_theme_change');
 
+/**
+ * Default menu fallback if no menu is set
+ */
+function digitaldreamscape_default_menu()
+{
+?>
+    <ul id="primary-menu" class="menu">
+        <li><a href="<?php echo esc_url(home_url('/')); ?>">Home</a></li>
+        <li><a href="<?php echo esc_url(home_url('/blog')); ?>">Blog</a></li>
+        <li><a href="<?php echo esc_url(home_url('/streaming')); ?>">Streaming</a></li>
+        <li><a href="<?php echo esc_url(home_url('/community')); ?>">Community</a></li>
+        <li><a href="<?php echo esc_url(home_url('/about')); ?>">About</a></li>
+    </ul>
+<?php
+}

@@ -345,6 +345,7 @@ add_filter('template_include', function ($template) {
         // Add site-specific page templates here
         // Example: 'about' => 'page-templates/page-about.php',
         // Example: 'blog' => 'page-templates/page-blog.php',
+        'music' => 'page-music.php', // Force music page to use page-music.php template
     );
     
     if ($page_slug && isset($page_templates[$page_slug])) {
@@ -384,6 +385,14 @@ add_filter('template_include', function ($template) {
                 );
                 return $new_template;
             }
+        }
+    }
+    
+    // Force music page (ID 3671) to use page-3671.php template
+    if (is_page(3671)) {
+        $music_template = locate_template('page-3671.php');
+        if ($music_template && file_exists($music_template)) {
+            return $music_template;
         }
     }
     

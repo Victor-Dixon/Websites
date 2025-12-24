@@ -1,11 +1,8 @@
 <?php
 /**
- * Template Name: Music Page
- * Template Post Type: page
+ * Template for Page ID 3671 (Music Page)
  * 
- * Music Page Template
- * 
- * Template for displaying Aria's music collection
+ * This template is specifically for the music page
  * 
  * @package AriaJet
  */
@@ -175,44 +172,6 @@ get_header();
     border-radius: 10px;
 }
 
-.music-placeholder {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-    border-radius: 20px;
-    padding: 3rem 2rem;
-    text-align: center;
-    border: 2px solid rgba(102, 126, 234, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.music-placeholder:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-}
-
-.music-placeholder .music-icon {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-    animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-}
-
-.music-placeholder h2 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: #2c3e50;
-}
-
-.music-placeholder p {
-    font-size: 1.1rem;
-    color: #7f8c8d;
-    line-height: 1.6;
-    margin-bottom: 2rem;
-}
-
 .cosmic-elements {
     display: flex;
     justify-content: center;
@@ -230,6 +189,11 @@ get_header();
 .cosmic-emoji:nth-child(2) { --i: 1; }
 .cosmic-emoji:nth-child(3) { --i: 2; }
 .cosmic-emoji:nth-child(4) { --i: 3; }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
 
 @keyframes twinkle {
     0%, 100% { opacity: 1; transform: scale(1); }
@@ -253,3 +217,4 @@ get_header();
 
 <?php
 get_footer();
+
