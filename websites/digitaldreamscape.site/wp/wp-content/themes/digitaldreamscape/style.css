@@ -241,6 +241,13 @@ section:last-child {
     display: inline-block;
 }
 
+/* Hide any direct children of navigation that aren't ul lists */
+.main-navigation>*:not(ul),
+.main-navigation>div,
+.main-navigation>span {
+    display: none !important;
+}
+
 .main-navigation ul {
     display: flex;
     list-style: none;
@@ -2178,6 +2185,11 @@ body {
         border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
+    /* Ensure only ul lists show in mobile menu */
+    .main-navigation.active>*:not(ul) {
+        display: none;
+    }
+
     .main-navigation ul {
         flex-direction: column;
         gap: var(--spacing-2);
@@ -2224,6 +2236,11 @@ body {
         box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);
         padding: var(--spacing-4);
         border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Ensure only ul lists show in mobile menu */
+    .main-navigation.active>*:not(ul) {
+        display: none;
     }
 
     .main-navigation ul {
