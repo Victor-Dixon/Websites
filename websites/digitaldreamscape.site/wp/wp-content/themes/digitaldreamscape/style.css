@@ -1357,11 +1357,11 @@ body {
 }
 
 .archive-description.dreamscape-archive-desc {
-    font-size: 1.125rem;
+    font-size: var(--font-size-lg);
     color: rgba(255, 255, 255, 0.95);
     max-width: 800px;
     margin: 0 auto;
-    line-height: 1.7;
+    line-height: var(--line-height-relaxed);
     position: relative;
     z-index: 1;
 }
