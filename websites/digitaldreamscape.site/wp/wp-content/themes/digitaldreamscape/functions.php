@@ -103,7 +103,15 @@ function digitaldreamscape_unified_subheader() {
     </div>
     <?php
 }
-add_action('wp_body_open', 'digitaldreamscape_unified_subheader', 20);
+// Hook into wp_footer with early priority, but we'll manually call it after header
+// This ensures it appears right after the header
+add_action('wp_footer', function() {
+    // Only output if not already displayed
+    if (!did_action('digitaldreamscape_subheader_displayed')) {
+        digitaldreamscape_unified_subheader();
+        do_action('digitaldreamscape_subheader_displayed');
+    }
+}, 1);
 
 /**
  * Performance Optimizations

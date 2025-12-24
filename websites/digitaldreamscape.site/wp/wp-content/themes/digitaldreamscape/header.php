@@ -56,3 +56,9 @@
             </div>
         </div>
     </header>
+    <?php
+    // Render unified subheader right after header
+    if (function_exists('digitaldreamscape_unified_subheader')) {
+        digitaldreamscape_unified_subheader();
+    }
+    ?>
