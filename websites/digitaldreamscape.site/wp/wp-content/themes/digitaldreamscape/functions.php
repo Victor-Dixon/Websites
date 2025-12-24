@@ -49,11 +49,11 @@ add_action('after_setup_theme', 'digitaldreamscape_setup');
  */
 function digitaldreamscape_scripts()
 {
-    // Enqueue theme stylesheet with cache busting - updated version for unified brand header
-    wp_enqueue_style('digitaldreamscape-style', get_stylesheet_uri(), array(), '3.0.0');
+    // Enqueue theme stylesheet with cache busting - unified brand header v3.0.1
+    wp_enqueue_style('digitaldreamscape-style', get_stylesheet_uri(), array(), '3.0.1');
 
-    // Enqueue theme JavaScript (load in footer for better performance) - updated for unified brand header
-    wp_enqueue_script('digitaldreamscape-script', get_template_directory_uri() . '/js/main.js', array(), '3.0.0', true);
+    // Enqueue theme JavaScript (load in footer for better performance) - unified brand header v3.0.1
+    wp_enqueue_script('digitaldreamscape-script', get_template_directory_uri() . '/js/main.js', array(), '3.0.1', true);
 
     // Add Digital Dreamscape context to page
     wp_localize_script('digitaldreamscape-script', 'dreamscapeContext', array(

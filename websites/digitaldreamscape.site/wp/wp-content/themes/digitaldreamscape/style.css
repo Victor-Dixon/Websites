@@ -303,7 +303,8 @@ body.page-template-front-page .site-header,
 
 @media (max-width: 768px) {
     .logo-tagline {
-        display: none; /* Hide on mobile for space */
+        display: none;
+        /* Hide on mobile for space */
     }
 }
 
@@ -371,7 +372,7 @@ body.page-template-front-page .site-header,
         gap: var(--spacing-2) !important;
         margin-left: var(--spacing-4) !important;
     }
-    
+
     .nav-cta {
         padding: var(--spacing-2) var(--spacing-3) !important;
         font-size: var(--font-size-xs) !important;
@@ -380,7 +381,8 @@ body.page-template-front-page .site-header,
 
 @media (max-width: 768px) {
     .nav-cta-group {
-        display: none !important; /* Hidden on mobile, show in mobile menu instead */
+        display: none !important;
+        /* Hidden on mobile, show in mobile menu instead */
     }
 }
 

@@ -1,10 +1,16 @@
 <?php
 
 /**
- * Header Template
+ * Header Template - Unified Brand Header
+ * 
+ * Features:
+ * - [BUILD IN PUBLIC] identity tagline
+ * - Watch Live + Read Episodes CTAs
+ * - Consistent across ALL pages
  * 
  * @package DigitalDreamscape
- * @since 1.0.0
+ * @since 3.0.0
+ * @cache-bust 2025-12-24-v2
  */
 ?>
 <!DOCTYPE html>
@@ -53,7 +59,7 @@
                         'fallback_cb' => 'digitaldreamscape_default_menu',
                     ));
                     ?>
-                    
+
                     <!-- Primary CTAs - Brand Action Center -->
                     <div class="nav-cta-group">
                         <a href="<?php echo esc_url(home_url('/streaming/')); ?>" class="nav-cta nav-cta-primary">

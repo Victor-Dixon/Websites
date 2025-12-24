@@ -72,6 +72,7 @@ def deploy_digitaldreamscape_theme():
         "wp/wp-content/themes/digitaldreamscape/footer.php",
         "wp/wp-content/themes/digitaldreamscape/front-page.php",
         "wp/wp-content/themes/digitaldreamscape/index.php",
+        "wp/wp-content/themes/digitaldreamscape/page.php",  # Generic page template
         "wp/wp-content/themes/digitaldreamscape/page-blog.php",
         "wp/wp-content/themes/digitaldreamscape/single.php",
         "wp/wp-content/themes/digitaldreamscape/archive.php",

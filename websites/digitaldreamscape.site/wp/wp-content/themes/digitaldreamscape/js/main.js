@@ -21,7 +21,7 @@
                 menuToggle.classList.toggle('active');
                 var isExpanded = navigation.classList.contains('active');
                 menuToggle.setAttribute('aria-expanded', isExpanded);
-                
+
                 // Prevent body scroll when menu is open
                 if (isExpanded) {
                     document.body.style.overflow = 'hidden';
@@ -75,16 +75,16 @@
         // Header scroll effect - add shadow on scroll
         if (header) {
             var lastScrollTop = 0;
-            
+
             window.addEventListener('scroll', function () {
                 var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                
+
                 if (scrollTop > 50) {
                     header.classList.add('scrolled');
                 } else {
                     header.classList.remove('scrolled');
                 }
-                
+
                 lastScrollTop = scrollTop;
             }, { passive: true });
         }
