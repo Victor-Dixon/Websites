@@ -448,17 +448,7 @@ function ariajet_cosmic_fix_capabilities_menu_item($items, $args) {
 }
 add_filter('wp_nav_menu_objects', 'ariajet_cosmic_fix_capabilities_menu_item', 10, 2);
 
-/**
- * Force comments open on the About page so the form is usable.
- */
-function ariajet_cosmic_force_about_comments_open($open, $post_id) {
-    $slug = (string) get_post_field('post_name', $post_id);
-    if (strcasecmp($slug, 'about') === 0) {
-        return true;
-    }
-    return $open;
-}
-add_filter('comments_open', 'ariajet_cosmic_force_about_comments_open', 10, 2);
+// Note: About page is intentionally kept minimal; do not force comments open.
 
 
 /**

@@ -25,26 +25,9 @@ get_header();
                 </header>
 
                 <div class="entry-content">
-                    <hr class="about-divider" />
-
-                    <h2 class="about-heading"><?php _e('Things about me:', 'ariajet-cosmic'); ?></h2>
-                    <ul class="about-list">
-                        <li>[Point 1 about yourself]</li>
-                        <li>[Point 2 about yourself]</li>
-                        <li>[Point 3 about yourself]</li>
-                    </ul>
-
-                    <p class="about-comments-intro">
-                        <strong><?php _e('Leave a comment below!', 'ariajet-cosmic'); ?></strong>
-                    </p>
+                    <?php the_content(); ?>
                 </div>
 
-                <div class="about-comments">
-                    <?php
-                    // We show comments + form (the theme also forces comments open for slug "about").
-                    comments_template();
-                    ?>
-                </div>
             </article>
             <?php
         endwhile;
@@ -55,21 +38,10 @@ get_header();
 <style>
 .page-about-template .page-content {
     padding: var(--space-12);
+}
+.page-about-template .entry-content {
     max-width: 900px;
     margin: 0 auto;
-}
-.page-about-template .about-divider {
-    border: 0;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.12);
-    margin: var(--space-6) 0 var(--space-8);
-}
-.page-about-template .about-list {
-    margin: var(--space-4) 0 var(--space-8);
-    padding-left: var(--space-8);
-}
-.page-about-template .about-comments {
-    margin-top: var(--space-10);
 }
 </style>
 
