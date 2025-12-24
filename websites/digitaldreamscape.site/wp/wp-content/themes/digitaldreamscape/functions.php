@@ -49,11 +49,11 @@ add_action('after_setup_theme', 'digitaldreamscape_setup');
  */
 function digitaldreamscape_scripts()
 {
-    // Enqueue theme stylesheet with cache busting - updated version for blog page menu fixes
-    wp_enqueue_style('digitaldreamscape-style', get_stylesheet_uri(), array(), '2.0.6');
+    // Enqueue theme stylesheet with cache busting - updated version for title breaking and menu fixes
+    wp_enqueue_style('digitaldreamscape-style', get_stylesheet_uri(), array(), '2.0.7');
 
     // Enqueue theme JavaScript (load in footer for better performance) - updated for aggressive menu cleanup
-    wp_enqueue_script('digitaldreamscape-script', get_template_directory_uri() . '/js/main.js', array(), '2.0.6', true);
+    wp_enqueue_script('digitaldreamscape-script', get_template_directory_uri() . '/js/main.js', array(), '2.0.7', true);
 
     // Add Digital Dreamscape context to page
     wp_localize_script('digitaldreamscape-script', 'dreamscapeContext', array(
@@ -449,25 +449,25 @@ function digitaldreamscape_clean_nav_menu_html($nav_menu, $args)
     $nav_menu = preg_replace('/<div[^>]*class="[^"]*nav-cta[^"]*"[^>]*>.*?<\/div>/is', '', $nav_menu);
     $nav_menu = preg_replace('/<div[^>]*class="[^"]*nav[^"]*cta[^"]*"[^>]*>.*?<\/div>/is', '', $nav_menu);
     $nav_menu = preg_replace('/<div[^>]*class="[^"]*cta[^"]*nav[^"]*"[^>]*>.*?<\/div>/is', '', $nav_menu);
-    
+
     // Remove any div, span, or p elements that aren't menu items
     $nav_menu = preg_replace('/<(div|span|p)[^>]*>.*?Watch Live.*?<\/(div|span|p)>/is', '', $nav_menu);
     $nav_menu = preg_replace('/<(div|span|p)[^>]*>.*?Read Episodes?(?!.*Blog).*?<\/(div|span|p)>/is', '', $nav_menu);
-    
+
     // Remove specific links - handle both single and multiple instances
     $nav_menu = preg_replace(
         '/<li[^>]*>.*?<a[^>]*>.*?(?:Watch Live|Read Episodes?)(?!.*Blog).*?<\/a>.*?<\/li>/is',
         '',
         $nav_menu
     );
-    
+
     // Remove links containing "watch" in href (case insensitive)
     $nav_menu = preg_replace('/<li[^>]*>.*?<a[^>]*href=["\'][^"\']*watch[^"\']*["\'][^>]*>.*?<\/a>.*?<\/li>/is', '', $nav_menu);
-    
+
     // Remove any remaining "Watch Live" or "Read Episodes" text outside of links
     $nav_menu = preg_replace('/Watch Live\s*→?\s*/i', '', $nav_menu);
     $nav_menu = preg_replace('/Read Episodes?(?!\s*Blog)\s*/i', '', $nav_menu);
-    
+
     // Remove arrow symbols that might be left behind
     $nav_menu = preg_replace('/\s*→\s*/', '', $nav_menu);
 

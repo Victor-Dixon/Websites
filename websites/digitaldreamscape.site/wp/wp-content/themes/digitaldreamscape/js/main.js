@@ -55,28 +55,37 @@
         });
 
         // Remove nav-cta div completely (contains Watch Live and Read Episodes)
-        var navCtaDivs = navigation.querySelectorAll('.nav-cta, div.nav-cta');
+        // Also check for any generic divs that might contain these links
+        var navCtaDivs = navigation.querySelectorAll('.nav-cta, div.nav-cta, div:not(.menu):not(#primary-menu)');
         navCtaDivs.forEach(function (div) {
-            div.style.display = 'none';
-            div.style.visibility = 'hidden';
-            div.style.height = '0';
-            div.style.width = '0';
-            div.style.overflow = 'hidden';
-            div.style.position = 'absolute';
-            div.style.left = '-9999px';
-            div.style.opacity = '0';
-            div.style.pointerEvents = 'none';
-            setTimeout(function () {
-                try {
-                    if (div.parentNode) {
-                        div.parentNode.removeChild(div);
-                    } else {
-                        div.remove();
+            // Check if this div contains "Watch Live" or "Read Episodes"
+            var divText = div.textContent.trim().toLowerCase();
+            if (divText.includes('watch live') || 
+                (divText.includes('read epi') && !divText.includes('read the blog'))) {
+                // Immediately hide
+                div.style.setProperty('display', 'none', 'important');
+                div.style.setProperty('visibility', 'hidden', 'important');
+                div.style.setProperty('height', '0', 'important');
+                div.style.setProperty('width', '0', 'important');
+                div.style.setProperty('overflow', 'hidden', 'important');
+                div.style.setProperty('position', 'absolute', 'important');
+                div.style.setProperty('left', '-9999px', 'important');
+                div.style.setProperty('opacity', '0', 'important');
+                div.style.setProperty('pointer-events', 'none', 'important');
+                
+                // Force remove
+                setTimeout(function () {
+                    try {
+                        if (div.parentNode) {
+                            div.parentNode.removeChild(div);
+                        } else {
+                            div.remove();
+                        }
+                    } catch (e) {
+                        // Ignore if already removed
                     }
-                } catch (e) {
-                    // Ignore if already removed
-                }
-            }, 50);
+                }, 10);
+            }
         });
 
         // Also remove links containing "Watch Live" or "Read Episodes" as backup
@@ -97,11 +106,11 @@
                     parent.style.overflow = 'hidden';
                     parent.style.opacity = '0';
                     parent.style.pointerEvents = 'none';
-                    
+
                     // Also hide the link itself
                     link.style.display = 'none';
                     link.style.visibility = 'hidden';
-                    
+
                     setTimeout(function () {
                         try {
                             if (parent.parentNode) {
@@ -125,7 +134,7 @@
                 }
             }
         });
-        
+
         // Also check for text nodes containing "Watch Live" or "Read Episodes"
         // This handles cases where they might appear as plain text
         var walker = document.createTreeWalker(
@@ -134,27 +143,38 @@
             null,
             false
         );
-        
+
         var textNode;
         var nodesToRemove = [];
         while (textNode = walker.nextNode()) {
             var text = textNode.textContent.trim().toLowerCase();
-            if (text.includes('watch live') || 
+            if (text.includes('watch live') ||
                 (text.includes('read epi') && !text.includes('read the blog'))) {
                 var parent = textNode.parentNode;
-                if (parent && parent.tagName !== 'LI' && !parent.classList.contains('menu-item')) {
+                // Remove ANY parent that contains this text, unless it's a valid menu item
+                if (parent && parent.tagName !== 'LI' && 
+                    !parent.classList.contains('menu-item') && 
+                    !parent.classList.contains('menu') &&
+                    parent.id !== 'primary-menu') {
                     nodesToRemove.push(parent);
                 }
             }
         }
-        
-        nodesToRemove.forEach(function(node) {
-            node.style.display = 'none';
-            node.style.visibility = 'hidden';
-            node.style.height = '0';
-            node.style.width = '0';
-            node.style.opacity = '0';
-            setTimeout(function() {
+
+        nodesToRemove.forEach(function (node) {
+            // Immediately hide with important flags
+            node.style.setProperty('display', 'none', 'important');
+            node.style.setProperty('visibility', 'hidden', 'important');
+            node.style.setProperty('height', '0', 'important');
+            node.style.setProperty('width', '0', 'important');
+            node.style.setProperty('opacity', '0', 'important');
+            node.style.setProperty('font-size', '0', 'important');
+            node.style.setProperty('line-height', '0', 'important');
+            node.style.setProperty('padding', '0', 'important');
+            node.style.setProperty('margin', '0', 'important');
+            
+            // Force remove immediately
+            setTimeout(function () {
                 try {
                     if (node.parentNode) {
                         node.parentNode.removeChild(node);
@@ -162,9 +182,15 @@
                         node.remove();
                     }
                 } catch (e) {
-                    // Ignore if already removed
+                    // If removal fails, empty the content
+                    try {
+                        node.innerHTML = '';
+                        node.textContent = '';
+                    } catch (e2) {
+                        // Ignore if already removed
+                    }
                 }
-            }, 50);
+            }, 10);
         });
     }
 
@@ -200,7 +226,7 @@
         setTimeout(cleanupMenuItems, 3000);
 
         // Also run on window load
-        window.addEventListener('load', function() {
+        window.addEventListener('load', function () {
             cleanupMenuItems();
             setTimeout(cleanupMenuItems, 500);
             setTimeout(cleanupMenuItems, 1000);

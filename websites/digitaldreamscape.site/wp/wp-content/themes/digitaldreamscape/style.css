@@ -266,8 +266,11 @@ body.page-template-front-page .site-header,
     font-family: var(--font-heading);
     transition: all 0.3s ease;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    white-space: nowrap;
-    display: inline-block;
+    white-space: nowrap !important;
+    display: inline-block !important;
+    word-break: keep-all !important;
+    hyphens: none !important;
+    overflow-wrap: normal !important;
 }
 
 .logo-link:hover {
@@ -277,10 +280,12 @@ body.page-template-front-page .site-header,
 }
 
 .logo-text {
-    white-space: nowrap;
-    display: inline-block;
-    word-break: keep-all;
-    hyphens: none;
+    white-space: nowrap !important;
+    display: inline-block !important;
+    word-break: keep-all !important;
+    hyphens: none !important;
+    overflow-wrap: normal !important;
+    word-wrap: normal !important;
 }
 
 /* Hide any direct children of navigation that aren't ul lists */
@@ -308,8 +313,8 @@ nav.main-navigation .nav-cta,
 }
 
 /* Hide any div, span, or p elements that might contain the unwanted text */
-.main-navigation div:not(.menu):not(#primary-menu),
-.main-navigation span:not(.menu-item),
+.main-navigation div:not(.menu):not(#primary-menu):not([class*="menu"]),
+.main-navigation span:not(.menu-item):not([class*="menu"]),
 .main-navigation p {
     display: none !important;
     visibility: hidden !important;
@@ -321,6 +326,22 @@ nav.main-navigation .nav-cta,
     padding: 0 !important;
     margin: 0 !important;
     overflow: hidden !important;
+    position: absolute !important;
+    left: -9999px !important;
+    pointer-events: none !important;
+}
+
+/* Specifically target any direct div children that aren't menu lists */
+.main-navigation > div:not(.menu):not(#primary-menu) {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    left: -9999px !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
 }
 
 .main-navigation>ul {
@@ -1503,6 +1524,9 @@ body {
     position: relative;
     z-index: 1;
     word-break: keep-all;
+    white-space: nowrap;
+    overflow-wrap: normal;
+    hyphens: none;
 }
 
 .archive-description.dreamscape-archive-desc {
