@@ -3,6 +3,11 @@
 Clear DigitalDreamscape Cache
 =============================
 
+⚠️  DEPRECATED: Use unified_wordpress_manager.py instead:
+    python -m unified_wordpress_manager --site digitaldreamscape.site --action clear-cache
+
+This tool is kept for backward compatibility but will be removed in a future version.
+
 Clears all types of WordPress cache for digitaldreamscape.site
 
 Author: Agent-7 (Web Development Specialist)
@@ -24,6 +29,10 @@ def clear_cache():
     print("=" * 70)
     print(f"🧹 CLEARING ALL CACHE: {site_name}")
     print("=" * 70)
+    print()
+    print("⚠️  DEPRECATED: This tool is deprecated.")
+    print("   Use unified_wordpress_manager.py instead:")
+    print(f"   python -m unified_wordpress_manager --site {site_name} --action clear-cache")
     print()
     
     site_configs = load_site_configs()

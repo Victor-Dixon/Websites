@@ -3,6 +3,11 @@
 Update freerideinvestor.com About Page Content
 ==============================================
 
+⚠️  DEPRECATED: Use generic_update_page_content.py instead:
+    python tools/generic_update_page_content.py --site freerideinvestor.com --page about --content "<h1>About</h1><p>Content here</p>"
+
+This tool is kept for backward compatibility but will be removed in a future version.
+
 Creates comprehensive About page content that matches the site's philosophy.
 
 Agent-7: Web Development Specialist
@@ -122,6 +127,10 @@ def main():
     print("=" * 70)
     print("UPDATE FREERIDEINVESTOR.COM ABOUT PAGE")
     print("=" * 70)
+    print()
+    print("⚠️  DEPRECATED: This tool is deprecated.")
+    print("   Use generic_update_page_content.py instead:")
+    print("   python tools/generic_update_page_content.py --site freerideinvestor.com --page about --content \"<h1>About</h1><p>Content here</p>\"")
     print()
     
     # Load site configs

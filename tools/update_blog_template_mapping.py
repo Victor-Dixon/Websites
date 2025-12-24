@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Update blog template mapping in functions.php"""
+"""
+Update blog template mapping in functions.php
+
+⚠️  DEPRECATED: Use generic_update_template_mapping.py instead:
+    python tools/generic_update_template_mapping.py --site digitaldreamscape.site --page blog --template page-templates/page-blog-beautiful.php --clear-cache
+
+This tool is kept for backward compatibility but will be removed in a future version.
+"""
 
 import sys
 from pathlib import Path
@@ -8,6 +15,12 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "ops" / "deployment"))
 from simple_wordpress_deployer import SimpleWordPressDeployer, load_site_configs
 
 SITE_NAME = "digitaldreamscape.site"
+
+# Show deprecation warning
+print("⚠️  DEPRECATED: This tool is deprecated.")
+print("   Use generic_update_template_mapping.py instead:")
+print("   python tools/generic_update_template_mapping.py --site digitaldreamscape.site --page blog --template page-templates/page-blog-beautiful.php --clear-cache")
+print()
 
 def main():
     site_configs = load_site_configs()

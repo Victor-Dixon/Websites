@@ -3,6 +3,11 @@
 Fix digitaldreamscape.site Post to Match YAML Vocal Patterns
 ===========================================================
 
+⚠️  DEPRECATED: Use generic_update_post_content.py instead:
+    python tools/generic_update_post_content.py --site digitaldreamscape.site --post-slug digital-dreamscape-site-update --content-file rewritten_content.html
+
+This tool is kept for backward compatibility but will be removed in a future version.
+
 Rewrites the "Digital Dreamscape Site Update" post to match the 
 casual, conversational, stream-of-consciousness style defined in
 the YAML voice template.

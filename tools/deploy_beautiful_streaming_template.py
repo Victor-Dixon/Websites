@@ -3,7 +3,10 @@
 Deploy Beautiful Streaming Template to digitaldreamscape.site
 =============================================================
 
-Deploys the new beautiful streaming template and CSS.
+⚠️  DEPRECATED: Use generic_deploy_template.py instead:
+    python tools/generic_deploy_template.py --site digitaldreamscape.site --template page-streaming-beautiful.php --local-path <path> --css <css_path>
+
+This tool is kept for backward compatibility but will be removed in a future version.
 
 Agent-7: Web Development Specialist
 """
