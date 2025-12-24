@@ -5,14 +5,14 @@
  * 
  * This template loads the proper contact page template
  */
-get_header();
 
-// Load the proper contact page template
+// Load the proper contact page template (it includes get_header() and get_footer())
 $template_path = get_template_directory() . '/page-templates/page-contact.php';
 if (file_exists($template_path)) {
     include($template_path);
 } else {
     // Fallback: Display basic contact info
+    get_header();
     ?>
     <div class="container">
         <div class="content-area">
@@ -32,7 +32,6 @@ if (file_exists($template_path)) {
         </div>
     </div>
     <?php
+    get_footer();
 }
-
-get_footer();
 ?>
