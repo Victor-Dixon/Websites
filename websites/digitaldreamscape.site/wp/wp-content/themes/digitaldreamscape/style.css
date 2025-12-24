@@ -216,7 +216,8 @@ section:last-child {
 .site-logo img {
     max-height: 50px;
     width: auto;
-    filter: brightness(0) invert(1); /* Make logo white if it's dark */
+    filter: brightness(0) invert(1);
+    /* Make logo white if it's dark */
 }
 
 .logo-link {
@@ -280,8 +281,8 @@ section:last-child {
 
 .main-navigation a:hover,
 .main-navigation a:focus,
-.main-navigation .current-menu-item > a,
-.main-navigation .current_page_item > a {
+.main-navigation .current-menu-item>a,
+.main-navigation .current_page_item>a {
     color: var(--white);
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(5px);
@@ -290,8 +291,8 @@ section:last-child {
 
 .main-navigation a:hover::before,
 .main-navigation a:focus::before,
-.main-navigation .current-menu-item > a::before,
-.main-navigation .current_page_item > a::before {
+.main-navigation .current-menu-item>a::before,
+.main-navigation .current_page_item>a::before {
     transform: scaleX(1);
 }
 
@@ -2170,12 +2171,12 @@ body {
         z-index: 1000;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
-    
+
     .main-navigation ul {
         flex-direction: column;
         gap: var(--spacing-2);
     }
-    
+
     .main-navigation a {
         display: block;
         padding: var(--spacing-3);
@@ -2184,9 +2185,10 @@ body {
         color: rgba(255, 255, 255, 0.95);
         text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     }
-    
+
     .main-navigation a::before {
-        display: none; /* Remove underline on mobile */
+        display: none;
+        /* Remove underline on mobile */
     }
 }
 
@@ -2217,19 +2219,20 @@ body {
         padding: var(--spacing-4);
         border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
-    
+
     .main-navigation ul {
         flex-direction: column;
         gap: var(--spacing-3);
     }
-    
+
     .main-navigation a {
         color: rgba(255, 255, 255, 0.95);
         text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     }
-    
+
     .main-navigation a::before {
-        display: none; /* Remove underline on tablet */
+        display: none;
+        /* Remove underline on tablet */
     }
 
     .footer-links {
