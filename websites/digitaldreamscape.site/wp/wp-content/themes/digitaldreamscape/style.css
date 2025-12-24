@@ -497,6 +497,104 @@ nav.main-navigation .current_page_item>a {
 }
 
 /* ============================================
+   UNIFIED SUBHEADER STRIP - Consistent Across All Pages
+   ============================================ */
+.unified-subheader {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+    border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+    padding: var(--spacing-3) 0;
+    position: sticky;
+    top: 70px; /* Adjust based on header height */
+    z-index: 999;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.subheader-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-5);
+}
+
+.subheader-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-6);
+    flex-wrap: wrap;
+}
+
+.subheader-tagline {
+    display: flex;
+    align-items: center;
+}
+
+.tagline-text {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--secondary-color);
+    letter-spacing: 0.05em;
+    font-family: var(--font-heading);
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subheader-context {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+}
+
+.context-badge {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary-color);
+    padding: var(--spacing-1) var(--spacing-3);
+    border-radius: 4px;
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.context-label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--secondary-color);
+    letter-spacing: 0.02em;
+}
+
+/* Mobile responsive for subheader */
+@media (max-width: 768px) {
+    .unified-subheader {
+        top: 60px;
+        padding: var(--spacing-2) 0;
+    }
+    
+    .subheader-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-2);
+    }
+    
+    .subheader-context {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .tagline-text {
+        font-size: var(--font-size-xs);
+    }
+    
+    .context-label {
+        font-size: var(--font-size-xs);
+    }
+}
+
+/* ============================================
    CONTENT STYLES - Theme Consistent
    ============================================ */
 .site-main {

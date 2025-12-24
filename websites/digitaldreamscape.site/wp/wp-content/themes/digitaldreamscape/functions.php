@@ -49,8 +49,8 @@ add_action('after_setup_theme', 'digitaldreamscape_setup');
  */
 function digitaldreamscape_scripts()
 {
-    // Enqueue theme stylesheet with cache busting - updated version for title breaking and menu fixes
-    wp_enqueue_style('digitaldreamscape-style', get_stylesheet_uri(), array(), '2.0.7');
+    // Enqueue theme stylesheet with cache busting - updated version for unified subheader
+    wp_enqueue_style('digitaldreamscape-style', get_stylesheet_uri(), array(), '2.1.0');
 
     // Enqueue theme JavaScript (load in footer for better performance) - updated for aggressive menu cleanup
     wp_enqueue_script('digitaldreamscape-script', get_template_directory_uri() . '/js/main.js', array(), '2.0.7', true);
@@ -63,6 +63,47 @@ function digitaldreamscape_scripts()
     ));
 }
 add_action('wp_enqueue_scripts', 'digitaldreamscape_scripts');
+
+/**
+ * Render Unified Subheader Strip
+ * Consistent tagline + context indicator across all pages
+ */
+function digitaldreamscape_unified_subheader() {
+    // Determine context based on page type
+    $context = '';
+    $context_badge = '';
+    
+    if (is_front_page() || is_home()) {
+        $context = 'Command Hub';
+        $context_badge = '[COMMAND HUB]';
+    } elseif (is_single()) {
+        $context = 'Episode View';
+        $context_badge = '[EPISODE VIEW]';
+    } elseif (is_archive() || is_category() || is_tag()) {
+        $context = 'Episode Archive';
+        $context_badge = '[EPISODE ARCHIVE]';
+    } else {
+        $context = 'Command Hub';
+        $context_badge = '[COMMAND HUB]';
+    }
+    
+    ?>
+    <div class="unified-subheader">
+        <div class="subheader-container">
+            <div class="subheader-content">
+                <div class="subheader-tagline">
+                    <span class="tagline-text">Build in Public. Stream & Create.</span>
+                </div>
+                <div class="subheader-context">
+                    <span class="context-badge"><?php echo esc_html($context_badge); ?></span>
+                    <span class="context-label"><?php echo esc_html($context); ?></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+add_action('wp_body_open', 'digitaldreamscape_unified_subheader', 20);
 
 /**
  * Performance Optimizations
