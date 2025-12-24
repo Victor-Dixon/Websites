@@ -58,13 +58,21 @@ function digitaldreamscape_scripts()
     }
     
     // Enqueue beautiful streaming template styles (conditionally on streaming page)
-    if (is_page('streaming') || is_page_template('page-templates/page-streaming-beautiful.php')) {
-        wp_enqueue_style('digitaldreamscape-beautiful-streaming', get_template_directory_uri() . '/assets/css/beautiful-streaming.css', array('digitaldreamscape-style'), '1.0.0');
+    // Use multiple detection methods for reliability
+    $is_streaming = is_page('streaming') 
+        || is_page_template('page-templates/page-streaming-beautiful.php')
+        || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/streaming') !== false);
+    if ($is_streaming) {
+        wp_enqueue_style('digitaldreamscape-beautiful-streaming', get_template_directory_uri() . '/assets/css/beautiful-streaming.css', array('digitaldreamscape-style'), '1.0.1');
     }
     
     // Enqueue beautiful community template styles (conditionally on community page)
-    if (is_page('community') || is_page_template('page-templates/page-community-beautiful.php')) {
-        wp_enqueue_style('digitaldreamscape-beautiful-community', get_template_directory_uri() . '/assets/css/beautiful-community.css', array('digitaldreamscape-style'), '1.0.0');
+    // Use multiple detection methods for reliability
+    $is_community = is_page('community') 
+        || is_page_template('page-templates/page-community-beautiful.php')
+        || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/community') !== false);
+    if ($is_community) {
+        wp_enqueue_style('digitaldreamscape-beautiful-community', get_template_directory_uri() . '/assets/css/beautiful-community.css', array('digitaldreamscape-style'), '1.0.1');
     }
 
     // Enqueue theme JavaScript (load in footer for better performance) - unified brand header v3.0.1

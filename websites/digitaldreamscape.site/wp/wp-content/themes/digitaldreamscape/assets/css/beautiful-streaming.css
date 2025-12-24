@@ -3,11 +3,18 @@
  * Modern, elegant streaming hub design matching blog template
  */
 
+/* Force dark background on body when streaming template is active */
+body.page-template-page-templates-page-streaming-beautiful-php,
+body.page-template-page-streaming-beautiful,
+body:has(.beautiful-streaming-main) {
+    background: #0a0a0a !important;
+}
+
 /* Container */
 .beautiful-streaming-main {
     padding: 4rem 0;
-    background: var(--bg-primary, #0a0a0a);
-    min-height: 80vh;
+    background: #0a0a0a !important;
+    min-height: 100vh;
 }
 
 .beautiful-streaming-container {

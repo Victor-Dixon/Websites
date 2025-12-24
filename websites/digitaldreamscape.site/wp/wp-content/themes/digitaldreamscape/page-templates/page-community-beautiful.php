@@ -9,6 +9,18 @@
  * @since 2.0.0
  */
 
+// Enqueue CSS BEFORE get_header() so it's in the <head>
+add_action('wp_enqueue_scripts', function() {
+    wp_enqueue_style('digitaldreamscape-beautiful-community', get_template_directory_uri() . '/assets/css/beautiful-community.css', array('digitaldreamscape-style'), '1.0.2');
+}, 20);
+
+// Alternative: Force CSS inline if wp_enqueue_scripts already fired
+if (did_action('wp_enqueue_scripts')) {
+    add_action('wp_head', function() {
+        echo '<link rel="stylesheet" href="' . get_template_directory_uri() . '/assets/css/beautiful-community.css?v=1.0.2" />';
+    }, 999);
+}
+
 get_header(); ?>
 
 <main class="site-main beautiful-community-main">

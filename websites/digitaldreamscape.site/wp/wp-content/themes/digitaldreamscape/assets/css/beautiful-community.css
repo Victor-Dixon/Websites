@@ -4,11 +4,18 @@
  * @since 2.0.0
  */
 
+/* Force dark background on body when community template is active */
+body.page-template-page-templates-page-community-beautiful-php,
+body.page-template-page-community-beautiful,
+body:has(.beautiful-community-main) {
+    background: #0a0a0a !important;
+}
+
 /* Container */
 .beautiful-community-main {
     padding: 4rem 0;
-    background: var(--bg-primary, #0a0a0a);
-    min-height: 80vh;
+    background: #0a0a0a !important;
+    min-height: 100vh;
 }
 
 .beautiful-community-container {

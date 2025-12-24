@@ -9,12 +9,19 @@
  * @since 2.0.0
  */
 
-get_header(); 
+// Enqueue CSS BEFORE get_header() so it's in the <head>
+add_action('wp_enqueue_scripts', function() {
+    wp_enqueue_style('digitaldreamscape-beautiful-streaming', get_template_directory_uri() . '/assets/css/beautiful-streaming.css', array('digitaldreamscape-style'), '1.0.2');
+}, 20);
 
-// Enqueue CSS directly if not already loaded
-if (!wp_style_is('digitaldreamscape-beautiful-streaming', 'enqueued')) {
-    wp_enqueue_style('digitaldreamscape-beautiful-streaming', get_template_directory_uri() . '/assets/css/beautiful-streaming.css', array('digitaldreamscape-style'), '1.0.0');
+// Alternative: Force CSS inline if wp_enqueue_scripts already fired
+if (did_action('wp_enqueue_scripts')) {
+    add_action('wp_head', function() {
+        echo '<link rel="stylesheet" href="' . get_template_directory_uri() . '/assets/css/beautiful-streaming.css?v=1.0.2" />';
+    }, 999);
 }
+
+get_header(); 
 ?>
 
 <main class="site-main beautiful-streaming-main">

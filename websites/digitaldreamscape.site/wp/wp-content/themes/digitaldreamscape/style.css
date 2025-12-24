@@ -4,12 +4,17 @@ Theme URI: https://digitaldreamscape.site
 Author: Victor Dixon
 Author URI: https://dadudekc.com
 Description: Build-in-public & streaming hub theme for Digital Dreamscape. Features modern design, community features, and streaming integration.
-Version: 1.0.0
+Version: 1.0.1
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: digitaldreamscape
 Tags: blog, streaming, community, one-column, custom-menu, featured-images, threaded-comments, translation-ready
 */
+
+/* Import Beautiful Template Styles */
+@import url('assets/css/beautiful-blog.css');
+@import url('assets/css/beautiful-streaming.css');
+@import url('assets/css/beautiful-community.css');
 
 /* ============================================
    RESET & BASE STYLES
@@ -3147,4 +3152,118 @@ body {
     .featured-card .card-content {
         padding: 1.5rem;
     }
+}
+
+/* ============================================
+   BEAUTIFUL TEMPLATE OVERRIDE STYLES
+   Force dark background for streaming/community/blog pages
+   ============================================ */
+
+/* Force dark background on body for beautiful templates */
+body.page-template-page-templates-page-streaming-beautiful-php,
+body.page-template-page-templates-page-community-beautiful-php,
+body.page-template-page-templates-page-blog-beautiful-php,
+body:has(.beautiful-streaming-main),
+body:has(.beautiful-community-main),
+body:has(.beautiful-blog-main) {
+    background: #0a0a0a !important;
+    background-color: #0a0a0a !important;
+}
+
+/* Force container backgrounds */
+.beautiful-streaming-main,
+.beautiful-community-main,
+.beautiful-blog-main,
+main.site-main.beautiful-streaming-main,
+main.site-main.beautiful-community-main,
+main.site-main.beautiful-blog-main {
+    background: #0a0a0a !important;
+    background-color: #0a0a0a !important;
+    min-height: 100vh !important;
+}
+
+/* Force white text for beautiful templates */
+.beautiful-streaming-main,
+.beautiful-streaming-main *,
+.beautiful-community-main,
+.beautiful-community-main *,
+.beautiful-blog-main,
+.beautiful-blog-main * {
+    color: #ffffff;
+}
+
+/* Restore specific colors for links and accents */
+.beautiful-streaming-main a,
+.beautiful-community-main a,
+.beautiful-blog-main a {
+    color: #a78bfa;
+}
+
+.beautiful-streaming-main a:hover,
+.beautiful-community-main a:hover,
+.beautiful-blog-main a:hover {
+    color: #c4b5fd;
+}
+
+/* Badge styling */
+.beautiful-streaming-badge,
+.beautiful-community-badge,
+.beautiful-blog-badge {
+    display: inline-block !important;
+    padding: 0.5rem 1.5rem !important;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2)) !important;
+    border: 1px solid rgba(99, 102, 241, 0.3) !important;
+    border-radius: 50px !important;
+    color: #a78bfa !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase !important;
+    margin-bottom: 1.5rem !important;
+}
+
+/* Title gradient styling */
+.beautiful-streaming-title,
+.beautiful-community-title,
+.beautiful-blog-title {
+    font-size: clamp(2.5rem, 5vw, 4rem) !important;
+    font-weight: 800 !important;
+    line-height: 1.1 !important;
+    margin: 0 0 1.5rem 0 !important;
+    background: linear-gradient(135deg, #ffffff 0%, #a78bfa 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
+/* Status card styling */
+.beautiful-streaming-status-card {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 16px !important;
+    padding: 2rem !important;
+    margin-bottom: 3rem !important;
+    backdrop-filter: blur(10px) !important;
+    text-align: center !important;
+}
+
+.beautiful-streaming-status-value.offline {
+    background: rgba(239, 68, 68, 0.2) !important;
+    border: 1px solid rgba(239, 68, 68, 0.3) !important;
+    color: #f87171 !important;
+}
+
+/* Card styling */
+.beautiful-streaming-card,
+.beautiful-community-card {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 16px !important;
+}
+
+.beautiful-streaming-card:hover,
+.beautiful-community-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border-color: rgba(99, 102, 241, 0.5) !important;
 }
