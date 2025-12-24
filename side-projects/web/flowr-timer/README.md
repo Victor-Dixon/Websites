@@ -12,3 +12,7 @@ It also includes an optional **voice auto-stop** concept: the timer can stop aut
 
 Open `index.html` in a browser.
 
+## PRD
+
+See `docs/flowr/FLOWR_TIMER_PRD.md`.
+
