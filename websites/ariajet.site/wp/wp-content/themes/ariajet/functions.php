@@ -322,6 +322,31 @@ if (!function_exists('ariajet_get_music_tracks')) {
 
         $tracks = array();
 
+        // Theme-curated list (ships with the theme): wp-content/themes/ariajet/data/music-tracks.json
+        $theme_tracks_path = trailingslashit(get_template_directory()) . 'data/music-tracks.json';
+        if (is_readable($theme_tracks_path)) {
+            $json = file_get_contents($theme_tracks_path);
+            $data = json_decode($json, true);
+            if (is_array($data)) {
+                foreach ($data as $row) {
+                    if (!is_array($row) || empty($row['url'])) {
+                        continue;
+                    }
+                    $url = (string) $row['url'];
+                    $mime = !empty($row['mime']) ? (string) $row['mime'] : null;
+
+                    $tracks[] = array(
+                        'title'  => !empty($row['title']) ? (string) $row['title'] : (string) wp_basename($url),
+                        'artist' => !empty($row['artist']) ? (string) $row['artist'] : $default_artist,
+                        'url'    => $url,
+                        'mime'   => $mime ?: 'audio/mpeg',
+                        'icon'   => !empty($row['icon']) ? (string) $row['icon'] : $default_icon,
+                        'emojis' => (!empty($row['emojis']) && is_array($row['emojis'])) ? array_values($row['emojis']) : $default_emojis,
+                    );
+                }
+            }
+        }
+
         // Prefer a curated list if present.
         $tracks_json_path = $music_dir . 'tracks.json';
         if (is_dir($music_dir) && is_readable($tracks_json_path)) {
@@ -410,6 +435,21 @@ if (!function_exists('ariajet_get_music_tracks')) {
                     );
                 }
             }
+        }
+
+        // Dedupe by URL (prevents duplicates if the same song is found multiple ways).
+        if (!empty($tracks)) {
+            $seen = array();
+            $unique = array();
+            foreach ($tracks as $track) {
+                $url = isset($track['url']) ? (string) $track['url'] : '';
+                if ($url === '' || isset($seen[$url])) {
+                    continue;
+                }
+                $seen[$url] = true;
+                $unique[] = $track;
+            }
+            $tracks = $unique;
         }
 
         return $tracks;
