@@ -189,6 +189,9 @@ header.site-header,
 header[class*="site-header"],
 header[role="banner"],
 body .site-header,
+body.home .site-header,
+body.front-page .site-header,
+body.page-template-front-page .site-header,
 .site-header {
     background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%) !important;
     backdrop-filter: blur(10px) !important;
@@ -204,7 +207,7 @@ body .site-header,
 .header-container,
 .header-inner,
 .site-header .container,
-.site-header > .container {
+.site-header>.container {
     max-width: 1200px !important;
     margin: 0 auto !important;
     padding: 0 var(--spacing-5) !important;
@@ -305,11 +308,11 @@ nav.main-navigation .nav-cta {
 
 /* Navigation menu list - consistent across all pages */
 .main-navigation ul,
-.main-navigation > ul,
+.main-navigation>ul,
 #site-navigation ul,
-#site-navigation > ul,
+#site-navigation>ul,
 nav.main-navigation ul,
-nav.main-navigation > ul,
+nav.main-navigation>ul,
 .main-navigation .menu,
 #site-navigation .menu {
     display: flex !important;
@@ -326,7 +329,10 @@ nav.main-navigation li {
     margin: 0 !important;
 }
 
-/* Navigation menu link styling - consistent across all pages */
+/* Navigation menu link styling - consistent across all pages including homepage */
+body .main-navigation a,
+body.home .main-navigation a,
+body.front-page .main-navigation a,
 .main-navigation a,
 .main-navigation .menu a,
 #site-navigation a,

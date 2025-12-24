@@ -69,7 +69,8 @@ def deploy_digitaldreamscape_theme():
         "wp/wp-content/themes/digitaldreamscape/style.css",
         "wp/wp-content/themes/digitaldreamscape/functions.php",
         "wp/wp-content/themes/digitaldreamscape/header.php",
-        "wp/wp-content/themes/digitaldreamscape/front-page.php"
+        "wp/wp-content/themes/digitaldreamscape/front-page.php",
+        "wp/wp-content/themes/digitaldreamscape/js/main.js"
     ]
 
     try:
@@ -142,7 +143,11 @@ def deploy_digitaldreamscape_theme():
             try:
                 if SIMPLE_DEPLOYER_AVAILABLE:
                     filename = local_path.name
-                    remote_path = f"wp-content/themes/digitaldreamscape/{filename}"
+                    # Handle JS files in subdirectories
+                    if 'js/' in file_path:
+                        remote_path = f"wp-content/themes/digitaldreamscape/js/{filename}"
+                    else:
+                        remote_path = f"wp-content/themes/digitaldreamscape/{filename}"
                     success = manager.deploy_file(local_path, remote_path)
                 else:
                     success = manager.deploy_file(local_path)

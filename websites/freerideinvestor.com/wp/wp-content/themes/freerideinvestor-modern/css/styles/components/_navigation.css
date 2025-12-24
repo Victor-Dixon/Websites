@@ -13,32 +13,39 @@
   align-items: center; /* Vertically align items */
 }
 
-/* Navigation Links */
+/* Navigation Links - Stunning Design */
 .main-nav .nav-list li a {
-  display: inline-block; /* Ensure links are block-level for padding */
-  padding: var(--spacing-xs, 8px) var(--spacing-sm, 16px); /* Add clickable padding */
-  border-radius: 4px; /* Slightly larger rounding for a modern look */
-  color: var(--color-text-base); /* Default text color */
-  text-decoration: none; /* Remove underline */
-  font-weight: 600; /* Slightly bold for better readability */
-  transition: background-color var(--transition-fast, 0.2s ease), 
-              color var(--transition-fast, 0.2s ease); /* Smooth transitions */
+  display: inline-block !important; /* Ensure links are block-level for padding */
+  padding: 12px 24px !important; /* Add clickable padding */
+  border-radius: 8px !important; /* Slightly larger rounding for a modern look */
+  color: #f0f6fc !important; /* Light text color */
+  text-decoration: none !important; /* Remove underline */
+  font-weight: 600 !important; /* Slightly bold for better readability */
+  background: rgba(240, 246, 252, 0.03) !important; /* Subtle background */
+  border: 1px solid transparent !important;
+  transition: all 0.3s ease !important; /* Smooth transitions */
 }
 
-/* Hover and Focus States */
+/* Hover and Focus States - Stunning Design */
 .main-nav .nav-list li a:hover,
 .main-nav .nav-list li a:focus {
-  background: var(--color-nav-hover-bg, rgba(255, 255, 255, 0.1)); /* Subtle hover effect */
-  color: var(--color-text-base); /* Maintain text color */
-  outline: 2px solid var(--color-accent, #1f7a3d); /* Focus outline for accessibility */
-  outline-offset: 2px; /* Slight gap between the outline and the element */
+  background: rgba(240, 246, 252, 0.08) !important; /* Hover effect */
+  border-color: rgba(240, 246, 252, 0.1) !important;
+  color: #0066ff !important; /* Blue on hover */
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.2) !important;
+  outline: none !important;
 }
 
-/* Active Navigation Link */
-.main-nav .nav-list li a.active {
-  background: var(--color-accent); /* Highlight active link */
-  color: var(--color-background, #ffffff); /* Contrast with accent color */
-  font-weight: 700; /* Bold for emphasis */
+/* Active Navigation Link - Stunning Design */
+.main-nav .nav-list li a.active,
+.main-nav .nav-list li.current-menu-item > a,
+.main-nav .nav-list li.current_page_item > a {
+  background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%) !important; /* Blue gradient */
+  color: white !important; /* White text */
+  border-color: #0066ff !important;
+  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.4) !important;
+  font-weight: 700 !important; /* Bold for emphasis */
 }
 
 /*--------------------------------------------------------------

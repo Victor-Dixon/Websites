@@ -49,8 +49,8 @@ add_action('after_setup_theme', 'digitaldreamscape_setup');
  */
 function digitaldreamscape_scripts()
 {
-    // Enqueue theme stylesheet with cache busting - updated version for menu fixes
-    wp_enqueue_style('digitaldreamscape-style', get_stylesheet_uri(), array(), '2.0.4');
+    // Enqueue theme stylesheet with cache busting - updated version for homepage menu fixes
+    wp_enqueue_style('digitaldreamscape-style', get_stylesheet_uri(), array(), '2.0.5');
 
     // Enqueue theme JavaScript (load in footer for better performance)
     wp_enqueue_script('digitaldreamscape-script', get_template_directory_uri() . '/js/main.js', array(), '2.0.3', true);
@@ -371,8 +371,9 @@ add_filter('wp_nav_menu_objects', 'digitaldreamscape_clean_nav_menu_objects', 99
  */
 function digitaldreamscape_clean_nav_menu_html($nav_menu, $args)
 {
-    // Only process primary menu
-    if (!isset($args->theme_location) || $args->theme_location !== 'primary') {
+    // Process primary menu or if theme_location is not set (some themes don't pass it)
+    // This ensures we clean menus on all pages including homepage
+    if (isset($args->theme_location) && $args->theme_location !== 'primary') {
         return $nav_menu;
     }
 
@@ -385,7 +386,10 @@ function digitaldreamscape_clean_nav_menu_html($nav_menu, $args)
 
         $xpath = new DOMXPath($dom);
 
-        // Find and remove links containing "Watch Live" or "Read Episodes"
+        // Collect all nodes to remove first, then remove them
+        $nodes_to_remove = array();
+
+        // Find and collect links containing "Watch Live" or "Read Episodes"
         $links_to_remove = $xpath->query("//a[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'watch live') or contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'read epi')]");
 
         foreach ($links_to_remove as $link) {
@@ -394,49 +398,44 @@ function digitaldreamscape_clean_nav_menu_html($nav_menu, $args)
             if (strpos($linkText, 'read epi') !== false && strpos($linkText, 'blog') === false) {
                 $parent = $link->parentNode;
                 if ($parent && $parent->tagName === 'li') {
-                    $parent->parentNode->removeChild($parent);
+                    $nodes_to_remove[] = $parent;
                 } elseif ($parent) {
-                    // If parent is not li, remove the link itself
-                    $parent->removeChild($link);
+                    $nodes_to_remove[] = $link;
                 }
             } elseif (strpos($linkText, 'watch live') !== false) {
                 $parent = $link->parentNode;
                 if ($parent && $parent->tagName === 'li') {
-                    $parent->parentNode->removeChild($parent);
+                    $nodes_to_remove[] = $parent;
                 } elseif ($parent) {
-                    $parent->removeChild($link);
+                    $nodes_to_remove[] = $link;
                 }
             }
         }
 
-        // Remove any direct children of nav that aren't ul elements
-        // Try both 'main-navigation' and 'nav' classes
-        $nav = $xpath->query("//nav[contains(@class, 'main-navigation') or contains(@class, 'nav')]")->item(0);
-        if ($nav) {
+        // Find nav-cta divs and non-ul children
+        $nav_elements = $xpath->query("//nav[contains(@class, 'main-navigation') or contains(@class, 'nav')]");
+        foreach ($nav_elements as $nav) {
             $children = $xpath->query("./*", $nav);
-            $children_to_remove = array();
             foreach ($children as $child) {
-                // Remove nav-cta div and any other non-ul elements
+                // Remove nav-cta divs and any other non-ul elements
                 if ($child->tagName !== 'ul') {
-                    $children_to_remove[] = $child;
-                } elseif ($child->getAttribute('class') === 'nav-cta') {
-                    $children_to_remove[] = $child;
-                }
-            }
-            // Remove children after iteration to avoid modifying collection during iteration
-            foreach ($children_to_remove as $child) {
-                if ($child->parentNode) {
-                    $child->parentNode->removeChild($child);
+                    $nodes_to_remove[] = $child;
+                } elseif (strpos($child->getAttribute('class'), 'nav-cta') !== false) {
+                    $nodes_to_remove[] = $child;
                 }
             }
         }
 
-        // Also specifically target and remove nav-cta divs
-        $nav_cta_divs = $xpath->query("//div[contains(@class, 'nav-cta')]");
+        // Also specifically target and remove nav-cta divs anywhere in the nav
+        $nav_cta_divs = $xpath->query("//nav[contains(@class, 'main-navigation')]//div[contains(@class, 'nav-cta')] | //nav[contains(@class, 'nav')]//div[contains(@class, 'nav-cta')]");
         foreach ($nav_cta_divs as $div) {
-            $parent = $div->parentNode;
-            if ($parent && ($parent->tagName === 'nav' || strpos($parent->getAttribute('class'), 'nav') !== false)) {
-                $parent->removeChild($div);
+            $nodes_to_remove[] = $div;
+        }
+
+        // Remove all collected nodes
+        foreach ($nodes_to_remove as $node) {
+            if ($node->parentNode) {
+                $node->parentNode->removeChild($node);
             }
         }
 
@@ -446,14 +445,18 @@ function digitaldreamscape_clean_nav_menu_html($nav_menu, $args)
     }
 
     // Fallback: Use regex to remove unwanted items (less reliable but works if DOMDocument fails)
-    // Remove nav-cta divs
+    // Remove nav-cta divs - more aggressive pattern
     $nav_menu = preg_replace('/<div[^>]*class="[^"]*nav-cta[^"]*"[^>]*>.*?<\/div>/is', '', $nav_menu);
-    // Remove specific links
+    $nav_menu = preg_replace('/<div[^>]*class="[^"]*nav[^"]*cta[^"]*"[^>]*>.*?<\/div>/is', '', $nav_menu);
+    // Remove specific links - handle both single and multiple instances
     $nav_menu = preg_replace(
         '/<li[^>]*>.*?<a[^>]*>.*?(?:Watch Live|Read Episodes?)(?!.*Blog).*?<\/a>.*?<\/li>/is',
         '',
         $nav_menu
     );
+    // Remove any remaining "Watch Live" or "Read Episodes" text outside of links
+    $nav_menu = preg_replace('/Watch Live\s*→?\s*/i', '', $nav_menu);
+    $nav_menu = preg_replace('/Read Episodes?(?!\s*Blog)/i', '', $nav_menu);
 
     return $nav_menu;
 }
