@@ -252,9 +252,9 @@ add_filter('template_include', function ($template) {
 
     // Map page slugs to templates (customize per site)
     $page_templates = array(
-        // Add site-specific page templates here
+        'blog' => 'page-blog.php',  // Force blog page to use page-blog.php template
+        // Add other site-specific page templates here
         // Example: 'about' => 'page-templates/page-about.php',
-        // Example: 'blog' => 'page-templates/page-blog.php',
     );
 
     if ($page_slug && isset($page_templates[$page_slug])) {
