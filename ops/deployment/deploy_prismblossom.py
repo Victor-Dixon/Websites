@@ -64,8 +64,10 @@ def deploy_prismblossom_theme():
     site_name = "prismblossom.online"
     site_key = "prismblossom"
 
-    # Files to deploy (from commit 8045d7f)
+    # Files to deploy - Neon Purple Homepage Theme Updates
     files_to_deploy = [
+        "wp/wp-content/themes/prismblossom/style.css",
+        "wp/wp-content/themes/prismblossom/index.php",
         "wp/wp-content/themes/prismblossom/functions.php",
         "wp/wp-content/themes/prismblossom/page-carmyn.php"
     ]

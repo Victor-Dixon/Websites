@@ -247,11 +247,12 @@ function ariajet_body_classes($classes) {
 add_filter('body_class', 'ariajet_body_classes');
 
 /**
- * Rewrite a "Capabilities" nav item to Home (/).
+ * Rewrite a "Capabilities" nav item to MUSIC (/music).
  * (Menu labels usually live in the WordPress database.)
  */
 function ariajet_fix_capabilities_menu_item($items, $args) {
-    if (!isset($args->theme_location) || $args->theme_location !== 'primary') {
+    // Apply to primary menu, or if no location specified (applies to all menus)
+    if (isset($args->theme_location) && $args->theme_location !== 'primary') {
         return $items;
     }
 
@@ -260,8 +261,15 @@ function ariajet_fix_capabilities_menu_item($items, $args) {
         $url = isset($item->url) ? trim((string) $item->url) : '';
         $is_dead_link = ($url === '' || $url === '#' || strcasecmp($url, 'javascript:void(0)') === 0);
 
-        // If a menu item is labeled "Capabilities" or "Agents", make it Home → /
-        if (strcasecmp($title, 'Capabilities') === 0 || strcasecmp($title, 'Agents') === 0) {
+        // If a menu item is labeled "Capabilities" or "Capabilitie", change it to MUSIC → /music
+        if (strcasecmp($title, 'Capabilities') === 0 || strcasecmp($title, 'Capabilitie') === 0) {
+            $item->title = __('MUSIC', 'ariajet');
+            $item->url = home_url('/music');
+            continue;
+        }
+
+        // If a menu item is labeled "Agents", make it Home → /
+        if (strcasecmp($title, 'Agents') === 0) {
             $item->title = __('Home', 'ariajet');
             $item->url = home_url('/');
             continue;
