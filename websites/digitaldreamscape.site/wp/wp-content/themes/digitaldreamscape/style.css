@@ -184,24 +184,16 @@ section:last-child {
 /* ============================================
    HEADER STYLES - Theme Consistent
    ============================================ */
-/* Target all possible header selectors to ensure consistent styling */
-/* Use high specificity to override any other rules */
-header.site-header,
-header[class*="site-header"],
-header[role="banner"],
-body .site-header,
-body.home .site-header,
-body.front-page .site-header,
-body.page-template-front-page .site-header,
+/* Header styling - should now be consistent since blog page uses correct template */
 .site-header {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2) !important;
-    position: sticky !important;
-    top: 0 !important;
-    z-index: 1000 !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Handle different header container structures */
@@ -227,10 +219,11 @@ body.page-template-front-page .site-header,
     align-items: center;
 }
 
+/* .brand classes kept as fallback if needed, but theme uses .site-logo */
 .brand-text,
 .brand-name {
     text-decoration: none;
-    color: var(--white) !important;
+    color: var(--white);
     font-size: var(--font-size-xl);
     font-weight: 700;
     font-family: var(--font-heading);
@@ -244,7 +237,7 @@ body.page-template-front-page .site-header,
 .brand:hover .brand-name,
 .brand-text:hover,
 .brand-name:hover {
-    color: var(--white) !important;
+    color: var(--white);
     text-shadow: 0 2px 20px rgba(255, 255, 255, 0.5);
     transform: translateY(-1px);
 }
@@ -281,73 +274,18 @@ body.page-template-front-page .site-header,
     hyphens: none;
 }
 
-/* Hide any direct children of navigation that aren't ul lists - ULTRA AGGRESSIVE */
-/* Target both main-navigation and nav classes */
-nav.main-navigation>*:not(ul),
-.main-navigation>*:not(ul#primary-menu):not(ul.menu),
-.main-navigation>div:not(#primary-menu):not(.menu),
-.main-navigation>div:not(ul),
-.main-navigation>span,
-.main-navigation>section,
-.main-navigation>article,
-.main-navigation>aside,
-nav.nav>*:not(ul),
-.nav>*:not(ul#primary-menu):not(ul.menu),
-.nav>div.nav-cta,
-.nav>div:not(#primary-menu):not(.menu):not(ul),
-.nav>span,
-.nav>section,
-.nav>article,
-.nav>aside {
-    display: none !important;
-    visibility: hidden !important;
-    height: 0 !important;
-    width: 0 !important;
-    overflow: hidden !important;
-    position: absolute !important;
-    left: -9999px !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
+/* Hide any direct children of navigation that aren't ul lists */
+/* Note: Menu cleanup is handled in PHP via functions.php filter */
+nav.main-navigation>*:not(ul) {
+    display: none;
 }
 
-/* Hide links containing "Watch Live" or "Read Episodes" text - more specific selectors */
-/* Target both main-navigation and nav classes */
-.main-navigation a[href*="watch"],
-.main-navigation a[href*="watch-live"],
-.main-navigation a[href*="streaming"]:not([href*="blog"]),
-.main-navigation>*:not(ul) a,
-.main-navigation>div a,
-.main-navigation>span a,
-.nav a[href*="watch"],
-.nav a[href*="watch-live"],
-.nav>div.nav-cta a,
-.nav>*:not(ul) a,
-.nav>div a:not(.menu a):not(#primary-menu a),
-.nav>span a {
-    display: none !important;
-    visibility: hidden !important;
-    height: 0 !important;
-    width: 0 !important;
-    overflow: hidden !important;
-    position: absolute !important;
-    left: -9999px !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
+.main-navigation>ul {
+    display: flex;
+    visibility: visible;
 }
 
-/* Ensure only ul menu lists are visible */
-nav.main-navigation>ul#primary-menu,
-nav.main-navigation>ul.menu,
-.main-navigation>ul,
-nav.nav>ul#primary-menu,
-nav.nav>ul.menu,
-.nav>ul {
-    display: flex !important;
-    visibility: visible !important;
-}
-
-.main-navigation ul,
-.nav ul {
+.main-navigation ul {
     display: flex;
     list-style: none;
     gap: var(--spacing-6);
@@ -356,13 +294,11 @@ nav.nav>ul.menu,
     padding: 0;
 }
 
-.main-navigation li,
-.nav li {
+.main-navigation li {
     margin: 0;
 }
 
-.main-navigation a,
-.nav a {
+.main-navigation a {
     text-decoration: none;
     color: rgba(255, 255, 255, 0.95);
     font-weight: 600;
@@ -375,8 +311,7 @@ nav.nav>ul.menu,
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-.main-navigation a::before,
-.nav a::before {
+.main-navigation a::before {
     content: '';
     position: absolute;
     bottom: 0;
@@ -389,9 +324,7 @@ nav.nav>ul.menu,
 }
 
 .main-navigation a:hover,
-.main-navigation a:focus,
-.nav a:hover,
-.nav a:focus {
+.main-navigation a:focus {
     color: var(--white);
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(5px);
@@ -400,19 +333,14 @@ nav.nav>ul.menu,
 }
 
 .main-navigation a:hover::before,
-.main-navigation a:focus::before,
-.nav a:hover::before,
-.nav a:focus::before {
+.main-navigation a:focus::before {
     transform: scaleX(1);
 }
 
 /* Active/Current page styling */
 .main-navigation .current-menu-item>a,
 .main-navigation .current_page_item>a,
-.main-navigation .current-menu-ancestor>a,
-.nav .current-menu-item>a,
-.nav .current_page_item>a,
-.nav .current-menu-ancestor>a {
+.main-navigation .current-menu-ancestor>a {
     color: var(--white);
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(5px);
@@ -423,10 +351,7 @@ nav.nav>ul.menu,
 
 .main-navigation .current-menu-item>a::before,
 .main-navigation .current_page_item>a::before,
-.main-navigation .current-menu-ancestor>a::before,
-.nav .current-menu-item>a::before,
-.nav .current_page_item>a::before,
-.nav .current-menu-ancestor>a::before {
+.main-navigation .current-menu-ancestor>a::before {
     transform: scaleX(1);
     background: var(--white);
     opacity: 0.8;
