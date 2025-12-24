@@ -47,14 +47,6 @@ def _get(name: str) -> str:
     return (os.environ.get(name) or "").strip()
 
 
-def _sftp_user_for_home() -> str:
-    return (
-        _get("ARIAJET_SITE_SFTP_USER")
-        or _get("SFTP_USER")
-        or _get("HOSTINGER_USER")
-    )
-
-
 @dataclass(frozen=True)
 class FoundPost:
     id: int
@@ -83,21 +75,23 @@ def _detect_wp_path(*, deployer, site_domain: str) -> str:
     """
     Determine the WordPress root path on the remote server.
     """
-    user = _sftp_user_for_home()
-    if not user:
-        # fallback: most Hostinger accounts use uXXXX... as username, but we avoid guessing.
-        user = "u000000000"
+    # Ask remote for $HOME to avoid guessing server usernames.
+    home = (deployer.execute_command("echo $HOME 2>/dev/null") or "").strip()
+    if not home:
+        home = "/home"
 
     candidates: list[str] = []
 
-    # Prefer remote_path from config if present
     remote_path = getattr(deployer, "remote_path", "") or ""
     if remote_path:
-        candidates.append(f"/home/{user}/{remote_path}".rstrip("/"))
+        candidates.append(f"{home.rstrip('/')}/{remote_path}".rstrip("/"))
 
-    # Common Hostinger layout
-    candidates.append(f"/home/{user}/domains/{site_domain}/public_html")
-    candidates.append(f"/home/{user}/public_html")
+    candidates.extend(
+        [
+            f"{home.rstrip('/')}/domains/{site_domain}/public_html",
+            f"{home.rstrip('/')}/public_html",
+        ]
+    )
 
     for base in candidates:
         chk = deployer.execute_command(f"test -f {base}/wp-config.php && echo OK 2>/dev/null")
