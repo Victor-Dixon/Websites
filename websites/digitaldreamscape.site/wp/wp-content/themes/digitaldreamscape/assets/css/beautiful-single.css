@@ -1,0 +1,853 @@
+/**
+ * Beautiful Single Post Styles
+ * Dark theme styling for individual blog posts
+ *
+ * @package DigitalDreamscape
+ * @since 2.0.0
+ */
+
+/* ============================================
+   SINGLE POST LAYOUT
+   ============================================ */
+
+.single .site-main,
+.single-post .site-main {
+    background: #0a0a0a !important;
+    min-height: 100vh;
+    padding: 0;
+}
+
+.single-post-area {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+}
+
+/* ============================================
+   POST HEADER - HERO SECTION
+   ============================================ */
+
+.dreamscape-header {
+    margin-bottom: 3rem;
+}
+
+/* Hero Image Container */
+.dreamscape-hero {
+    position: relative;
+    width: calc(100% + 3rem);
+    margin-left: -1.5rem;
+    margin-top: -2rem;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 0 0 24px 24px;
+}
+
+.dreamscape-hero .featured-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Default Hero (No Featured Image) */
+.dreamscape-default-hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+}
+
+.dreamscape-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.2) 0%, transparent 70%);
+    animation: patternFloat 15s ease-in-out infinite;
+}
+
+@keyframes patternFloat {
+    0%, 100% { background-position: 0% 0%, 100% 100%, 50% 50%; }
+    50% { background-position: 100% 100%, 0% 0%, 50% 50%; }
+}
+
+/* Hero Overlay */
+.dreamscape-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(to top, #0a0a0a 0%, rgba(10, 10, 10, 0.8) 50%, transparent 100%);
+    display: flex;
+    align-items: flex-end;
+    padding: 2rem;
+}
+
+.narrative-marker {
+    display: inline-block;
+    padding: 0.5rem 1.25rem;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3));
+    border: 1px solid rgba(99, 102, 241, 0.5);
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #a78bfa;
+    text-transform: uppercase;
+}
+
+/* ============================================
+   POST META HEADER
+   ============================================ */
+
+.dreamscape-meta {
+    padding-top: 2rem;
+}
+
+/* Questline Tags */
+.dreamscape-questlines {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.questline-tag {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: #a78bfa;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.questline-tag:hover {
+    background: rgba(99, 102, 241, 0.25);
+    border-color: rgba(99, 102, 241, 0.5);
+    color: #c4b5fd;
+}
+
+/* Post Title */
+.dreamscape-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0 0 2rem 0;
+    background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 50%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Identity Section */
+.dreamscape-identity {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    margin-bottom: 1.5rem;
+}
+
+.identity-avatar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.avatar-frame {
+    display: block;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+}
+
+.avatar-frame img {
+    border-radius: 50%;
+    display: block;
+    border: 2px solid #0a0a0a;
+}
+
+.identity-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.identity-name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.identity-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #a78bfa;
+    letter-spacing: 0.05em;
+}
+
+.dreamscape-timestamp {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Stats Section */
+.dreamscape-stats {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.stat-icon {
+    font-size: 1rem;
+}
+
+.stat-value {
+    font-weight: 500;
+}
+
+/* Context Banner */
+.dreamscape-context {
+    margin-bottom: 2rem;
+}
+
+.context-badge {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.05));
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 12px;
+}
+
+.context-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #a78bfa;
+    padding: 0.25rem 0.75rem;
+    background: rgba(99, 102, 241, 0.2);
+    border-radius: 4px;
+}
+
+.context-text {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-style: italic;
+}
+
+/* ============================================
+   NARRATIVE CONTENT AREA
+   ============================================ */
+
+.dreamscape-narrative {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* Narrative Intro/Outro */
+.narrative-intro,
+.narrative-outro {
+    padding: 1.5rem 2rem;
+    background: rgba(99, 102, 241, 0.08);
+    border-left: 4px solid #6366f1;
+    border-radius: 0 12px 12px 0;
+    margin-bottom: 2.5rem;
+}
+
+.narrative-outro {
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+    background: rgba(34, 197, 94, 0.08);
+    border-left-color: #22c55e;
+}
+
+.intro-badge,
+.outro-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #a78bfa;
+    margin-bottom: 0.75rem;
+}
+
+.outro-badge {
+    color: #4ade80;
+}
+
+.intro-text,
+.outro-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+}
+
+/* Content Typography */
+.dreamscape-narrative p {
+    margin-bottom: 1.75rem;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.dreamscape-narrative h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 3rem 0 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 3px solid #6366f1;
+    display: inline-block;
+}
+
+.dreamscape-narrative h3 {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 2.5rem 0 1rem;
+}
+
+.dreamscape-narrative h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #a78bfa;
+    margin: 2rem 0 0.75rem;
+}
+
+/* Lists */
+.dreamscape-narrative ul,
+.dreamscape-narrative ol {
+    margin: 1.5rem 0 2rem 1.5rem;
+    padding: 0;
+}
+
+.dreamscape-narrative li {
+    margin-bottom: 0.75rem;
+    color: rgba(255, 255, 255, 0.85);
+    position: relative;
+}
+
+.dreamscape-narrative ul li::marker {
+    color: #a78bfa;
+}
+
+.dreamscape-narrative ol li::marker {
+    color: #a78bfa;
+    font-weight: 600;
+}
+
+/* Links */
+.dreamscape-narrative a {
+    color: #a78bfa;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(167, 139, 250, 0.3);
+    transition: all 0.2s ease;
+}
+
+.dreamscape-narrative a:hover {
+    color: #c4b5fd;
+    border-bottom-color: #c4b5fd;
+}
+
+/* Blockquotes */
+.dreamscape-narrative blockquote {
+    margin: 2rem 0;
+    padding: 1.5rem 2rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 4px solid #8b5cf6;
+    border-radius: 0 12px 12px 0;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.dreamscape-narrative blockquote p {
+    margin-bottom: 0;
+}
+
+/* Code Blocks */
+.dreamscape-narrative code {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.9em;
+    padding: 0.2em 0.5em;
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 4px;
+    color: #e0e7ff;
+}
+
+.dreamscape-narrative pre {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: #1a1a2e;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 12px;
+    overflow-x: auto;
+}
+
+.dreamscape-narrative pre code {
+    padding: 0;
+    background: transparent;
+    border: none;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #e0e7ff;
+}
+
+/* Tables */
+.dreamscape-narrative table {
+    width: 100%;
+    margin: 2rem 0;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.dreamscape-narrative th,
+.dreamscape-narrative td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dreamscape-narrative th {
+    background: rgba(99, 102, 241, 0.15);
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.dreamscape-narrative td {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.dreamscape-narrative tr:last-child td {
+    border-bottom: none;
+}
+
+/* Strong/Bold */
+.dreamscape-narrative strong {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* Emphasis */
+.dreamscape-narrative em {
+    color: rgba(255, 255, 255, 0.9);
+    font-style: italic;
+}
+
+/* Horizontal Rule */
+.dreamscape-narrative hr {
+    margin: 3rem 0;
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.5), transparent);
+}
+
+/* ============================================
+   POST TAGS
+   ============================================ */
+
+.post-tags {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 3rem 0 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tags-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.tag-link {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.tag-link:hover {
+    background: rgba(99, 102, 241, 0.2);
+    border-color: rgba(99, 102, 241, 0.4);
+    color: #a78bfa;
+}
+
+/* ============================================
+   POST FOOTER - SHARE BUTTONS
+   ============================================ */
+
+.post-footer {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+}
+
+.post-share {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.share-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.share-buttons {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.share-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.share-twitter {
+    background: rgba(29, 161, 242, 0.15);
+    border: 1px solid rgba(29, 161, 242, 0.3);
+    color: #1da1f2;
+}
+
+.share-twitter:hover {
+    background: rgba(29, 161, 242, 0.25);
+}
+
+.share-facebook {
+    background: rgba(66, 103, 178, 0.15);
+    border: 1px solid rgba(66, 103, 178, 0.3);
+    color: #4267b2;
+}
+
+.share-facebook:hover {
+    background: rgba(66, 103, 178, 0.25);
+}
+
+.share-linkedin {
+    background: rgba(0, 119, 181, 0.15);
+    border: 1px solid rgba(0, 119, 181, 0.3);
+    color: #0077b5;
+}
+
+.share-linkedin:hover {
+    background: rgba(0, 119, 181, 0.25);
+}
+
+/* ============================================
+   AUTHOR BIO
+   ============================================ */
+
+.author-bio {
+    display: flex;
+    gap: 1.5rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(139, 92, 246, 0.05));
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 16px;
+    margin: 2rem 0;
+}
+
+.author-bio-avatar img {
+    border-radius: 50%;
+    border: 3px solid rgba(99, 102, 241, 0.3);
+}
+
+.author-bio-content {
+    flex: 1;
+}
+
+.author-bio-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 0.5rem;
+}
+
+.author-bio-description {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0 0 1rem;
+}
+
+.author-bio-link {
+    display: inline-block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #a78bfa;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.author-bio-link:hover {
+    color: #c4b5fd;
+}
+
+/* ============================================
+   POST NAVIGATION
+   ============================================ */
+
+.post-navigation {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 3rem 0;
+}
+
+.nav-previous,
+.nav-next {
+    display: flex;
+}
+
+.nav-next {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.post-navigation .nav-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    flex: 1;
+}
+
+.post-navigation .nav-link:hover {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+.nav-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #a78bfa;
+}
+
+.nav-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.4;
+}
+
+/* ============================================
+   COMMENTS SECTION
+   ============================================ */
+
+.comments-area {
+    margin-top: 3rem;
+    padding-top: 3rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.comments-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 2rem;
+}
+
+.comment-respond {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 2rem;
+}
+
+.comment-reply-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 1.5rem;
+}
+
+.comment-notes {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 1.5rem;
+}
+
+.comment-form label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 0.5rem;
+}
+
+.comment-form input[type="text"],
+.comment-form input[type="email"],
+.comment-form input[type="url"],
+.comment-form textarea {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.comment-form input:focus,
+.comment-form textarea:focus {
+    outline: none;
+    border-color: rgba(99, 102, 241, 0.5);
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.comment-form textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.comment-form-cookies-consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin: 1rem 0;
+}
+
+.comment-form-cookies-consent input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-top: 0.25rem;
+}
+
+.comment-form-cookies-consent label {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 0;
+}
+
+.form-submit {
+    margin-top: 1.5rem;
+}
+
+.submit {
+    display: inline-block;
+    padding: 0.875rem 2rem;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .single-post-area {
+        padding: 1rem;
+    }
+    
+    .dreamscape-hero {
+        width: calc(100% + 2rem);
+        margin-left: -1rem;
+        margin-top: -1rem;
+        height: 280px;
+    }
+    
+    .dreamscape-identity {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .dreamscape-stats {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .post-navigation {
+        grid-template-columns: 1fr;
+    }
+    
+    .nav-next {
+        justify-content: flex-start;
+        text-align: left;
+    }
+    
+    .author-bio {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .author-bio-avatar {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .dreamscape-narrative pre {
+        padding: 1rem;
+        margin-left: -1rem;
+        margin-right: -1rem;
+        border-radius: 0;
+    }
+    
+    .narrative-intro,
+    .narrative-outro {
+        padding: 1.25rem 1.5rem;
+    }
+}
+

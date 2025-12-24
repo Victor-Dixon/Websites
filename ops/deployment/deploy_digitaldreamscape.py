@@ -84,7 +84,8 @@ def deploy_digitaldreamscape_theme():
         "wp/wp-content/themes/digitaldreamscape/page-templates/page-community-beautiful.php",
         "wp/wp-content/themes/digitaldreamscape/assets/css/beautiful-blog.css",
         "wp/wp-content/themes/digitaldreamscape/assets/css/beautiful-streaming.css",
-        "wp/wp-content/themes/digitaldreamscape/assets/css/beautiful-community.css"
+        "wp/wp-content/themes/digitaldreamscape/assets/css/beautiful-community.css",
+        "wp/wp-content/themes/digitaldreamscape/assets/css/beautiful-single.css"
     ]
 
     try:

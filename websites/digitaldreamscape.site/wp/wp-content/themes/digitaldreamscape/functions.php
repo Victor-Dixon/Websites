@@ -53,8 +53,13 @@ function digitaldreamscape_scripts()
     wp_enqueue_style('digitaldreamscape-style', get_stylesheet_uri(), array(), '3.0.1');
 
     // Enqueue beautiful blog template styles (conditionally on blog pages)
-    if (is_page('blog') || is_home() || is_archive() || is_single()) {
+    if (is_page('blog') || is_home() || is_archive()) {
         wp_enqueue_style('digitaldreamscape-beautiful-blog', get_template_directory_uri() . '/assets/css/beautiful-blog.css', array('digitaldreamscape-style'), '1.0.0');
+    }
+    
+    // Enqueue beautiful single post styles (conditionally on single posts)
+    if (is_single()) {
+        wp_enqueue_style('digitaldreamscape-beautiful-single', get_template_directory_uri() . '/assets/css/beautiful-single.css', array('digitaldreamscape-style'), '1.0.0');
     }
     
     // Enqueue beautiful streaming template styles (conditionally on streaming page)
