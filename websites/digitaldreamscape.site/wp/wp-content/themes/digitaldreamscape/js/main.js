@@ -87,10 +87,21 @@
                 linkText.includes('watch live →') ||
                 (linkText.includes('read epi') && !linkText.includes('read the blog'))) {
                 var parent = link.parentElement;
-                if (parent && !parent.classList.contains('menu') && parent.tagName !== 'LI') {
-                    // Remove if parent is not a menu item
+                // Remove regardless of parent - these should not appear in nav
+                if (parent) {
+                    // First hide immediately
                     parent.style.display = 'none';
                     parent.style.visibility = 'hidden';
+                    parent.style.height = '0';
+                    parent.style.width = '0';
+                    parent.style.overflow = 'hidden';
+                    parent.style.opacity = '0';
+                    parent.style.pointerEvents = 'none';
+                    
+                    // Also hide the link itself
+                    link.style.display = 'none';
+                    link.style.visibility = 'hidden';
+                    
                     setTimeout(function () {
                         try {
                             if (parent.parentNode) {
@@ -99,19 +110,62 @@
                                 parent.remove();
                             }
                         } catch (e) {
-                            // Ignore if already removed
+                            // If parent removal fails, try removing link
+                            try {
+                                if (link.parentNode) {
+                                    link.parentNode.removeChild(link);
+                                } else {
+                                    link.remove();
+                                }
+                            } catch (e2) {
+                                // Ignore if already removed
+                            }
                         }
                     }, 50);
                 }
             }
         });
-    }
-
-    // Run cleanup immediately if DOM is already loaded
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initMenuCleanup);
-    } else {
-        initMenuCleanup();
+        
+        // Also check for text nodes containing "Watch Live" or "Read Episodes"
+        // This handles cases where they might appear as plain text
+        var walker = document.createTreeWalker(
+            navigation,
+            NodeFilter.SHOW_TEXT,
+            null,
+            false
+        );
+        
+        var textNode;
+        var nodesToRemove = [];
+        while (textNode = walker.nextNode()) {
+            var text = textNode.textContent.trim().toLowerCase();
+            if (text.includes('watch live') || 
+                (text.includes('read epi') && !text.includes('read the blog'))) {
+                var parent = textNode.parentNode;
+                if (parent && parent.tagName !== 'LI' && !parent.classList.contains('menu-item')) {
+                    nodesToRemove.push(parent);
+                }
+            }
+        }
+        
+        nodesToRemove.forEach(function(node) {
+            node.style.display = 'none';
+            node.style.visibility = 'hidden';
+            node.style.height = '0';
+            node.style.width = '0';
+            node.style.opacity = '0';
+            setTimeout(function() {
+                try {
+                    if (node.parentNode) {
+                        node.parentNode.removeChild(node);
+                    } else {
+                        node.remove();
+                    }
+                } catch (e) {
+                    // Ignore if already removed
+                }
+            }, 50);
+        });
     }
 
     function initMenuCleanup() {
@@ -133,15 +187,31 @@
             });
         }
 
-        // Run cleanup multiple times to catch all variations
+        // Run cleanup multiple times to catch all variations - MORE FREQUENT
+        setTimeout(cleanupMenuItems, 50);
         setTimeout(cleanupMenuItems, 100);
+        setTimeout(cleanupMenuItems, 200);
         setTimeout(cleanupMenuItems, 300);
         setTimeout(cleanupMenuItems, 500);
+        setTimeout(cleanupMenuItems, 750);
         setTimeout(cleanupMenuItems, 1000);
+        setTimeout(cleanupMenuItems, 1500);
         setTimeout(cleanupMenuItems, 2000);
+        setTimeout(cleanupMenuItems, 3000);
 
         // Also run on window load
-        window.addEventListener('load', cleanupMenuItems);
+        window.addEventListener('load', function() {
+            cleanupMenuItems();
+            setTimeout(cleanupMenuItems, 500);
+            setTimeout(cleanupMenuItems, 1000);
+        });
+    }
+
+    // Run cleanup immediately if DOM is already loaded
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initMenuCleanup);
+    } else {
+        initMenuCleanup();
     }
 
     // Original DOMContentLoaded handler for other functionality

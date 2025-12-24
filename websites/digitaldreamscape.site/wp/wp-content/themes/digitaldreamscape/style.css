@@ -289,7 +289,9 @@ nav.main-navigation>*:not(ul),
 .main-navigation>*:not(ul),
 .main-navigation>div.nav-cta,
 .main-navigation .nav-cta,
-nav.main-navigation .nav-cta {
+nav.main-navigation .nav-cta,
+.main-navigation a[href*="watch"],
+.main-navigation a[href*="streaming"] {
     display: none !important;
     visibility: hidden !important;
     height: 0 !important;
@@ -299,11 +301,46 @@ nav.main-navigation .nav-cta {
     left: -9999px !important;
     opacity: 0 !important;
     pointer-events: none !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Hide any div, span, or p elements that might contain the unwanted text */
+.main-navigation div:not(.menu):not(#primary-menu),
+.main-navigation span:not(.menu-item),
+.main-navigation p {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    opacity: 0 !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
 }
 
 .main-navigation>ul {
-    display: flex;
-    visibility: visible;
+    display: flex !important;
+    visibility: visible !important;
+}
+
+/* Additional aggressive rules for any list items with suspicious content */
+.main-navigation li a[href*="watch"],
+.main-navigation li a[href*="episode"]:not([href*="blog"]) {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    opacity: 0 !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
 }
 
 /* Navigation menu list - consistent across all pages */
