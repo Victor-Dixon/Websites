@@ -308,6 +308,7 @@ add_filter('template_include', function ($template) {
     // Map page slugs to templates (customize per site)
     $page_templates = array(
         'blog' => 'page-templates/page-blog-beautiful.php',  // Force blog page to use beautiful blog template
+        'streaming' => 'page-templates/page-streaming-beautiful.php',  // Force streaming page to use beautiful streaming template
         // Add other site-specific page templates here
         // Example: 'about' => 'page-templates/page-about.php',
     );
