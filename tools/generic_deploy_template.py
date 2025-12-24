@@ -175,7 +175,8 @@ def main():
     print()
     
     # Load site configs
-    from ops.deployment.simple_wordpress_deployer import load_site_configs
+    sys.path.insert(0, str(Path(__file__).parent.parent / "ops" / "deployment"))
+    from simple_wordpress_deployer import load_site_configs
     site_configs = load_site_configs()
     
     if args.site not in site_configs:
