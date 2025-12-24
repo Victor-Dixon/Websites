@@ -85,12 +85,12 @@ function digitaldreamscape_performance_cleanup()
     // Remove emoji scripts
     remove_action('wp_head', 'print_emoji_detection_script', 7);
     remove_action('wp_print_styles', 'print_emoji_styles');
-    
+
     // Remove unnecessary RSS feed links
     remove_action('wp_head', 'rsd_link');
     remove_action('wp_head', 'wlwmanifest_link');
     remove_action('wp_head', 'wp_generator');
-    
+
     // Remove shortlink
     remove_action('wp_head', 'wp_shortlink_wp_head');
 }
@@ -133,7 +133,7 @@ function digitaldreamscape_seo_meta_tags()
     // Get site name and description
     $site_name = get_bloginfo('name');
     $site_description = get_bloginfo('description');
-    
+
     if (is_single() || is_page()) {
         global $post;
         $title = get_the_title();
@@ -151,10 +151,10 @@ function digitaldreamscape_seo_meta_tags()
         $url = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         $image = '';
     }
-    
+
     // Meta description
     echo '<meta name="description" content="' . esc_attr($excerpt) . '">' . "\n";
-    
+
     // Open Graph Meta Tags
     echo '<meta property="og:title" content="' . esc_attr($title) . '">' . "\n";
     echo '<meta property="og:description" content="' . esc_attr($excerpt) . '">' . "\n";
@@ -164,7 +164,7 @@ function digitaldreamscape_seo_meta_tags()
     if ($image) {
         echo '<meta property="og:image" content="' . esc_url($image) . '">' . "\n";
     }
-    
+
     // Twitter Card Meta Tags
     echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
     echo '<meta name="twitter:title" content="' . esc_attr($title) . '">' . "\n";
@@ -199,11 +199,11 @@ function digitaldreamscape_structured_data()
                 'url' => home_url('/'),
             ),
         );
-        
+
         if (has_post_thumbnail()) {
             $schema['image'] = get_the_post_thumbnail_url($post->ID, 'large');
         }
-        
+
         echo '<script type="application/ld+json">' . wp_json_encode($schema, JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
     } elseif (is_home() || is_front_page()) {
         $schema = array(
@@ -213,7 +213,7 @@ function digitaldreamscape_structured_data()
             'url' => home_url('/'),
             'description' => get_bloginfo('description') ? get_bloginfo('description') : 'Build-in-public & streaming hub for Digital Dreamscape',
         );
-        
+
         echo '<script type="application/ld+json">' . wp_json_encode($schema, JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
     }
 }
