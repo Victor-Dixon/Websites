@@ -42,9 +42,10 @@ function freerideinvestor_menu_theme_consistent_css() {
         display: inline-block !important;
         padding: var(--spacing-xs, 0.5rem) var(--spacing-sm, 1rem) !important; /* Theme has horizontal padding */
         border-radius: 4px !important;
-        color: var(--color-text-base, var(--text-secondary, #4a4a4a)) !important; /* Theme uses --color-text-base */
+        /* Support both theme variable naming conventions */
+        color: var(--color-text-base, var(--text-secondary, var(--text-primary, #4a4a4a))) !important;
         text-decoration: none !important;
-        font-weight: 600 !important; /* Theme uses 600, not 500 */
+        font-weight: 600 !important; /* Theme component CSS uses 600 */
         transition: background-color var(--transition-fast, 0.2s ease), 
                     color var(--transition-fast, 0.2s ease) !important;
     }
@@ -53,7 +54,8 @@ function freerideinvestor_menu_theme_consistent_css() {
     .main-nav .nav-list li a:hover,
     .main-nav .nav-list li a:focus {
         background: var(--color-nav-hover-bg, rgba(255, 255, 255, 0.1)) !important;
-        color: var(--color-text-base, var(--text-secondary, #4a4a4a)) !important; /* Theme maintains text color on hover */
+        /* Theme maintains text color on hover, not changing it */
+        color: var(--color-text-base, var(--text-secondary, var(--text-primary, #4a4a4a))) !important;
         outline: 2px solid var(--color-accent, var(--primary-blue, #0066ff)) !important;
         outline-offset: 2px !important;
     }
