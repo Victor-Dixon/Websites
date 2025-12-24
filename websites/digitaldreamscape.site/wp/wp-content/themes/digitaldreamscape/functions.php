@@ -71,6 +71,11 @@ function digitaldreamscape_scripts()
         wp_enqueue_style('digitaldreamscape-beautiful-streaming', get_template_directory_uri() . '/assets/css/beautiful-streaming.css', array('digitaldreamscape-style'), '1.0.1');
     }
     
+    // Enqueue beautiful single post template styles (conditionally on single posts)
+    if (is_single()) {
+        wp_enqueue_style('digitaldreamscape-beautiful-single', get_template_directory_uri() . '/assets/css/beautiful-single.css', array('digitaldreamscape-style'), '1.0.0');
+    }
+    
     // Enqueue beautiful community template styles (conditionally on community page)
     // Use multiple detection methods for reliability
     $is_community = is_page('community') 
