@@ -11,10 +11,86 @@
    ============================================ */
 
 .single .site-main,
-.single-post .site-main {
+.single-post .site-main,
+body.single,
+body.single-post {
     background: #0a0a0a !important;
     min-height: 100vh;
     padding: 0;
+}
+
+/* Force dark background on all single post elements */
+.single .container,
+.single-post .container,
+.single-post-area,
+.single .content-area,
+.single-post .content-area,
+.single article,
+.single-post article,
+.single .dreamscape-narrative,
+.single-post .dreamscape-narrative,
+.single .post-content,
+.single-post .post-content,
+body.single .post-content,
+body.single-post .post-content {
+    background: #0a0a0a !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Force dark on all nested elements - override main style.css */
+.dreamscape-narrative,
+.post-content.dreamscape-narrative,
+body.single .dreamscape-narrative,
+body.single-post .dreamscape-narrative,
+.single .post-content.dreamscape-narrative,
+.single-post .post-content.dreamscape-narrative,
+.single-post-area .dreamscape-narrative,
+.single-post-area .post-content {
+    background: #0a0a0a !important;
+    background-image: none !important;
+}
+
+/* Override the ::before and ::after pseudo-elements */
+body.single .dreamscape-narrative::before,
+body.single .dreamscape-narrative::after,
+body.single-post .dreamscape-narrative::before,
+body.single-post .dreamscape-narrative::after {
+    display: none !important;
+    opacity: 0 !important;
+}
+
+/* Ensure text is light colored */
+.dreamscape-narrative p,
+.post-content p,
+body.single .dreamscape-narrative p,
+body.single-post .dreamscape-narrative p,
+body.single .post-content p,
+body.single-post .post-content p {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Override the first paragraph styling from main style.css */
+body.single .dreamscape-narrative>p:first-of-type,
+body.single-post .dreamscape-narrative>p:first-of-type,
+body.single .post-content p:first-of-type,
+body.single-post .post-content p:first-of-type {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Override list items */
+body.single .dreamscape-narrative li,
+body.single-post .dreamscape-narrative li,
+body.single .post-content li,
+body.single-post .post-content li {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Override list item arrows */
+body.single .dreamscape-narrative ul li::before,
+body.single-post .dreamscape-narrative ul li::before,
+body.single .post-content ul li::before,
+body.single-post .post-content ul li::before {
+    color: #a78bfa !important;
 }
 
 .single-post-area {
@@ -266,14 +342,32 @@
     color: rgba(255, 255, 255, 0.85);
 }
 
-/* Narrative Intro/Outro */
+/* Narrative Intro/Outro - Override light theme from main style.css */
 .narrative-intro,
-.narrative-outro {
+.narrative-outro,
+body.single .narrative-intro,
+body.single-post .narrative-intro,
+body.single .narrative-outro,
+body.single-post .narrative-outro {
     padding: 1.5rem 2rem;
-    background: rgba(99, 102, 241, 0.08);
+    background: rgba(99, 102, 241, 0.15) !important;
+    background-image: none !important;
     border-left: 4px solid #6366f1;
     border-radius: 0 12px 12px 0;
     margin-bottom: 2.5rem;
+}
+
+/* Hide light gradient pseudo-elements */
+body.single .narrative-intro::before,
+body.single .narrative-intro::after,
+body.single-post .narrative-intro::before,
+body.single-post .narrative-intro::after,
+body.single .narrative-outro::before,
+body.single .narrative-outro::after,
+body.single-post .narrative-outro::before,
+body.single-post .narrative-outro::after {
+    display: none !important;
+    opacity: 0 !important;
 }
 
 .narrative-outro {

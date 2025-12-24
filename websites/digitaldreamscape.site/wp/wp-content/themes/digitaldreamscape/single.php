@@ -8,6 +8,56 @@
 
 get_header(); ?>
 
+<!-- Critical Dark Theme Styles - Inline for guaranteed loading -->
+<style>
+    body.single, body.single-post,
+    .single .site-main, .single-post .site-main,
+    .single-post-area, .single .content-area,
+    .single article, .dreamscape-narrative,
+    .post-content.dreamscape-narrative,
+    .narrative-intro, .narrative-outro {
+        background: #0a0a0a !important;
+        background-image: none !important;
+    }
+    .dreamscape-narrative::before, .dreamscape-narrative::after,
+    .narrative-intro::before, .narrative-intro::after,
+    .narrative-outro::before, .narrative-outro::after {
+        display: none !important;
+    }
+    .dreamscape-narrative p, .post-content p,
+    .dreamscape-narrative li, .post-content li {
+        color: rgba(255, 255, 255, 0.85) !important;
+    }
+    .dreamscape-narrative h2, .dreamscape-narrative h3,
+    .post-content h2, .post-content h3 {
+        color: #ffffff !important;
+    }
+    .intro-text, .outro-text {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+    .intro-badge, .outro-badge {
+        color: #a78bfa !important;
+    }
+    .outro-badge { color: #4ade80 !important; }
+    .dreamscape-narrative strong, .post-content strong {
+        color: #ffffff !important;
+    }
+    .dreamscape-narrative a, .post-content a {
+        color: #a78bfa !important;
+    }
+    .dreamscape-narrative ul li::before, .post-content ul li::before {
+        color: #a78bfa !important;
+    }
+    .narrative-intro {
+        background: rgba(99, 102, 241, 0.15) !important;
+        border-left: 4px solid #6366f1;
+    }
+    .narrative-outro {
+        background: rgba(34, 197, 94, 0.15) !important;
+        border-left: 4px solid #22c55e;
+    }
+</style>
+
 <main class="site-main">
     <div class="container">
         <div class="content-area single-post-area">
