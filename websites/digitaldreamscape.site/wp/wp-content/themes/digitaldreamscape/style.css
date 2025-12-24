@@ -288,80 +288,123 @@ body.page-template-front-page .site-header,
     word-wrap: normal !important;
 }
 
-/* Hide any direct children of navigation that aren't ul lists */
-/* Aggressively hide nav-cta divs and other non-menu elements */
-nav.main-navigation>*:not(ul),
-.main-navigation>*:not(ul),
-.main-navigation>div.nav-cta,
-.main-navigation .nav-cta,
-nav.main-navigation .nav-cta,
-.main-navigation a[href*="watch"],
-.main-navigation a[href*="streaming"] {
-    display: none !important;
-    visibility: hidden !important;
-    height: 0 !important;
-    width: 0 !important;
-    overflow: hidden !important;
-    position: absolute !important;
-    left: -9999px !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-    font-size: 0 !important;
-    line-height: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
+/* Logo tagline - BUILD IN PUBLIC identity */
+.logo-tagline {
+    display: inline-block;
+    margin-left: var(--spacing-2);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    letter-spacing: 0.05em;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    vertical-align: middle;
 }
 
-/* Hide any div, span, or p elements that might contain the unwanted text */
-.main-navigation div:not(.menu):not(#primary-menu):not([class*="menu"]),
-.main-navigation span:not(.menu-item):not([class*="menu"]),
-.main-navigation p {
-    display: none !important;
-    visibility: hidden !important;
-    height: 0 !important;
-    width: 0 !important;
-    opacity: 0 !important;
-    font-size: 0 !important;
-    line-height: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow: hidden !important;
-    position: absolute !important;
-    left: -9999px !important;
-    pointer-events: none !important;
+@media (max-width: 768px) {
+    .logo-tagline {
+        display: none; /* Hide on mobile for space */
+    }
 }
 
-/* Specifically target any direct div children that aren't menu lists */
-.main-navigation>div:not(.menu):not(#primary-menu) {
-    display: none !important;
-    visibility: hidden !important;
-    height: 0 !important;
-    width: 0 !important;
-    opacity: 0 !important;
-    position: absolute !important;
-    left: -9999px !important;
-    overflow: hidden !important;
-    pointer-events: none !important;
+/* ============================================
+   NAV CTA BUTTONS - Primary Action Center
+   ============================================ */
+.nav-cta-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: var(--spacing-3) !important;
+    margin-left: var(--spacing-6) !important;
 }
 
+.nav-cta {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: var(--spacing-2) !important;
+    padding: var(--spacing-2) var(--spacing-4) !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    font-size: var(--font-size-sm) !important;
+    text-decoration: none !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    white-space: nowrap !important;
+}
+
+.nav-cta-primary {
+    background: var(--white) !important;
+    color: var(--primary-color) !important;
+    border: 2px solid var(--white) !important;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3) !important;
+}
+
+.nav-cta-primary:hover {
+    background: transparent !important;
+    color: var(--white) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4) !important;
+}
+
+.nav-cta-secondary {
+    background: transparent !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.nav-cta-secondary:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: var(--white) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    transform: translateY(-2px) !important;
+}
+
+.nav-cta .cta-arrow {
+    font-size: 1.1em;
+    transition: transform 0.3s ease;
+}
+
+.nav-cta:hover .cta-arrow {
+    transform: translateX(3px);
+}
+
+@media (max-width: 1024px) {
+    .nav-cta-group {
+        gap: var(--spacing-2) !important;
+        margin-left: var(--spacing-4) !important;
+    }
+    
+    .nav-cta {
+        padding: var(--spacing-2) var(--spacing-3) !important;
+        font-size: var(--font-size-xs) !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-cta-group {
+        display: none !important; /* Hidden on mobile, show in mobile menu instead */
+    }
+}
+
+/* Navigation layout - allow menu list and CTA group */
+.main-navigation {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0 !important;
+}
+
+/* Navigation children - show menu list and CTA group */
 .main-navigation>ul {
     display: flex !important;
     visibility: visible !important;
 }
 
-/* Additional aggressive rules for any list items with suspicious content */
-.main-navigation li a[href*="watch"],
-.main-navigation li a[href*="episode"]:not([href*="blog"]) {
-    display: none !important;
-    visibility: hidden !important;
-    height: 0 !important;
-    width: 0 !important;
-    opacity: 0 !important;
-    font-size: 0 !important;
-    line-height: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow: hidden !important;
+.main-navigation>.nav-cta-group {
+    display: flex !important;
+    visibility: visible !important;
+}
+
+/* Header scroll effect */
+.site-header.scrolled {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
 }
 
 /* Navigation menu list - consistent across all pages - ULTRA SPECIFIC */
@@ -448,6 +491,7 @@ nav.main-navigation li {
 
 /* DESKTOP MENU - Force horizontal layout above mobile breakpoint */
 @media (min-width: 769px) {
+
     .main-navigation,
     #site-navigation,
     nav.main-navigation {

@@ -24,19 +24,27 @@
     <header id="site-header" class="site-header">
         <div class="header-container">
             <div class="header-content">
-                <!-- Logo -->
+                <!-- Logo with BUILD IN PUBLIC identity -->
                 <div class="site-logo">
                     <?php if (has_custom_logo()) : ?>
                         <?php the_custom_logo(); ?>
                     <?php else : ?>
                         <a href="<?php echo esc_url(home_url('/')); ?>" class="logo-link">
                             <span class="logo-text">Digital Dreamscape</span>
+                            <span class="logo-tagline">[BUILD IN PUBLIC]</span>
                         </a>
                     <?php endif; ?>
                 </div>
 
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
                 <!-- Navigation -->
-                <nav id="site-navigation" class="main-navigation">
+                <nav id="site-navigation" class="main-navigation" aria-label="Primary navigation">
                     <?php
                     wp_nav_menu(array(
                         'theme_location' => 'primary',
@@ -45,20 +53,17 @@
                         'fallback_cb' => 'digitaldreamscape_default_menu',
                     ));
                     ?>
+                    
+                    <!-- Primary CTAs - Brand Action Center -->
+                    <div class="nav-cta-group">
+                        <a href="<?php echo esc_url(home_url('/streaming/')); ?>" class="nav-cta nav-cta-primary">
+                            Watch Live <span class="cta-arrow">→</span>
+                        </a>
+                        <a href="<?php echo esc_url(home_url('/blog/')); ?>" class="nav-cta nav-cta-secondary">
+                            Read Episodes
+                        </a>
+                    </div>
                 </nav>
-
-                <!-- Mobile Menu Toggle -->
-                <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
             </div>
         </div>
     </header>
-    <?php
-    // Render unified subheader right after header
-    if (function_exists('digitaldreamscape_unified_subheader')) {
-        digitaldreamscape_unified_subheader();
-    }
-    ?>
