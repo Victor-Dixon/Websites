@@ -184,33 +184,39 @@ section:last-child {
 /* ============================================
    HEADER STYLES - Theme Consistent
    ============================================ */
-/* Header styling - should now be consistent since blog page uses correct template */
+/* Header styling - consistent across all pages with workarounds for compatibility */
+header.site-header,
+header[class*="site-header"],
+header[role="banner"],
+body .site-header,
 .site-header {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2) !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1000 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
-/* Handle different header container structures */
+/* Handle different header container structures - workarounds for compatibility */
 .header-container,
 .header-inner,
-.site-header .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 var(--spacing-5);
+.site-header .container,
+.site-header > .container {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    padding: 0 var(--spacing-5) !important;
 }
 
 .header-content,
-.header-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--spacing-4) 0;
+.header-inner,
+.site-header .header-content {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: var(--spacing-4) 0 !important;
 }
 
 .site-logo,
@@ -297,30 +303,45 @@ nav.main-navigation .nav-cta {
     visibility: visible;
 }
 
-.main-navigation ul {
-    display: flex;
-    list-style: none;
-    gap: var(--spacing-6);
-    align-items: center;
-    margin: 0;
-    padding: 0;
+/* Navigation menu list - consistent across all pages */
+.main-navigation ul,
+.main-navigation > ul,
+#site-navigation ul,
+#site-navigation > ul,
+nav.main-navigation ul,
+nav.main-navigation > ul,
+.main-navigation .menu,
+#site-navigation .menu {
+    display: flex !important;
+    list-style: none !important;
+    gap: var(--spacing-6) !important;
+    align-items: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
-.main-navigation li {
-    margin: 0;
+.main-navigation li,
+#site-navigation li,
+nav.main-navigation li {
+    margin: 0 !important;
 }
 
-.main-navigation a {
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.95);
-    font-weight: 600;
-    font-size: var(--font-size-base);
-    padding: var(--spacing-2) var(--spacing-4);
-    border-radius: 8px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: inline-block;
-    position: relative;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+/* Navigation menu link styling - consistent across all pages */
+.main-navigation a,
+.main-navigation .menu a,
+#site-navigation a,
+nav.main-navigation a,
+nav.main-navigation .menu a {
+    text-decoration: none !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+    font-weight: 600 !important;
+    font-size: var(--font-size-base) !important;
+    padding: var(--spacing-2) var(--spacing-4) !important;
+    border-radius: 8px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    display: inline-block !important;
+    position: relative !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
 }
 
 .main-navigation a::before {
@@ -336,12 +357,18 @@ nav.main-navigation .nav-cta {
 }
 
 .main-navigation a:hover,
-.main-navigation a:focus {
-    color: var(--white);
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    transform: translateY(-1px);
+.main-navigation a:focus,
+.main-navigation .menu a:hover,
+.main-navigation .menu a:focus,
+#site-navigation a:hover,
+#site-navigation a:focus,
+nav.main-navigation a:hover,
+nav.main-navigation a:focus {
+    color: var(--white) !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important;
+    transform: translateY(-1px) !important;
 }
 
 .main-navigation a:hover::before,
@@ -349,16 +376,22 @@ nav.main-navigation .nav-cta {
     transform: scaleX(1);
 }
 
-/* Active/Current page styling */
+/* Active/Current page styling - consistent across all pages */
 .main-navigation .current-menu-item>a,
 .main-navigation .current_page_item>a,
-.main-navigation .current-menu-ancestor>a {
-    color: var(--white);
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    font-weight: 700;
-    border-bottom: 2px solid var(--white);
+.main-navigation .current-menu-ancestor>a,
+.main-navigation .menu .current-menu-item>a,
+.main-navigation .menu .current_page_item>a,
+#site-navigation .current-menu-item>a,
+#site-navigation .current_page_item>a,
+nav.main-navigation .current-menu-item>a,
+nav.main-navigation .current_page_item>a {
+    color: var(--white) !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important;
+    font-weight: 700 !important;
+    border-bottom: 2px solid var(--white) !important;
 }
 
 .main-navigation .current-menu-item>a::before,
