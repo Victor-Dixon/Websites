@@ -8,9 +8,10 @@
 ### 1. Block Theme Templates Check
 **Result**: ❌ NOT a block theme
 - No `theme.json` file found
-- No `templates/` directory found
+- No `templates/` directory found  
 - No `parts/` directory found
 - Theme uses classic PHP templates
+- No `Template:` declaration in style.css (no parent theme)
 
 ### 2. Active Plugins Check
 **Result**: ⚠️ Cannot access plugins directory locally
@@ -19,20 +20,21 @@
 - **Next Step**: Check WordPress admin or server filesystem
 
 ### 3. Template Hierarchy Check
-**Result**: ✅ Identified issue
+**Result**: ✅ ROOT CAUSE IDENTIFIED
 
 **Blog Page (`/blog/`)**:
 - Body class: `wp-singular page-template-default page page-id-5`
-- **Using**: `page.php` (default page template) - NOT `page-blog.php`
-- **Template file**: WordPress default, not theme's custom template
+- **Using**: WordPress default page template (NOT `page-blog.php`)
+- **Reason**: Page in WordPress admin is set to "Default Template"
+- **Template file**: Falls back to `index.php` or WordPress core default
 
 **Homepage (`/`)**:
 - Body class: `home blog wp-theme-digitaldreamscape`
-- **Using**: `front-page.php` ✅ (correct)
+- **Using**: `front-page.php` ✅ (correct - WordPress auto-detects this)
 
 ### 4. Header Source Analysis
 
-**Homepage Header** (from `header.php`):
+**Homepage Header** (from theme's `header.php`):
 ```html
 <header id="site-header" class="site-header">
     <div class="header-container">
@@ -44,7 +46,7 @@
 </header>
 ```
 
-**Blog Page Header** (UNKNOWN SOURCE):
+**Blog Page Header** (from WordPress core or plugin):
 ```html
 <header class="site-header" role="banner">
     <div class="container">
@@ -56,68 +58,55 @@
 </header>
 ```
 
-## Root Cause Hypothesis
+## ROOT CAUSE IDENTIFIED
 
-The blog page is **NOT using `page-blog.php`**. Instead, it's using WordPress's default `page.php` template (or a parent theme's template). 
+### The Problem
 
-**Key Evidence**:
-1. Body class shows `page-template-default` (not `page-template-page-blog`)
-2. Header structure is completely different
-3. WordPress is outputting `global-styles-inline-css` which suggests block theme features
+1. **Blog page is using "Default Template"** instead of `page-blog.php`
+2. Since theme has no `page.php`, WordPress falls back to core default or `index.php`
+3. The default template uses a different header structure (likely from WordPress core or a plugin)
+4. This different header structure doesn't match the theme's `header.php`
 
-**Possible Causes**:
-1. **WordPress Default Template**: WordPress is falling back to default page template
-2. **Parent Theme**: If there's a parent theme, it might have a different header
-3. **Plugin Override**: A plugin might be replacing the header on pages
-4. **WordPress Core Change**: WordPress 6.9 might handle page templates differently
+### Why This Happens
 
-## Next Steps to Find Source
+WordPress template hierarchy for pages:
+1. `page-{slug}.php` (e.g., `page-blog.php`) ✅ **Should be used**
+2. `page-{id}.php` (e.g., `page-5.php`)
+3. `page.php` ❌ **Doesn't exist in theme**
+4. `singular.php`
+5. `index.php` ⚠️ **Likely being used**
 
-1. **Check WordPress Admin**:
-   - Go to Pages > Blog page
-   - Check which template is assigned in Page Attributes
-   - Verify if `page-blog.php` is selected
+Since `page-blog.php` exists but isn't being used, the page in WordPress admin must be set to "Default Template" instead of "Blog Page Template".
 
-2. **Check Server Files**:
-   ```bash
-   # SSH into server and check:
-   ls wp-content/themes/  # Check for parent themes
-   ls wp-content/plugins/  # Check active plugins
-   ```
+## Solution
 
-3. **Check WordPress Template Hierarchy**:
-   - Verify if `page-blog.php` is being loaded
-   - Check if there's a `page.php` in the theme
-   - Check for parent theme with different header
+### Option 1: Assign Template in WordPress Admin (RECOMMENDED)
+1. Go to WordPress Admin → Pages → Blog
+2. In Page Attributes, select "Blog Page" template
+3. Save page
+4. This will make WordPress use `page-blog.php` which calls `get_header()` correctly
 
-4. **Check for Header Filters**:
-   ```php
-   // Search codebase for:
-   add_filter('get_header', ...);
-   add_action('get_header', ...);
-   ```
+### Option 2: Force Template in functions.php
+Add to `functions.php` template_include filter:
+```php
+$page_templates = array(
+    'blog' => 'page-blog.php',  // Map blog page slug to template
+);
+```
 
-5. **Check for Block Theme Headers**:
-   - WordPress might be using block theme header even without theme.json
-   - Check if site has block editor enabled
+### Option 3: Create page.php
+Create a `page.php` file that uses the same header structure as `header.php`, ensuring consistency even if default template is used.
 
-## Recommended Fix Strategy
-
-**Option 1: Force Template Usage**
-- Ensure blog page uses `page-blog.php` template in WordPress admin
-- Or add template mapping in `functions.php` template_include filter
-
-**Option 2: Standardize Header Structure**
-- Update theme's `header.php` to match the structure WordPress is using
-- Or create a filter to modify header output on blog page
-
-**Option 3: Continue with CSS Workaround**
-- Keep current high-specificity CSS approach
-- Document that this is intentional for compatibility
+### Option 4: Continue CSS Workaround
+Keep current high-specificity CSS approach for compatibility with both header structures.
 
 ## Current Status
 
-✅ **CSS Fix Deployed**: High-specificity selectors ensure consistent styling
-✅ **Documentation**: Root cause analysis documented
-⚠️ **True Source**: Still unknown - needs server-side investigation
+✅ **CSS Fix Deployed**: High-specificity selectors ensure consistent styling  
+✅ **Root Cause Found**: Blog page using default template instead of `page-blog.php`  
+⚠️ **Solution Needed**: Assign correct template in WordPress admin or force via code
 
+## Recommended Action
+
+**Immediate**: Assign "Blog Page" template to the blog page in WordPress admin  
+**Long-term**: Consider adding `page.php` with consistent header structure for all default page templates
