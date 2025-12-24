@@ -364,7 +364,7 @@ nav.main-navigation .nav-cta,
     overflow: hidden !important;
 }
 
-/* Navigation menu list - consistent across all pages */
+/* Navigation menu list - consistent across all pages - ULTRA SPECIFIC */
 .main-navigation ul,
 .main-navigation>ul,
 #site-navigation ul,
@@ -372,19 +372,138 @@ nav.main-navigation .nav-cta,
 nav.main-navigation ul,
 nav.main-navigation>ul,
 .main-navigation .menu,
-#site-navigation .menu {
+#site-navigation .menu,
+.site-header .main-navigation ul,
+.site-header nav ul,
+header .main-navigation ul,
+header nav ul,
+#site-header .main-navigation ul,
+#site-header nav ul,
+body .main-navigation ul,
+body .site-header nav ul,
+body header nav ul,
+.header-content .main-navigation ul,
+.header-content nav ul {
     display: flex !important;
+    flex-direction: row !important;
     list-style: none !important;
+    list-style-type: none !important;
     gap: var(--spacing-6) !important;
     align-items: center !important;
     margin: 0 !important;
     padding: 0 !important;
+    flex-wrap: nowrap !important;
+}
+
+/* Remove ALL bullet points from menu lists */
+.main-navigation ul li,
+.main-navigation>ul>li,
+#site-navigation ul li,
+nav.main-navigation ul li,
+.site-header .main-navigation ul li,
+.site-header nav ul li,
+header .main-navigation ul li,
+header nav ul li,
+#site-header .main-navigation ul li,
+#site-header nav ul li,
+body .main-navigation ul li,
+body .site-header nav ul li,
+body header nav ul li,
+.header-content .main-navigation ul li,
+.header-content nav ul li {
+    list-style: none !important;
+    list-style-type: none !important;
+    display: inline-block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Hide any ::marker pseudo-elements */
+.main-navigation ul li::marker,
+.main-navigation li::marker,
+#site-navigation ul li::marker,
+nav.main-navigation li::marker,
+.site-header nav li::marker,
+header nav li::marker {
+    content: none !important;
+    display: none !important;
+}
+
+/* Override any inherited list styles */
+.main-navigation ul,
+.main-navigation ol,
+#site-navigation ul,
+#site-navigation ol {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+    padding-inline-start: 0 !important;
+    margin-inline-start: 0 !important;
 }
 
 .main-navigation li,
 #site-navigation li,
 nav.main-navigation li {
     margin: 0 !important;
+}
+
+/* DESKTOP MENU - Force horizontal layout above mobile breakpoint */
+@media (min-width: 769px) {
+    .main-navigation,
+    #site-navigation,
+    nav.main-navigation {
+        display: flex !important;
+    }
+
+    .main-navigation ul,
+    .main-navigation>ul,
+    #site-navigation ul,
+    #site-navigation>ul,
+    nav.main-navigation ul,
+    nav.main-navigation>ul,
+    .site-header .main-navigation ul,
+    .site-header nav ul,
+    header .main-navigation ul,
+    header nav ul,
+    body .main-navigation ul {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        list-style: none !important;
+        list-style-type: none !important;
+        gap: var(--spacing-6) !important;
+        align-items: center !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        padding-left: 0 !important;
+    }
+
+    .main-navigation ul li,
+    #site-navigation ul li,
+    nav.main-navigation ul li,
+    .site-header nav ul li,
+    header nav ul li,
+    body .main-navigation ul li {
+        display: inline-flex !important;
+        list-style: none !important;
+        list-style-type: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .main-navigation ul li::before,
+    #site-navigation ul li::before,
+    nav.main-navigation ul li::before {
+        content: none !important;
+        display: none !important;
+    }
+
+    .main-navigation ul li::marker,
+    #site-navigation ul li::marker,
+    nav.main-navigation ul li::marker {
+        content: none !important;
+        display: none !important;
+        font-size: 0 !important;
+    }
 }
 
 /* Navigation menu link styling - consistent across all pages including homepage */
