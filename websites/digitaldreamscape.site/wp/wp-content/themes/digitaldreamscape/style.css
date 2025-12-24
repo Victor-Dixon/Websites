@@ -184,33 +184,69 @@ section:last-child {
 /* ============================================
    HEADER STYLES - Theme Consistent
    ============================================ */
+/* Target all possible header selectors to ensure consistent styling */
+/* Use high specificity to override any other rules */
+header.site-header,
+header[class*="site-header"],
+header[role="banner"],
+body .site-header,
+body.home .site-header,
+body.front-page .site-header,
+body.page-template-front-page .site-header,
 .site-header {
     background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%) !important;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2) !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1000 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
-.header-container {
+/* Handle different header container structures */
+.header-container,
+.header-inner,
+.site-header .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 var(--spacing-5);
 }
 
-.header-content {
+.header-content,
+.header-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: var(--spacing-4) 0;
 }
 
-.site-logo {
+.site-logo,
+.brand {
     display: flex;
     align-items: center;
+}
+
+.brand-text,
+.brand-name {
+    text-decoration: none;
+    color: var(--white) !important;
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    font-family: var(--font-heading);
+    transition: all 0.3s ease;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.brand:hover .brand-text,
+.brand:hover .brand-name,
+.brand-text:hover,
+.brand-name:hover {
+    color: var(--white) !important;
+    text-shadow: 0 2px 20px rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
 }
 
 .site-logo img {
@@ -228,6 +264,8 @@ section:last-child {
     font-family: var(--font-heading);
     transition: all 0.3s ease;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+    display: inline-block;
 }
 
 .logo-link:hover {
@@ -239,12 +277,28 @@ section:last-child {
 .logo-text {
     white-space: nowrap;
     display: inline-block;
+    word-break: keep-all;
+    hyphens: none;
 }
 
-/* Hide any direct children of navigation that aren't ul lists */
+/* Hide any direct children of navigation that aren't ul lists - ULTRA AGGRESSIVE */
+/* Target both main-navigation and nav classes */
 nav.main-navigation>*:not(ul),
+.main-navigation>*:not(ul#primary-menu):not(ul.menu),
 .main-navigation>div:not(#primary-menu):not(.menu),
-.main-navigation>span {
+.main-navigation>div:not(ul),
+.main-navigation>span,
+.main-navigation>section,
+.main-navigation>article,
+.main-navigation>aside,
+nav.nav>*:not(ul),
+.nav>*:not(ul#primary-menu):not(ul.menu),
+.nav>div.nav-cta,
+.nav>div:not(#primary-menu):not(.menu):not(ul),
+.nav>span,
+.nav>section,
+.nav>article,
+.nav>aside {
     display: none !important;
     visibility: hidden !important;
     height: 0 !important;
@@ -252,26 +306,48 @@ nav.main-navigation>*:not(ul),
     overflow: hidden !important;
     position: absolute !important;
     left: -9999px !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
 }
 
-/* Hide links containing "Watch Live" or "Read Episodes" text */
+/* Hide links containing "Watch Live" or "Read Episodes" text - more specific selectors */
+/* Target both main-navigation and nav classes */
 .main-navigation a[href*="watch"],
-.main-navigation a[href*="episode"]:not([href*="blog"]),
-.main-navigation a:contains("Watch Live"),
-.main-navigation a:contains("Read Episodes") {
+.main-navigation a[href*="watch-live"],
+.main-navigation a[href*="streaming"]:not([href*="blog"]),
+.main-navigation>*:not(ul) a,
+.main-navigation>div a,
+.main-navigation>span a,
+.nav a[href*="watch"],
+.nav a[href*="watch-live"],
+.nav>div.nav-cta a,
+.nav>*:not(ul) a,
+.nav>div a:not(.menu a):not(#primary-menu a),
+.nav>span a {
     display: none !important;
     visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    overflow: hidden !important;
+    position: absolute !important;
+    left: -9999px !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
 }
 
 /* Ensure only ul menu lists are visible */
 nav.main-navigation>ul#primary-menu,
 nav.main-navigation>ul.menu,
-.main-navigation>ul {
+.main-navigation>ul,
+nav.nav>ul#primary-menu,
+nav.nav>ul.menu,
+.nav>ul {
     display: flex !important;
     visibility: visible !important;
 }
 
-.main-navigation ul {
+.main-navigation ul,
+.nav ul {
     display: flex;
     list-style: none;
     gap: var(--spacing-6);
@@ -280,11 +356,13 @@ nav.main-navigation>ul.menu,
     padding: 0;
 }
 
-.main-navigation li {
+.main-navigation li,
+.nav li {
     margin: 0;
 }
 
-.main-navigation a {
+.main-navigation a,
+.nav a {
     text-decoration: none;
     color: rgba(255, 255, 255, 0.95);
     font-weight: 600;
@@ -297,7 +375,8 @@ nav.main-navigation>ul.menu,
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-.main-navigation a::before {
+.main-navigation a::before,
+.nav a::before {
     content: '';
     position: absolute;
     bottom: 0;
@@ -311,19 +390,46 @@ nav.main-navigation>ul.menu,
 
 .main-navigation a:hover,
 .main-navigation a:focus,
-.main-navigation .current-menu-item>a,
-.main-navigation .current_page_item>a {
+.nav a:hover,
+.nav a:focus {
     color: var(--white);
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
+    transform: translateY(-1px);
 }
 
 .main-navigation a:hover::before,
 .main-navigation a:focus::before,
-.main-navigation .current-menu-item>a::before,
-.main-navigation .current_page_item>a::before {
+.nav a:hover::before,
+.nav a:focus::before {
     transform: scaleX(1);
+}
+
+/* Active/Current page styling */
+.main-navigation .current-menu-item>a,
+.main-navigation .current_page_item>a,
+.main-navigation .current-menu-ancestor>a,
+.nav .current-menu-item>a,
+.nav .current_page_item>a,
+.nav .current-menu-ancestor>a {
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    font-weight: 700;
+    border-bottom: 2px solid var(--white);
+}
+
+.main-navigation .current-menu-item>a::before,
+.main-navigation .current_page_item>a::before,
+.main-navigation .current-menu-ancestor>a::before,
+.nav .current-menu-item>a::before,
+.nav .current_page_item>a::before,
+.nav .current-menu-ancestor>a::before {
+    transform: scaleX(1);
+    background: var(--white);
+    opacity: 0.8;
 }
 
 .mobile-menu-toggle {
@@ -2468,6 +2574,9 @@ body {
 
 .hero-title-line {
     display: block;
+    white-space: nowrap;
+    word-break: normal;
+    hyphens: none;
 }
 
 .hero-subtitle {
@@ -2550,8 +2659,10 @@ body {
     color: var(--secondary-color);
     font-family: var(--font-heading);
     letter-spacing: -0.02em;
-    word-break: keep-all;
+    word-break: normal;
     white-space: normal;
+    hyphens: none;
+    overflow-wrap: normal;
 }
 
 .featured-grid {

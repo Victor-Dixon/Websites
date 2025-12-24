@@ -50,10 +50,10 @@ add_action('after_setup_theme', 'digitaldreamscape_setup');
 function digitaldreamscape_scripts()
 {
     // Enqueue theme stylesheet with cache busting
-    wp_enqueue_style('digitaldreamscape-style', get_stylesheet_uri(), array(), '2.0.2');
+    wp_enqueue_style('digitaldreamscape-style', get_stylesheet_uri(), array(), '2.0.3');
 
     // Enqueue theme JavaScript (load in footer for better performance)
-    wp_enqueue_script('digitaldreamscape-script', get_template_directory_uri() . '/js/main.js', array('jquery'), '2.0.1', true);
+    wp_enqueue_script('digitaldreamscape-script', get_template_directory_uri() . '/js/main.js', array(), '2.0.3', true);
 
     // Add Digital Dreamscape context to page
     wp_localize_script('digitaldreamscape-script', 'dreamscapeContext', array(
@@ -336,3 +336,119 @@ function digitaldreamscape_default_menu()
     </ul>
 <?php
 }
+
+/**
+ * Remove extra menu items that might be added by plugins or filters
+ * This filters the menu objects before HTML generation
+ */
+function digitaldreamscape_clean_nav_menu_objects($items, $args)
+{
+    // Only process primary menu
+    if ($args->theme_location !== 'primary') {
+        return $items;
+    }
+
+    // Remove any menu items containing "Watch Live" or "Read Episodes"
+    if (!empty($items)) {
+        foreach ($items as $key => $item) {
+            $title = strtolower($item->title);
+            if (
+                strpos($title, 'watch live') !== false ||
+                (strpos($title, 'read epi') !== false && strpos($title, 'blog') === false)
+            ) {
+                unset($items[$key]);
+            }
+        }
+    }
+
+    return $items;
+}
+add_filter('wp_nav_menu_objects', 'digitaldreamscape_clean_nav_menu_objects', 999, 2);
+
+/**
+ * Remove extra menu items from HTML output
+ * This filters the final HTML string after menu is rendered
+ */
+function digitaldreamscape_clean_nav_menu_html($nav_menu, $args)
+{
+    // Only process primary menu
+    if (!isset($args->theme_location) || $args->theme_location !== 'primary') {
+        return $nav_menu;
+    }
+
+    // Use DOMDocument to parse and clean the HTML
+    if (class_exists('DOMDocument')) {
+        libxml_use_internal_errors(true);
+        $dom = new DOMDocument();
+        $dom->loadHTML('<?xml encoding="utf-8" ?>' . $nav_menu, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        libxml_clear_errors();
+
+        $xpath = new DOMXPath($dom);
+
+        // Find and remove links containing "Watch Live" or "Read Episodes"
+        $links_to_remove = $xpath->query("//a[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'watch live') or contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'read epi')]");
+
+        foreach ($links_to_remove as $link) {
+            // Make sure we don't remove "Read the Blog"
+            $linkText = strtolower(trim($link->textContent));
+            if (strpos($linkText, 'read epi') !== false && strpos($linkText, 'blog') === false) {
+                $parent = $link->parentNode;
+                if ($parent && $parent->tagName === 'li') {
+                    $parent->parentNode->removeChild($parent);
+                } elseif ($parent) {
+                    // If parent is not li, remove the link itself
+                    $parent->removeChild($link);
+                }
+            } elseif (strpos($linkText, 'watch live') !== false) {
+                $parent = $link->parentNode;
+                if ($parent && $parent->tagName === 'li') {
+                    $parent->parentNode->removeChild($parent);
+                } elseif ($parent) {
+                    $parent->removeChild($link);
+                }
+            }
+        }
+
+        // Remove any direct children of nav that aren't ul elements
+        // Try both 'main-navigation' and 'nav' classes
+        $nav = $xpath->query("//nav[contains(@class, 'main-navigation') or contains(@class, 'nav')]")->item(0);
+        if ($nav) {
+            $children = $xpath->query("./*", $nav);
+            foreach ($children as $child) {
+                // Remove nav-cta div and any other non-ul elements
+                if (
+                    $child->tagName !== 'ul' || $child->getAttribute('class') === 'nav-cta' ||
+                    ($child->tagName === 'div' && $child->getAttribute('class') === 'nav-cta')
+                ) {
+                    $nav->removeChild($child);
+                }
+            }
+        }
+
+        // Also specifically target and remove nav-cta divs
+        $nav_cta_divs = $xpath->query("//div[contains(@class, 'nav-cta')]");
+        foreach ($nav_cta_divs as $div) {
+            $parent = $div->parentNode;
+            if ($parent && ($parent->tagName === 'nav' || strpos($parent->getAttribute('class'), 'nav') !== false)) {
+                $parent->removeChild($div);
+            }
+        }
+
+        // Get the cleaned HTML
+        $cleaned = $dom->saveHTML();
+        return $cleaned ? $cleaned : $nav_menu;
+    }
+
+    // Fallback: Use regex to remove unwanted items (less reliable but works if DOMDocument fails)
+    // Remove nav-cta divs
+    $nav_menu = preg_replace('/<div[^>]*class="[^"]*nav-cta[^"]*"[^>]*>.*?<\/div>/is', '', $nav_menu);
+    // Remove specific links
+    $nav_menu = preg_replace(
+        '/<li[^>]*>.*?<a[^>]*>.*?(?:Watch Live|Read Episodes?)(?!.*Blog).*?<\/a>.*?<\/li>/is',
+        '',
+        $nav_menu
+    );
+
+    return $nav_menu;
+}
+add_filter('wp_nav_menu', 'digitaldreamscape_clean_nav_menu_html', 999, 2);
