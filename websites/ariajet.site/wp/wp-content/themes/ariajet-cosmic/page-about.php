@@ -57,13 +57,17 @@ get_header();
 </main>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@500;600&display=swap');
+
 .page-about-template .page-content {
     padding: 0;
 }
 .page-about-template .about-hero {
     padding: var(--space-12) var(--space-10) var(--space-10);
     text-align: center;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.55) 0%, rgba(118, 75, 162, 0.55) 100%);
+    background:
+        radial-gradient(900px 260px at 50% 0%, rgba(0, 255, 209, 0.28), transparent 65%),
+        linear-gradient(135deg, rgba(124, 92, 255, 0.72) 0%, rgba(255, 77, 196, 0.58) 45%, rgba(0, 255, 209, 0.48) 100%);
 }
 .page-about-template .about-eyebrow {
     margin: 0 0 var(--space-3);
@@ -72,17 +76,21 @@ get_header();
     text-transform: uppercase;
     font-weight: 600;
     font-size: 0.85rem;
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 .page-about-template .about-title {
     margin: 0;
     font-size: 2.4rem;
     line-height: 1.12;
+    font-family: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    letter-spacing: -0.02em;
 }
 .page-about-template .about-tagline {
     margin: var(--space-4) auto 0;
     max-width: 60ch;
     font-size: 1.05rem;
     opacity: 0.92;
+    font-family: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
 .page-about-template .about-body {
     display: grid;
@@ -104,9 +112,21 @@ get_header();
 }
 .page-about-template .about-content {
     max-width: 75ch;
+    color: rgba(255, 255, 255, 0.92);
+    font-family: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.75;
 }
 .page-about-template .about-content > *:first-child {
     margin-top: 0;
+}
+.page-about-template .about-content a {
+    color: rgba(0, 255, 209, 0.95);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0, 255, 209, 0.35);
+}
+.page-about-template .about-content a:hover {
+    border-bottom-color: rgba(0, 255, 209, 0.7);
 }
 .page-about-template .about-cta {
     grid-column: 1 / -1;
@@ -121,8 +141,10 @@ get_header();
     text-decoration: none;
     font-weight: 600;
     background: rgba(255, 255, 255, 0.92);
-    color: rgba(55, 61, 180, 1);
+    color: rgba(10, 12, 25, 0.96);
     border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 14px 30px rgba(0, 255, 209, 0.18);
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 .page-about-template .about-button:hover {
     transform: translateY(-1px);

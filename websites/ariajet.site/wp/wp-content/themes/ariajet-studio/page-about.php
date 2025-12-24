@@ -59,6 +59,8 @@ get_header();
 </main>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@500;600&display=swap');
+
 .page-about-template {
     padding: 20px 0 60px;
 }
@@ -66,15 +68,37 @@ get_header();
     max-width: 1100px;
 }
 .page-about-template .about-card {
+    position: relative;
     border-radius: 24px;
     overflow: hidden;
     border: 1px solid var(--border);
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.10) 0%, rgba(118, 75, 162, 0.08) 100%);
+    background:
+        radial-gradient(1100px 450px at 10% 0%, rgba(0, 255, 209, 0.12), transparent 55%),
+        radial-gradient(900px 450px at 95% 15%, rgba(255, 77, 196, 0.12), transparent 60%),
+        radial-gradient(800px 550px at 40% 120%, rgba(124, 92, 255, 0.18), transparent 60%),
+        linear-gradient(135deg, rgba(10, 12, 25, 0.92) 0%, rgba(18, 9, 31, 0.90) 100%);
+}
+.page-about-template .about-card::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    pointer-events: none;
+    background:
+        radial-gradient(1px 1px at 12% 20%, rgba(255,255,255,0.9), rgba(255,255,255,0)),
+        radial-gradient(1px 1px at 22% 55%, rgba(255,255,255,0.8), rgba(255,255,255,0)),
+        radial-gradient(1px 1px at 35% 35%, rgba(255,255,255,0.7), rgba(255,255,255,0)),
+        radial-gradient(1px 1px at 55% 30%, rgba(255,255,255,0.75), rgba(255,255,255,0)),
+        radial-gradient(1px 1px at 78% 22%, rgba(255,255,255,0.9), rgba(255,255,255,0)),
+        radial-gradient(1px 1px at 88% 62%, rgba(255,255,255,0.8), rgba(255,255,255,0));
+    opacity: 0.55;
+    mix-blend-mode: screen;
 }
 .page-about-template .about-hero {
     padding: var(--space-12) var(--space-10) var(--space-10);
     text-align: center;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.55) 0%, rgba(118, 75, 162, 0.55) 100%);
+    background:
+        radial-gradient(900px 260px at 50% 0%, rgba(0, 255, 209, 0.30), transparent 65%),
+        linear-gradient(135deg, rgba(124, 92, 255, 0.72) 0%, rgba(255, 77, 196, 0.58) 45%, rgba(0, 255, 209, 0.48) 100%);
     color: var(--white);
 }
 .page-about-template .about-eyebrow {
@@ -84,20 +108,26 @@ get_header();
     text-transform: uppercase;
     font-weight: 600;
     font-size: 0.85rem;
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 .page-about-template .about-title {
     margin: 0;
     font-size: 2.4rem;
     line-height: 1.12;
     color: var(--white);
+    font-family: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    letter-spacing: -0.02em;
 }
 .page-about-template .about-tagline {
     margin: var(--space-4) auto 0;
     max-width: 60ch;
     font-size: 1.05rem;
     opacity: 0.92;
+    font-family: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
 .page-about-template .about-body {
+    position: relative;
+    z-index: 1;
     display: grid;
     grid-template-columns: 320px 1fr;
     gap: var(--space-8);
@@ -117,9 +147,21 @@ get_header();
 }
 .page-about-template .about-content {
     max-width: 75ch;
+    color: rgba(255, 255, 255, 0.92);
+    font-family: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.75;
 }
 .page-about-template .about-content > *:first-child {
     margin-top: 0;
+}
+.page-about-template .about-content a {
+    color: rgba(0, 255, 209, 0.95);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0, 255, 209, 0.35);
+}
+.page-about-template .about-content a:hover {
+    border-bottom-color: rgba(0, 255, 209, 0.7);
 }
 .page-about-template .about-cta {
     grid-column: 1 / -1;
@@ -133,9 +175,11 @@ get_header();
     border-radius: 999px;
     text-decoration: none;
     font-weight: 600;
-    background: var(--white);
-    color: #3b4cca;
-    border: 1px solid rgba(0,0,0,0.06);
+    background: linear-gradient(135deg, rgba(0, 255, 209, 0.95) 0%, rgba(124, 92, 255, 0.92) 100%);
+    color: rgba(10, 12, 25, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 14px 30px rgba(0, 255, 209, 0.18);
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 .page-about-template .about-button:hover {
     transform: translateY(-1px);
