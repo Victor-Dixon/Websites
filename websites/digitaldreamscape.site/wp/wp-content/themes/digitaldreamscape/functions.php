@@ -49,8 +49,8 @@ add_action('after_setup_theme', 'digitaldreamscape_setup');
  */
 function digitaldreamscape_scripts()
 {
-    // Enqueue theme stylesheet
-    wp_enqueue_style('digitaldreamscape-style', get_stylesheet_uri(), array(), '2.0.1');
+    // Enqueue theme stylesheet with cache busting
+    wp_enqueue_style('digitaldreamscape-style', get_stylesheet_uri(), array(), '2.0.2');
 
     // Enqueue theme JavaScript (load in footer for better performance)
     wp_enqueue_script('digitaldreamscape-script', get_template_directory_uri() . '/js/main.js', array('jquery'), '2.0.1', true);
