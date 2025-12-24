@@ -64,12 +64,18 @@ def deploy_digitaldreamscape_theme():
     site_name = "digitaldreamscape.site"
     site_key = "digitaldreamscape"
 
-    # Files to deploy - Homepage styling and fixes
+    # Files to deploy - ALL theme files to ensure consistent headers
     files_to_deploy = [
         "wp/wp-content/themes/digitaldreamscape/style.css",
         "wp/wp-content/themes/digitaldreamscape/functions.php",
         "wp/wp-content/themes/digitaldreamscape/header.php",
+        "wp/wp-content/themes/digitaldreamscape/footer.php",
         "wp/wp-content/themes/digitaldreamscape/front-page.php",
+        "wp/wp-content/themes/digitaldreamscape/index.php",
+        "wp/wp-content/themes/digitaldreamscape/page-blog.php",
+        "wp/wp-content/themes/digitaldreamscape/single.php",
+        "wp/wp-content/themes/digitaldreamscape/archive.php",
+        "wp/wp-content/themes/digitaldreamscape/page-streaming.php",
         "wp/wp-content/themes/digitaldreamscape/js/main.js"
     ]
 

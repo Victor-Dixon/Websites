@@ -68,11 +68,12 @@ add_action('wp_enqueue_scripts', 'digitaldreamscape_scripts');
  * Render Unified Subheader Strip
  * Consistent tagline + context indicator across all pages
  */
-function digitaldreamscape_unified_subheader() {
+function digitaldreamscape_unified_subheader()
+{
     // Determine context based on page type
     $context = '';
     $context_badge = '';
-    
+
     if (is_front_page() || is_home()) {
         $context = 'Command Hub';
         $context_badge = '[COMMAND HUB]';
@@ -86,8 +87,8 @@ function digitaldreamscape_unified_subheader() {
         $context = 'Command Hub';
         $context_badge = '[COMMAND HUB]';
     }
-    
-    ?>
+
+?>
     <div class="unified-subheader">
         <div class="subheader-container">
             <div class="subheader-content">
@@ -101,11 +102,11 @@ function digitaldreamscape_unified_subheader() {
             </div>
         </div>
     </div>
-    <?php
+<?php
 }
 // Hook into wp_footer with early priority, but we'll manually call it after header
 // This ensures it appears right after the header
-add_action('wp_footer', function() {
+add_action('wp_footer', function () {
     // Only output if not already displayed
     if (!did_action('digitaldreamscape_subheader_displayed')) {
         digitaldreamscape_unified_subheader();
