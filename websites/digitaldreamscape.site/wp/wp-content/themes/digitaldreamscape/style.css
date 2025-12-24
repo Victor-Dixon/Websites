@@ -241,28 +241,34 @@ section:last-child {
     display: inline-block;
 }
 
-/* Hide any direct children of navigation that aren't ul lists - more aggressive */
-.main-navigation>*:not(ul) {
+/* Hide any direct children of navigation that aren't ul lists */
+nav.main-navigation>*:not(ul),
+.main-navigation>div:not(#primary-menu):not(.menu),
+.main-navigation>span {
     display: none !important;
     visibility: hidden !important;
-    opacity: 0 !important;
     height: 0 !important;
+    width: 0 !important;
     overflow: hidden !important;
+    position: absolute !important;
+    left: -9999px !important;
 }
 
-/* Hide any nested elements inside non-ul children */
-.main-navigation>div:not(ul),
-.main-navigation>span:not(ul),
-.main-navigation>*:not(ul) a {
+/* Hide links containing "Watch Live" or "Read Episodes" text */
+.main-navigation a[href*="watch"],
+.main-navigation a[href*="episode"]:not([href*="blog"]),
+.main-navigation a:contains("Watch Live"),
+.main-navigation a:contains("Read Episodes") {
     display: none !important;
+    visibility: hidden !important;
 }
 
 /* Ensure only ul menu lists are visible */
-.main-navigation>ul#primary-menu,
-.main-navigation>ul.menu {
+nav.main-navigation>ul#primary-menu,
+nav.main-navigation>ul.menu,
+.main-navigation>ul {
     display: flex !important;
     visibility: visible !important;
-    opacity: 1 !important;
 }
 
 .main-navigation ul {
