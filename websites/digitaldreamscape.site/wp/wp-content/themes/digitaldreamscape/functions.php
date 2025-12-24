@@ -45,15 +45,15 @@ function digitaldreamscape_setup()
 add_action('after_setup_theme', 'digitaldreamscape_setup');
 
 /**
- * Enqueue Styles and Scripts
+ * Enqueue Styles and Scripts with Performance Optimizations
  */
 function digitaldreamscape_scripts()
 {
     // Enqueue theme stylesheet
-    wp_enqueue_style('digitaldreamscape-style', get_stylesheet_uri(), array(), '2.0.0');
+    wp_enqueue_style('digitaldreamscape-style', get_stylesheet_uri(), array(), '2.0.1');
 
-    // Enqueue theme JavaScript
-    wp_enqueue_script('digitaldreamscape-script', get_template_directory_uri() . '/js/main.js', array('jquery'), '2.0.0', true);
+    // Enqueue theme JavaScript (load in footer for better performance)
+    wp_enqueue_script('digitaldreamscape-script', get_template_directory_uri() . '/js/main.js', array('jquery'), '2.0.1', true);
 
     // Add Digital Dreamscape context to page
     wp_localize_script('digitaldreamscape-script', 'dreamscapeContext', array(
@@ -63,6 +63,50 @@ function digitaldreamscape_scripts()
     ));
 }
 add_action('wp_enqueue_scripts', 'digitaldreamscape_scripts');
+
+/**
+ * Performance Optimizations
+ */
+
+// Lazy load images (native WordPress support for WordPress 5.5+)
+function digitaldreamscape_lazy_load_images($attr, $attachment, $size)
+{
+    if (!is_admin()) {
+        $attr['loading'] = 'lazy';
+        $attr['decoding'] = 'async';
+    }
+    return $attr;
+}
+add_filter('wp_get_attachment_image_attributes', 'digitaldreamscape_lazy_load_images', 10, 3);
+
+// Remove unnecessary WordPress features for better performance
+function digitaldreamscape_performance_cleanup()
+{
+    // Remove emoji scripts
+    remove_action('wp_head', 'print_emoji_detection_script', 7);
+    remove_action('wp_print_styles', 'print_emoji_styles');
+    
+    // Remove unnecessary RSS feed links
+    remove_action('wp_head', 'rsd_link');
+    remove_action('wp_head', 'wlwmanifest_link');
+    remove_action('wp_head', 'wp_generator');
+    
+    // Remove shortlink
+    remove_action('wp_head', 'wp_shortlink_wp_head');
+}
+add_action('init', 'digitaldreamscape_performance_cleanup');
+
+// Optimize WordPress queries
+function digitaldreamscape_optimize_queries($query)
+{
+    if (!is_admin() && $query->is_main_query()) {
+        // Limit post queries to improve performance
+        if (is_home() || is_archive()) {
+            $query->set('posts_per_page', 12);
+        }
+    }
+}
+add_action('pre_get_posts', 'digitaldreamscape_optimize_queries');
 
 /**
  * Register Widget Areas
@@ -82,16 +126,98 @@ function digitaldreamscape_widgets_init()
 add_action('widgets_init', 'digitaldreamscape_widgets_init');
 
 /**
- * Add Digital Dreamscape meta description to posts
+ * Enhanced SEO Meta Tags
  */
-function digitaldreamscape_post_meta_description()
+function digitaldreamscape_seo_meta_tags()
 {
-    if (is_single()) {
-        $description = 'Digital Dreamscape is a living, narrative-driven AI world where real actions become story, and story feeds back into execution. This episode is part of the persistent simulation of self + system.';
-        echo '<meta name="description" content="' . esc_attr($description) . '">';
+    // Get site name and description
+    $site_name = get_bloginfo('name');
+    $site_description = get_bloginfo('description');
+    
+    if (is_single() || is_page()) {
+        global $post;
+        $title = get_the_title();
+        $excerpt = has_excerpt() ? get_the_excerpt() : wp_trim_words(get_the_content(), 30);
+        $url = get_permalink();
+        $image = has_post_thumbnail() ? get_the_post_thumbnail_url($post->ID, 'large') : '';
+    } elseif (is_home() || is_front_page()) {
+        $title = $site_name;
+        $excerpt = $site_description ? $site_description : 'Build-in-public & streaming hub for Digital Dreamscape. Watch live streams, read updates, and be part of the community.';
+        $url = home_url('/');
+        $image = '';
+    } else {
+        $title = wp_get_document_title();
+        $excerpt = $site_description ? $site_description : 'Digital Dreamscape is a living, narrative-driven AI world where real actions become story, and story feeds back into execution.';
+        $url = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $image = '';
+    }
+    
+    // Meta description
+    echo '<meta name="description" content="' . esc_attr($excerpt) . '">' . "\n";
+    
+    // Open Graph Meta Tags
+    echo '<meta property="og:title" content="' . esc_attr($title) . '">' . "\n";
+    echo '<meta property="og:description" content="' . esc_attr($excerpt) . '">' . "\n";
+    echo '<meta property="og:url" content="' . esc_url($url) . '">' . "\n";
+    echo '<meta property="og:type" content="' . (is_single() ? 'article' : 'website') . '">' . "\n";
+    echo '<meta property="og:site_name" content="' . esc_attr($site_name) . '">' . "\n";
+    if ($image) {
+        echo '<meta property="og:image" content="' . esc_url($image) . '">' . "\n";
+    }
+    
+    // Twitter Card Meta Tags
+    echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
+    echo '<meta name="twitter:title" content="' . esc_attr($title) . '">' . "\n";
+    echo '<meta name="twitter:description" content="' . esc_attr($excerpt) . '">' . "\n";
+    if ($image) {
+        echo '<meta name="twitter:image" content="' . esc_url($image) . '">' . "\n";
     }
 }
-add_action('wp_head', 'digitaldreamscape_post_meta_description');
+add_action('wp_head', 'digitaldreamscape_seo_meta_tags', 1);
+
+/**
+ * Add structured data (JSON-LD) for better SEO
+ */
+function digitaldreamscape_structured_data()
+{
+    if (is_single()) {
+        global $post;
+        $schema = array(
+            '@context' => 'https://schema.org',
+            '@type' => 'BlogPosting',
+            'headline' => get_the_title(),
+            'description' => has_excerpt() ? get_the_excerpt() : wp_trim_words(get_the_content(), 30),
+            'datePublished' => get_the_date('c'),
+            'dateModified' => get_the_modified_date('c'),
+            'author' => array(
+                '@type' => 'Person',
+                'name' => get_the_author(),
+            ),
+            'publisher' => array(
+                '@type' => 'Organization',
+                'name' => get_bloginfo('name'),
+                'url' => home_url('/'),
+            ),
+        );
+        
+        if (has_post_thumbnail()) {
+            $schema['image'] = get_the_post_thumbnail_url($post->ID, 'large');
+        }
+        
+        echo '<script type="application/ld+json">' . wp_json_encode($schema, JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
+    } elseif (is_home() || is_front_page()) {
+        $schema = array(
+            '@context' => 'https://schema.org',
+            '@type' => 'WebSite',
+            'name' => get_bloginfo('name'),
+            'url' => home_url('/'),
+            'description' => get_bloginfo('description') ? get_bloginfo('description') : 'Build-in-public & streaming hub for Digital Dreamscape',
+        );
+        
+        echo '<script type="application/ld+json">' . wp_json_encode($schema, JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
+    }
+}
+add_action('wp_head', 'digitaldreamscape_structured_data', 2);
 
 
 /**
