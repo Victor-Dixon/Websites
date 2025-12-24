@@ -11,7 +11,7 @@ $template_path = get_template_directory() . '/page-templates/page-contact.php';
 if (file_exists($template_path)) {
     // Include the template directly - it handles header/footer
     include($template_path);
-    exit; // Prevent WordPress from loading default page template
+    return; // Prevent WordPress from loading default page template
 } else {
     // Fallback: Display basic contact info
     get_header();

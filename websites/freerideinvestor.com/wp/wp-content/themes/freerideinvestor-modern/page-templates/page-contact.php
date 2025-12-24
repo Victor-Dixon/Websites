@@ -1,15 +1,14 @@
 <?php
 /**
- * Template Name: Custom Contact Page
+ * Template Name: Contact
+ * Template Post Type: page
  * Description: A fully redesigned Contact page template with enhanced design, layout, and functionality, including Discord integration.
  */
 
 get_header();
 ?>
 
-<main id="main-content" class="site-main">
-  
-  <!-- Hero Section -->
+<!-- Hero Section -->
   <section class="hero blog-hero" aria-labelledby="contact-hero-heading">
     <div class="hero-content">
       <h1 id="contact-hero-heading" class="hero-title"><?php esc_html_e('Get in Touch with Us', 'simplifiedtradingtheme'); ?></h1>
@@ -307,6 +306,5 @@ get_header();
       </div>
     </div>
   </div>
-</main>
 
 <?php get_footer(); ?>

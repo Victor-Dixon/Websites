@@ -201,9 +201,20 @@ function freerideinvestor_menu_js_styled() {
             // Find navigation element - matches theme .main-nav class
             const navElements = document.querySelectorAll('.main-nav, nav.main-nav, [role="navigation"]');
             
-            if (toggleButtons.length === 0 || navElements.length === 0) {
-                console.warn('Menu toggle button or nav element not found');
-                return;
+            // Setup handlers if elements found, otherwise try alternative selectors
+            if (toggleButtons.length > 0 && navElements.length > 0) {
+                // Elements found, proceed with setup
+            } else {
+                // Try alternative selectors as fallback
+                const altToggle = document.querySelector('button[aria-label*="Toggle" i], button[aria-label*="menu" i]');
+                const altNav = document.querySelector('nav, [role="navigation"]');
+                if (altToggle && altNav) {
+                    toggleButtons = [altToggle];
+                    navElements = [altNav];
+                } else {
+                    // Silently return - menu may be CSS-only or handled by theme
+                    return;
+                }
             }
             
             // Add click handlers to toggle buttons
