@@ -60,7 +60,7 @@
         navCtaDivs.forEach(function (div) {
             // Check if this div contains "Watch Live" or "Read Episodes"
             var divText = div.textContent.trim().toLowerCase();
-            if (divText.includes('watch live') || 
+            if (divText.includes('watch live') ||
                 (divText.includes('read epi') && !divText.includes('read the blog'))) {
                 // Immediately hide
                 div.style.setProperty('display', 'none', 'important');
@@ -72,7 +72,7 @@
                 div.style.setProperty('left', '-9999px', 'important');
                 div.style.setProperty('opacity', '0', 'important');
                 div.style.setProperty('pointer-events', 'none', 'important');
-                
+
                 // Force remove
                 setTimeout(function () {
                     try {
@@ -152,8 +152,8 @@
                 (text.includes('read epi') && !text.includes('read the blog'))) {
                 var parent = textNode.parentNode;
                 // Remove ANY parent that contains this text, unless it's a valid menu item
-                if (parent && parent.tagName !== 'LI' && 
-                    !parent.classList.contains('menu-item') && 
+                if (parent && parent.tagName !== 'LI' &&
+                    !parent.classList.contains('menu-item') &&
                     !parent.classList.contains('menu') &&
                     parent.id !== 'primary-menu') {
                     nodesToRemove.push(parent);
@@ -172,7 +172,7 @@
             node.style.setProperty('line-height', '0', 'important');
             node.style.setProperty('padding', '0', 'important');
             node.style.setProperty('margin', '0', 'important');
-            
+
             // Force remove immediately
             setTimeout(function () {
                 try {

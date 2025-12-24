@@ -36,7 +36,15 @@ def main():
     # Load site configs and initialize deployer
     site_configs = load_site_configs()
     site_key = "digitaldreamscape.site"
+    
+    if site_key not in site_configs:
+        print(f"❌ Site config not found for {site_key}")
+        return
+    
     deployer = SimpleWordPressDeployer(site_key=site_key, site_configs=site_configs)
+    if not deployer.connect():
+        print("❌ Could not connect to server")
+        return
     
     # Site configuration
     site_domain = "digitaldreamscape.site"
@@ -58,25 +66,46 @@ def main():
     # Deploy to functions.php
     print(f"🔧 Deploying unified styling system to functions.php...")
     try:
-        remote_base = deployer.remote_path or f"/home/u996867598/domains/{site_key}/public_html"
+        remote_base = site_configs[site_key].get('sftp', {}).get('remote_path', 
+            f'domains/{site_key}/public_html')
         if not remote_base.startswith('/'):
-            remote_base = f"/home/u996867598/{remote_base}"
+            username = site_configs[site_key].get('sftp', {}).get('username', 'u996867598')
+            remote_base = f"/home/{username}/{remote_base}"
         
-        remote_functions = f"{remote_base}/wp-content/themes/digitaldreamscape/functions.php"
+        theme_path_remote = f"{remote_base}/wp-content/themes/digitaldreamscape"
+        functions_file_remote = f"{theme_path_remote}/functions.php"
         
         # Read current functions.php
         print(f"   📄 Reading current functions.php...")
-        current_content = deployer.sftp_client.open(remote_functions, 'r').read().decode('utf-8')
+        command = f"cat {functions_file_remote}"
+        current_functions = deployer.execute_command(command)
+        if not current_functions:
+            print("   ⚠️  Could not read functions.php, will append")
+            current_functions = ""
         
         # Check if already added
-        if 'digitaldreamscape_unified_subheader' in current_content:
+        if 'digitaldreamscape_unified_subheader' in current_functions:
             print(f"   ⚠️  Unified styling system already exists - skipping")
         else:
             # Append the fix
             print(f"   ➕ Appending unified styling system...")
-            new_content = current_content + "\n\n" + fix_content
-            deployer.sftp_client.putfo(__import__('io').StringIO(new_content), remote_functions)
-            print(f"   ✅ Unified styling system deployed successfully")
+            updated_functions = current_functions
+            if not updated_functions.endswith("\n"):
+                updated_functions += "\n"
+            updated_functions += "\n" + fix_content + "\n"
+            
+            # Write to temp file and deploy
+            import tempfile
+            with tempfile.NamedTemporaryFile(mode='w', suffix='.php', delete=False, encoding='utf-8') as tmp_file:
+                tmp_file.write(updated_functions)
+                tmp_path = Path(tmp_file.name)
+            
+            if deployer.deploy_file(tmp_path, functions_file_remote):
+                print(f"   ✅ Unified styling system deployed successfully")
+                tmp_path.unlink()  # Clean up temp file
+            else:
+                print(f"   ❌ Deployment failed")
+                return
     except Exception as e:
         print(f"   ❌ Deployment failed: {e}")
         import traceback
@@ -105,6 +134,8 @@ def main():
     print("   4. Verify card styling is consistent")
     print("   5. Clear browser cache (Ctrl+F5) if needed")
     print()
+    
+    deployer.disconnect()
 
 if __name__ == "__main__":
     main()

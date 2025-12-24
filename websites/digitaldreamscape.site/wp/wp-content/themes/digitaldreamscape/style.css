@@ -332,7 +332,7 @@ nav.main-navigation .nav-cta,
 }
 
 /* Specifically target any direct div children that aren't menu lists */
-.main-navigation > div:not(.menu):not(#primary-menu) {
+.main-navigation>div:not(.menu):not(#primary-menu) {
     display: none !important;
     visibility: hidden !important;
     height: 0 !important;
