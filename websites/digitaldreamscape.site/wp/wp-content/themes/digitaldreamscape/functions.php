@@ -52,6 +52,11 @@ function digitaldreamscape_scripts()
     // Enqueue theme stylesheet with cache busting - unified brand header v3.0.1
     wp_enqueue_style('digitaldreamscape-style', get_stylesheet_uri(), array(), '3.0.1');
 
+    // Enqueue beautiful blog template styles (conditionally on blog pages)
+    if (is_page('blog') || is_home() || is_archive() || is_single()) {
+        wp_enqueue_style('digitaldreamscape-beautiful-blog', get_template_directory_uri() . '/assets/css/beautiful-blog.css', array('digitaldreamscape-style'), '1.0.0');
+    }
+
     // Enqueue theme JavaScript (load in footer for better performance) - unified brand header v3.0.1
     wp_enqueue_script('digitaldreamscape-script', get_template_directory_uri() . '/js/main.js', array(), '3.0.1', true);
 
@@ -302,7 +307,7 @@ add_filter('template_include', function ($template) {
 
     // Map page slugs to templates (customize per site)
     $page_templates = array(
-        'blog' => 'page-blog.php',  // Force blog page to use page-blog.php template
+        'blog' => 'page-templates/page-blog-beautiful.php',  // Force blog page to use beautiful blog template
         // Add other site-specific page templates here
         // Example: 'about' => 'page-templates/page-about.php',
     );

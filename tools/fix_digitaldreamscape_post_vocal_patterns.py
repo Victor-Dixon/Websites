@@ -20,7 +20,7 @@ from simple_wordpress_deployer import SimpleWordPressDeployer, load_site_configs
 SITE_NAME = "digitaldreamscape.site"
 
 # Rewritten content matching YAML vocal patterns
-REWRITTEN_CONTENT = """ok so i spent a serious block of time on digitaldreamscape.site this sprint and the goal was simple: get the theme to a place where it represents my web design capabilities in a clean, modern, build-in-public way — and where its maintainable enough to evolve without turning into a fragile mess.
+REWRITTEN_CONTENT = """ok so i spent a serious block of time on digitaldreamscape.site this sprint and the goal was simple: get the theme to a place where it represents my web design capabilities in a clean, modern, build-in-public way, and where its maintainable enough to evolve without turning into a fragile mess.
 
 we made real progress... and we also hit the point where time spent stopped being worth the return. so this post is the closure: whats done, what went wrong, and how the future plan solves it without wasting another five hours.
 
@@ -37,7 +37,7 @@ categories treated like questlines
 metadata presented as world-state and timeline
 single post pages styled like narrative entries with intro/outro sections
 
-this isnt js aesthetic — its positioning. it communicates that dreamscape is a system, not a diary.
+this isnt js aesthetic, its positioning. it communicates that dreamscape is a system, not a diary.
 
 2) a modern "glass" ui direction
 
@@ -105,7 +105,7 @@ this protects time, prevents repeated mistakes, and produces higher quality acro
 
 future plan (whats next)
 
-phase 1 — stabilize (fast, minimal)
+phase 1: stabilize (fast, minimal)
 
 the goal is simple: no fatal errors, no missing includes, no fake asset links.
 
@@ -114,7 +114,7 @@ modularize functions.php into inc/ files
 either create a real /assets/js/ structure or remove enqueue references
 keep debug configuration out of theme files (debug belongs in wp-config.php)
 
-phase 2 — modular theme architecture
+phase 2: modular theme architecture
 
 instead of one giant style.css, we move to a maintainable structure:
 
@@ -132,7 +132,7 @@ inc/template-tags.php
 inc/filters.php
 inc/security.php
 
-phase 3 — make it "portfolio-grade"
+phase 3: make it "portfolio-grade"
 
 this is where the site becomes a true representation of web design capability:
 
@@ -146,7 +146,7 @@ the takeaway
 
 this sprint wasnt wasted. it proved something important:
 
-the theme design direction is strong — but the project needs structure before it needs more polish.
+the theme design direction is strong, but the project needs structure before it needs more polish.
 
 so were doing what builders do:
 

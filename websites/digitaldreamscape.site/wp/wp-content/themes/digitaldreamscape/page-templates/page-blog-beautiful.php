@@ -1,7 +1,8 @@
 <?php
 /**
- * Beautiful Blog Template
+ * Template Name: Beautiful Blog
  * 
+ * Beautiful Blog Template
  * Modern, elegant blog listing with card-based design
  * 
  * @package DigitalDreamscape

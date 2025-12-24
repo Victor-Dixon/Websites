@@ -77,7 +77,10 @@ def deploy_digitaldreamscape_theme():
         "wp/wp-content/themes/digitaldreamscape/single.php",
         "wp/wp-content/themes/digitaldreamscape/archive.php",
         "wp/wp-content/themes/digitaldreamscape/page-streaming.php",
-        "wp/wp-content/themes/digitaldreamscape/js/main.js"
+        "wp/wp-content/themes/digitaldreamscape/js/main.js",
+        # Beautiful blog template files
+        "wp/wp-content/themes/digitaldreamscape/page-templates/page-blog-beautiful.php",
+        "wp/wp-content/themes/digitaldreamscape/assets/css/beautiful-blog.css"
     ]
 
     try:
@@ -150,9 +153,13 @@ def deploy_digitaldreamscape_theme():
             try:
                 if SIMPLE_DEPLOYER_AVAILABLE:
                     filename = local_path.name
-                    # Handle JS files in subdirectories
+                    # Handle files in subdirectories
                     if 'js/' in file_path:
                         remote_path = f"wp-content/themes/digitaldreamscape/js/{filename}"
+                    elif 'page-templates/' in file_path:
+                        remote_path = f"wp-content/themes/digitaldreamscape/page-templates/{filename}"
+                    elif 'assets/css/' in file_path:
+                        remote_path = f"wp-content/themes/digitaldreamscape/assets/css/{filename}"
                     else:
                         remote_path = f"wp-content/themes/digitaldreamscape/{filename}"
                     success = manager.deploy_file(local_path, remote_path)
