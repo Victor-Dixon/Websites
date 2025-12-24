@@ -6,7 +6,41 @@
  * @since 2.0.0
  */
 
-get_header(); ?>
+get_header(); 
+
+/**
+ * Generate face card HTML for breaking up content
+ */
+function get_face_card_html() {
+    $author_id = get_the_author_meta('ID');
+    $author_name = get_the_author_meta('display_name', $author_id);
+    if (empty($author_name) || strpos($author_name, '@') !== false) {
+        $author_name = get_the_author_meta('nickname', $author_id);
+    }
+    if (empty($author_name) || strpos($author_name, '@') !== false) {
+        $author_name = 'Shadow Sovereign';
+    }
+    $author_avatar = get_avatar($author_id, 120);
+    $author_bio = get_the_author_meta('description', $author_id);
+    if (empty($author_bio)) {
+        $author_bio = 'Building Digital Dreamscape in public. One episode at a time.';
+    }
+    
+    return '
+    <div class="face-card-break">
+        <div class="face-card">
+            <div class="face-card-avatar">
+                ' . $author_avatar . '
+            </div>
+            <div class="face-card-content">
+                <div class="face-card-name">' . esc_html($author_name) . '</div>
+                <div class="face-card-role">[Shadow Sovereign]</div>
+                <div class="face-card-bio">' . esc_html($author_bio) . '</div>
+            </div>
+        </div>
+    </div>';
+}
+?>
 
 <!-- Critical Dark Theme Styles + Card System -->
 <style>
@@ -244,6 +278,86 @@ get_header(); ?>
         color: #a78bfa;
     }
     
+    /* Face Cards - Break up text walls */
+    .face-card-break {
+        margin: 3rem 0;
+        padding: 0;
+    }
+    .face-card {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+        padding: 1.5rem;
+        background: rgba(99, 102, 241, 0.08);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+    .face-card-avatar img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        border: 3px solid rgba(99, 102, 241, 0.4);
+        object-fit: cover;
+    }
+    .face-card-content {
+        flex: 1;
+    }
+    .face-card-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 0.25rem;
+    }
+    .face-card-role {
+        font-size: 0.85rem;
+        color: #a78bfa;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+    .face-card-bio {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+        line-height: 1.5;
+    }
+    
+    /* Improve content readability - less book-like */
+    .dreamscape-narrative {
+        max-width: 100%;
+        line-height: 1.8;
+    }
+    .dreamscape-narrative p {
+        margin-bottom: 1.5rem;
+        font-size: 1.05rem;
+        max-width: 65ch;
+    }
+    .dreamscape-narrative h2 {
+        margin-top: 3rem;
+        margin-bottom: 1.5rem;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #ffffff;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid rgba(99, 102, 241, 0.3);
+    }
+    .dreamscape-narrative h3 {
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #a78bfa;
+    }
+    .dreamscape-narrative ul,
+    .dreamscape-narrative ol {
+        margin: 1.5rem 0;
+        padding-left: 2rem;
+    }
+    .dreamscape-narrative li {
+        margin-bottom: 0.75rem;
+        line-height: 1.7;
+    }
+    
     /* Comments Card */
     .comments-card textarea,
     .comments-card input[type="text"],
@@ -275,6 +389,17 @@ get_header(); ?>
         color: #ffffff;
         font-weight: 600;
         cursor: pointer;
+    }
+    
+    /* Responsive face cards */
+    @media (max-width: 768px) {
+        .face-card {
+            flex-direction: column;
+            text-align: center;
+        }
+        .face-card-avatar {
+            margin-bottom: 1rem;
+        }
     }
 </style>
 
@@ -332,7 +457,7 @@ get_header(); ?>
                                             <?php echo get_avatar(get_the_author_meta('ID'), 48); ?>
                                         </span>
                                         <div class="identity-info">
-                                            <span class="identity-name"><?php the_author(); ?></span>
+                                            <span class="identity-name"><?php echo get_the_author_meta('display_name') ?: get_the_author_meta('nickname') ?: 'Shadow Sovereign'; ?></span>
                                             <span class="identity-title">[Shadow Sovereign]</span>
                                             <time class="post-date dreamscape-timestamp" datetime="<?php echo get_the_date('c'); ?>">
                                                 [TIMELINE] <?php echo get_the_date('F j, Y'); ?>
@@ -384,7 +509,52 @@ get_header(); ?>
                             </div>
                             
                             <?php
-                            the_content();
+                            // Output content with face cards inserted to break up text walls
+                            $content = get_the_content();
+                            $content = apply_filters('the_content', $content);
+                            
+                            // Split content by closing </p> tags to find paragraph breaks
+                            $parts = preg_split('/(<\/p>)/', $content, -1, PREG_SPLIT_DELIM_CAPTURE);
+                            $para_count = 0;
+                            $output = '';
+                            
+                            foreach ($parts as $part) {
+                                $output .= $part;
+                                
+                                // Count paragraphs (look for opening <p> tags)
+                                if (preg_match('/<p[^>]*>/', $part)) {
+                                    $para_count++;
+                                    
+                                    // Insert face card after every 4-5 paragraphs to break up text walls
+                                    if ($para_count > 0 && $para_count % 5 == 0) {
+                                        $output .= get_face_card_html();
+                                    }
+                                }
+                            }
+                            
+                            // For very long posts, add an extra face card in the middle
+                            $word_count = str_word_count(strip_tags($content));
+                            if ($word_count > 800 && $para_count > 10) {
+                                // Find middle paragraph and insert face card there if we haven't already
+                                $mid_para = floor($para_count / 2);
+                                $current = 0;
+                                $new_output = '';
+                                $inserted = false;
+                                
+                                foreach ($parts as $part) {
+                                    $new_output .= $part;
+                                    if (preg_match('/<p[^>]*>/', $part)) {
+                                        $current++;
+                                        if (!$inserted && $current >= $mid_para && $current % 5 != 0) {
+                                            $new_output .= get_face_card_html();
+                                            $inserted = true;
+                                        }
+                                    }
+                                }
+                                $output = $new_output;
+                            }
+                            
+                            echo $output;
                             
                             wp_link_pages(array(
                                 'before' => '<div class="page-links">' . esc_html__('Pages:', 'digitaldreamscape'),
@@ -452,14 +622,14 @@ get_header(); ?>
                                 <?php echo get_avatar(get_the_author_meta('ID'), 80); ?>
                             </div>
                             <div class="author-card-content">
-                                <h3 class="author-card-name"><?php the_author(); ?></h3>
+                                <h3 class="author-card-name"><?php echo get_the_author_meta('display_name') ?: get_the_author_meta('nickname') ?: 'Shadow Sovereign'; ?></h3>
                                 <?php if (get_the_author_meta('description')) : ?>
                                     <p class="author-card-desc"><?php echo get_the_author_meta('description'); ?></p>
                                 <?php else : ?>
                                     <p class="author-card-desc">Building Digital Dreamscape in public. One episode at a time.</p>
                                 <?php endif; ?>
                                 <a href="<?php echo esc_url(get_author_posts_url(get_the_author_meta('ID'))); ?>" class="author-card-link">
-                                    View all posts by <?php the_author(); ?> →
+                                    View all posts by <?php echo get_the_author_meta('display_name') ?: get_the_author_meta('nickname') ?: 'Shadow Sovereign'; ?> →
                                 </a>
                             </div>
                         </div>

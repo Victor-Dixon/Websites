@@ -59,16 +59,6 @@
                         'fallback_cb' => 'digitaldreamscape_default_menu',
                     ));
                     ?>
-
-                    <!-- Primary CTAs - Brand Action Center -->
-                    <div class="nav-cta-group">
-                        <a href="<?php echo esc_url(home_url('/streaming/')); ?>" class="nav-cta nav-cta-primary">
-                            Watch Live <span class="cta-arrow">→</span>
-                        </a>
-                        <a href="<?php echo esc_url(home_url('/blog/')); ?>" class="nav-cta nav-cta-secondary">
-                            Read Episodes
-                        </a>
-                    </div>
                 </nav>
             </div>
         </div>
