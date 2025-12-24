@@ -78,9 +78,13 @@ def deploy_digitaldreamscape_theme():
         "wp/wp-content/themes/digitaldreamscape/archive.php",
         "wp/wp-content/themes/digitaldreamscape/page-streaming.php",
         "wp/wp-content/themes/digitaldreamscape/js/main.js",
-        # Beautiful blog template files
+        # Beautiful template files
         "wp/wp-content/themes/digitaldreamscape/page-templates/page-blog-beautiful.php",
-        "wp/wp-content/themes/digitaldreamscape/assets/css/beautiful-blog.css"
+        "wp/wp-content/themes/digitaldreamscape/page-templates/page-streaming-beautiful.php",
+        "wp/wp-content/themes/digitaldreamscape/page-templates/page-community-beautiful.php",
+        "wp/wp-content/themes/digitaldreamscape/assets/css/beautiful-blog.css",
+        "wp/wp-content/themes/digitaldreamscape/assets/css/beautiful-streaming.css",
+        "wp/wp-content/themes/digitaldreamscape/assets/css/beautiful-community.css"
     ]
 
     try:

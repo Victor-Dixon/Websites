@@ -56,6 +56,16 @@ function digitaldreamscape_scripts()
     if (is_page('blog') || is_home() || is_archive() || is_single()) {
         wp_enqueue_style('digitaldreamscape-beautiful-blog', get_template_directory_uri() . '/assets/css/beautiful-blog.css', array('digitaldreamscape-style'), '1.0.0');
     }
+    
+    // Enqueue beautiful streaming template styles (conditionally on streaming page)
+    if (is_page('streaming') || is_page_template('page-templates/page-streaming-beautiful.php')) {
+        wp_enqueue_style('digitaldreamscape-beautiful-streaming', get_template_directory_uri() . '/assets/css/beautiful-streaming.css', array('digitaldreamscape-style'), '1.0.0');
+    }
+    
+    // Enqueue beautiful community template styles (conditionally on community page)
+    if (is_page('community') || is_page_template('page-templates/page-community-beautiful.php')) {
+        wp_enqueue_style('digitaldreamscape-beautiful-community', get_template_directory_uri() . '/assets/css/beautiful-community.css', array('digitaldreamscape-style'), '1.0.0');
+    }
 
     // Enqueue theme JavaScript (load in footer for better performance) - unified brand header v3.0.1
     wp_enqueue_script('digitaldreamscape-script', get_template_directory_uri() . '/js/main.js', array(), '3.0.1', true);
@@ -309,6 +319,7 @@ add_filter('template_include', function ($template) {
     $page_templates = array(
         'blog' => 'page-templates/page-blog-beautiful.php',  // Force blog page to use beautiful blog template
         'streaming' => 'page-templates/page-streaming-beautiful.php',  // Force streaming page to use beautiful streaming template
+        'community' => 'page-templates/page-community-beautiful.php',  // Force community page to use beautiful community template
         // Add other site-specific page templates here
         // Example: 'about' => 'page-templates/page-about.php',
     );

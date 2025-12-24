@@ -9,7 +9,13 @@
  * @since 2.0.0
  */
 
-get_header(); ?>
+get_header(); 
+
+// Enqueue CSS directly if not already loaded
+if (!wp_style_is('digitaldreamscape-beautiful-streaming', 'enqueued')) {
+    wp_enqueue_style('digitaldreamscape-beautiful-streaming', get_template_directory_uri() . '/assets/css/beautiful-streaming.css', array('digitaldreamscape-style'), '1.0.0');
+}
+?>
 
 <main class="site-main beautiful-streaming-main">
     <div class="beautiful-streaming-container">
