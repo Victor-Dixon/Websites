@@ -1,9 +1,8 @@
 <?php
 /**
- * Home Template - Stunning Blog Archive (Posts Page)
+ * Home Template - Blog Archive (Posts Page)
  * 
- * Displays blog posts with stunning design matching the front page.
- * This template handles pagination correctly for archive URLs.
+ * Displays blog posts matching the stunning front page design exactly.
  * 
  * @package FreeRideInvestor
  */
@@ -25,13 +24,7 @@ $blog_query = new WP_Query([
 ?>
 
 <style>
-/* Stunning Blog Page Styles - Matches Front Page */
-.stunning-blog-page {
-    background: linear-gradient(135deg, var(--fri-bg-darker) 0%, var(--fri-bg-dark) 100%);
-    color: var(--fri-text-light);
-    min-height: 100vh;
-}
-
+/* Stunning Blog Page Styles - EXACTLY MATCHES FRONT PAGE */
 :root {
     --fri-primary: #0066ff;
     --fri-primary-dark: #0052cc;
@@ -44,7 +37,13 @@ $blog_query = new WP_Query([
     --fri-border: rgba(240, 246, 252, 0.1);
 }
 
-/* Hero Section */
+.stunning-blog-page {
+    background: linear-gradient(135deg, var(--fri-bg-darker) 0%, var(--fri-bg-dark) 100%);
+    color: var(--fri-text-light);
+    min-height: 100vh;
+}
+
+/* Hero Section - Matches Front Page */
 .stunning-blog-hero {
     position: relative;
     padding: 120px 20px 80px;
@@ -94,25 +93,26 @@ $blog_query = new WP_Query([
     margin-right: auto;
 }
 
-/* Posts Grid */
+/* Blog Content - Uses Same Feature Grid Style as Front Page */
 .stunning-blog-content {
-    padding: 60px 20px 100px;
+    padding: 100px 20px;
     max-width: 1200px;
     margin: 0 auto;
 }
 
 .stunning-posts-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 30px;
-    margin-top: 40px;
+    margin-top: 60px;
 }
 
+/* Post Cards - Match Front Page Feature Cards EXACTLY */
 .stunning-post-card {
+    padding: 40px 30px;
     background: rgba(240, 246, 252, 0.03);
     border: 1px solid var(--fri-border);
     border-radius: 16px;
-    overflow: hidden;
     transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
@@ -129,6 +129,8 @@ $blog_query = new WP_Query([
     width: 100%;
     height: 200px;
     object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 24px;
     background: linear-gradient(135deg, var(--fri-primary) 0%, var(--fri-primary-dark) 100%);
     display: flex;
     align-items: center;
@@ -137,7 +139,6 @@ $blog_query = new WP_Query([
 }
 
 .stunning-post-card-content {
-    padding: 30px;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -206,7 +207,7 @@ $blog_query = new WP_Query([
     font-size: 1.1rem;
 }
 
-/* Pagination */
+/* Pagination - Match Front Page Style */
 .pagination {
     margin-top: 60px;
     text-align: center;
@@ -246,7 +247,7 @@ $blog_query = new WP_Query([
     color: white;
 }
 
-/* Responsive */
+/* Responsive - Match Front Page */
 @media (max-width: 768px) {
     .stunning-blog-hero {
         padding: 80px 20px 60px;
@@ -259,7 +260,7 @@ $blog_query = new WP_Query([
 </style>
 
 <div class="stunning-blog-page">
-    <!-- Hero Section -->
+    <!-- Hero Section - Matches Front Page -->
     <section class="stunning-blog-hero">
         <div class="stunning-blog-hero-content">
             <h1>Trading Insights & Strategy Analysis</h1>
