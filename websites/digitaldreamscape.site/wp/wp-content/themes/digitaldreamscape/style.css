@@ -1298,16 +1298,17 @@ body {
    ARCHIVE / BLOG LISTING STYLES
    ============================================ */
 .archive-header.dreamscape-archive-header {
-    margin-bottom: 4rem;
+    margin-bottom: var(--spacing-16);
     text-align: center;
-    padding: 4rem 2rem 2rem;
+    padding: var(--spacing-16) var(--spacing-5) var(--spacing-8);
     background: var(--gradient-1);
     color: var(--white);
     border-radius: 0 0 40px 40px;
-    margin-left: -20px;
-    margin-right: -20px;
+    margin-left: calc(-1 * var(--spacing-5));
+    margin-right: calc(-1 * var(--spacing-5));
     position: relative;
     overflow: hidden;
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
 }
 
 .archive-header.dreamscape-archive-header::before {
@@ -1326,28 +1327,33 @@ body {
     display: inline-block;
     background: rgba(255, 255, 255, 0.2);
     color: var(--white);
-    padding: 0.5rem 1.5rem;
+    padding: var(--spacing-2) var(--spacing-6);
     border-radius: 50px;
-    font-size: 0.75rem;
+    font-size: var(--font-size-xs);
     font-weight: 700;
     letter-spacing: 2px;
     font-family: 'Courier New', monospace;
     text-transform: uppercase;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--spacing-6);
     border: 1px solid rgba(255, 255, 255, 0.3);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 1;
 }
 
 .archive-title.dreamscape-archive-title {
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-size: clamp(var(--font-size-4xl), 6vw, var(--font-size-5xl));
     font-weight: 800;
-    margin-bottom: 1rem;
+    margin-bottom: var(--spacing-4);
+    margin-top: 0;
     color: var(--white);
     font-family: var(--font-heading);
     letter-spacing: -0.02em;
     text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
     position: relative;
     z-index: 1;
+    word-break: keep-all;
 }
 
 .archive-description.dreamscape-archive-desc {
