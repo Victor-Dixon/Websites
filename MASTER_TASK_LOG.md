@@ -14,6 +14,35 @@
 
 ## INBOX
 
+### 2026 REVENUE ENGINE - P0 FIXES (Week 1 Priority)
+
+**Source:** Comprehensive Grade Card Audit (2025-12-25)  
+**Status:** Brand Core infrastructure complete for freerideinvestor.com, proceeding to Funnel Infrastructure  
+**Reference:** `docs/website_audits/2026/implementation_roadmap_20251225_103426.md`
+
+#### Phase 1: Brand Core (BRAND-01, BRAND-02, BRAND-03) - IN PROGRESS
+- [x] **HIGH**: Brand Core infrastructure for freerideinvestor.com - ✅ COMPLETE (2025-12-25) - Created 3 Custom Post Types (positioning_statement, offer_ladder, icp_definition), meta boxes, component templates, front page integration, responsive CSS. Content creation script ready. **Tags:** #revenue-engine #brand-core [Agent-7]
+- [ ] **HIGH**: Replicate Brand Core infrastructure for tradingrobotplug.com - Create Custom Post Types, meta boxes, templates matching freerideinvestor.com pattern. **Tags:** #revenue-engine #brand-core [Agent-7]
+- [ ] **HIGH**: Replicate Brand Core infrastructure for dadudekc.com - Create Custom Post Types, meta boxes, templates matching freerideinvestor.com pattern. **Tags:** #revenue-engine #brand-core [Agent-7]
+- [ ] **HIGH**: Replicate Brand Core infrastructure for crosbyultimateevents.com - Create Custom Post Types, meta boxes, templates matching freerideinvestor.com pattern. **Tags:** #revenue-engine #brand-core [Agent-7]
+- [ ] **MEDIUM**: Create Brand Core content for all 4 sites via WP-CLI scripts - Execute content creation scripts to populate positioning statements, offer ladders, ICP definitions. **Tags:** #revenue-engine #content [Agent-7]
+
+#### Phase 2: Funnel Infrastructure (FUN-01, FUN-02, FUN-03) - NEXT PRIORITY
+- [x] **HIGH**: freerideinvestor.com [FUN-01] Lead magnet + landing + thank-you pages - ✅ IN PROGRESS (2025-12-25) - Created 4 page templates (roadmap landing, mindset journal landing, 2 thank-you pages), form handlers, CSS styling. Ready for email integration. **Tags:** #revenue-engine #funnel [Agent-7]
+- [ ] **HIGH**: freerideinvestor.com [FUN-02] Email welcome + nurture sequence - Create welcome email (deliver free resources, introduce premium membership), build nurture sequence (trading tips, TBOW tactic highlights, market insights). **Tags:** #revenue-engine #funnel #email [Agent-7]
+- [ ] **HIGH**: freerideinvestor.com [FUN-03] Booking/checkout end-to-end - Implement payment processing (Stripe) for premium membership, clear upgrade flow (free → premium), automated membership activation emails. **Tags:** #revenue-engine #funnel #payment [Agent-7]
+- [ ] **HIGH**: dadudekc.com [FUN-01] Lead magnet + landing + thank-you pages - Optimize /audit as lead magnet: create dedicated landing page with value prop, form capture, thank-you page with download + next steps. **Tags:** #revenue-engine #funnel [Agent-7]
+- [ ] **HIGH**: dadudekc.com [FUN-02] Email welcome + nurture sequence - Set up email service (ConvertKit/Mailchimp), create welcome email (deliver audit/scoreboard, introduce sprint offer), build nurture sequence. **Tags:** #revenue-engine #funnel #email [Agent-7]
+- [ ] **HIGH**: dadudekc.com [FUN-03] Booking/checkout end-to-end - Implement Calendly/Cal.com for discovery calls, payment processing (Stripe) for sprint deposits, automated booking confirmation emails. **Tags:** #revenue-engine #funnel #payment [Agent-7]
+- [ ] **HIGH**: crosbyultimateevents.com [FUN-01] Lead magnet + landing + thank-you pages - Create lead magnet 'Ultimate Event Planning Checklist' (PDF), landing page /event-planning-guide with form, thank-you page with download link. **Tags:** #revenue-engine #funnel [Agent-7]
+- [ ] **HIGH**: crosbyultimateevents.com [FUN-02] Email welcome + nurture sequence - Set up email service (Mailchimp/ConvertKit), create welcome email (deliver lead magnet, introduce services), build nurture sequence. **Tags:** #revenue-engine #funnel #email [Agent-7]
+- [ ] **HIGH**: crosbyultimateevents.com [FUN-03] Booking/checkout end-to-end - Implement Calendly/Cal.com integration for consultation booking, payment processing (Stripe) for deposits, automated confirmation emails. **Tags:** #revenue-engine #funnel #payment [Agent-7]
+
+#### Phase 3: Website Conversion (WEB-01, WEB-02, WEB-04) - PENDING
+- [ ] **HIGH**: Hero clarity + CTA clarity improvements (9 fixes across 3 sites) - A/B test hero headlines, optimize CTAs, add urgency/value props. **Tags:** #revenue-engine #conversion [Agent-7]
+- [ ] **HIGH**: Services/pricing + proof/trust elements (9 fixes across 3 sites) - Add pricing pages, testimonials, case studies, trust badges, social proof. **Tags:** #revenue-engine #conversion [Agent-7]
+- [ ] **HIGH**: Contact/booking friction reduction (9 fixes across 3 sites) - Reduce form fields, add phone numbers, implement chat widgets, add calendar booking. **Tags:** #revenue-engine #conversion [Agent-7]
+
 ### CRITICAL QUALITY ISSUES (Presentation Failures)
 - [ ] **CRITICAL**: Fix text rendering on weareswarm.online - Text rendering issues throughout showcase site. Examples: "Capabilitie", "A multi-agent AI  y tem  howca ing", "WordPre  Development", "© 2025 weare warm.online", "Specialize  in  y tem integration". **Impact:** Our showcase site looks broken and unprofessional. **Priority:** IMMEDIATE - This is our face to the world.  **Tags:** #website-quality [Agent-7]
 - [ ] **CRITICAL**: Fix tradingrobotplug.com placeholder quality - Minimal content (just "Home" heading), navigation typo "Capabilitie", footer typo "All right re erved". Appears to be unfinished placeholder site. **Priority:** HIGH - Add real content, fix typos, make it professional.  **Tags:** #trading-robot [Agent-7]

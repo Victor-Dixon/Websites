@@ -229,6 +229,24 @@ function freerideinvestor_enqueue_assets() {
         '1.1'
     );
     
+    // Brand Core Responsive CSS (Phase 1 P0 Fixes)
+    wp_enqueue_style(
+        'brand-core-responsive-css',
+        get_template_directory_uri() . '/css/styles/components/_brand-core-responsive.css',
+        ['main-css', 'custom-css'],
+        '1.0'
+    );
+    
+    // Lead Magnet Landing Pages CSS (Phase 1 P0 Fixes - FUN-01)
+    if (is_page_template(['page-roadmap-landing.php', 'page-mindset-journal-landing.php', 'page-thank-you-roadmap.php', 'page-thank-you-mindset-journal.php'])) {
+        wp_enqueue_style(
+            'lead-magnet-landing-css',
+            get_template_directory_uri() . '/css/styles/pages/_lead-magnet-landing.css',
+            ['main-css'],
+            '1.0'
+        );
+    }
+    
     // Custom JS
     wp_enqueue_script(
         'custom-js',
@@ -248,3 +266,13 @@ function freerideinvestor_enqueue_assets() {
     );
 }
 add_action('wp_enqueue_scripts', 'freerideinvestor_enqueue_assets', 5);
+
+/**
+ * Load Brand Core Meta Boxes (Phase 1 P0 Fixes)
+ */
+require_once get_template_directory() . '/inc/meta-boxes/brand-core-meta-boxes.php';
+
+/**
+ * Load Lead Magnet Handlers (Phase 1 P0 Fixes - FUN-01)
+ */
+require_once get_template_directory() . '/inc/lead-magnet-handlers.php';

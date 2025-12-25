@@ -11,6 +11,7 @@ get_header();
 <section class="hero">
   <h1 id="hero-heading"><?php esc_html_e('FREERIDEINVESTOR', 'simplifiedtradingtheme'); ?></h1>
   <p><?php esc_html_e('Master the markets with proven strategies, robust tools, and a supportive community designed for traders at all levels.', 'simplifiedtradingtheme'); ?></p>
+  <?php get_template_part('template-parts/components/positioning-statement'); ?>
   <a class="cta-button" href="<?php echo esc_url(home_url('/discord')); ?>" role="button">
     <?php esc_html_e('Join Now', 'simplifiedtradingtheme'); ?>
   </a>
@@ -30,6 +31,7 @@ get_header();
         'simplifiedtradingtheme'
       ); ?>
     </p>
+    <?php get_template_part('template-parts/components/icp-definition'); ?>
     <a href="<?php echo esc_url(home_url('/about')); ?>" class="cta-button">
       <?php esc_html_e('Learn More', 'simplifiedtradingtheme'); ?>
     </a>
@@ -38,6 +40,14 @@ get_header();
 
   <!-- Services Section -->
   <?php get_template_part('template-parts/services-section'); ?>
+
+  <!-- Offer Ladder Section -->
+  <section class="offer-ladder-section" aria-labelledby="offer-ladder-heading">
+    <h2 id="offer-ladder-heading" class="section-heading">
+      <?php esc_html_e('Your Path to Trading Success', 'simplifiedtradingtheme'); ?>
+    </h2>
+    <?php get_template_part('template-parts/components/offer-ladder'); ?>
+  </section>
 
   <!-- Tbow Tactics Section -->
   <section class="tbow-tactics" aria-labelledby="tbow-tactics-heading">
