@@ -247,6 +247,14 @@ function freerideinvestor_enqueue_assets() {
         );
     }
     
+    // Hero Optimization CSS (Tier 1 Quick Win - WEB-01)
+    wp_enqueue_style(
+        'hero-optimization-css',
+        get_template_directory_uri() . '/css/styles/pages/_hero-optimization.css',
+        ['main-css'],
+        '1.0'
+    );
+    
     // Custom JS
     wp_enqueue_script(
         'custom-js',
