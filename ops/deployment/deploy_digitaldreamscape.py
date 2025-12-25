@@ -74,7 +74,9 @@ def deploy_digitaldreamscape_theme():
         "wp/wp-content/themes/digitaldreamscape/index.php",
         "wp/wp-content/themes/digitaldreamscape/page.php",  # Generic page template
         "wp/wp-content/themes/digitaldreamscape/page-blog.php",
+        "wp/wp-content/themes/digitaldreamscape/page-about.php",
         "wp/wp-content/themes/digitaldreamscape/single.php",
+        "wp/wp-content/themes/digitaldreamscape/single-beautiful.php",
         "wp/wp-content/themes/digitaldreamscape/archive.php",
         "wp/wp-content/themes/digitaldreamscape/page-streaming.php",
         "wp/wp-content/themes/digitaldreamscape/js/main.js",
@@ -82,10 +84,19 @@ def deploy_digitaldreamscape_theme():
         "wp/wp-content/themes/digitaldreamscape/page-templates/page-blog-beautiful.php",
         "wp/wp-content/themes/digitaldreamscape/page-templates/page-streaming-beautiful.php",
         "wp/wp-content/themes/digitaldreamscape/page-templates/page-community-beautiful.php",
+        "wp/wp-content/themes/digitaldreamscape/page-templates/page-about-beautiful.php",
         "wp/wp-content/themes/digitaldreamscape/assets/css/beautiful-blog.css",
         "wp/wp-content/themes/digitaldreamscape/assets/css/beautiful-streaming.css",
         "wp/wp-content/themes/digitaldreamscape/assets/css/beautiful-community.css",
-        "wp/wp-content/themes/digitaldreamscape/assets/css/beautiful-single.css"
+        "wp/wp-content/themes/digitaldreamscape/assets/css/beautiful-single.css",
+        "wp/wp-content/themes/digitaldreamscape/assets/css/beautiful-about.css",
+        # Modular functions (inc/ directory) - Added 2025-12-25
+        "wp/wp-content/themes/digitaldreamscape/inc/setup.php",
+        "wp/wp-content/themes/digitaldreamscape/inc/enqueue.php",
+        "wp/wp-content/themes/digitaldreamscape/inc/template-tags.php",
+        "wp/wp-content/themes/digitaldreamscape/inc/template-loader.php",
+        "wp/wp-content/themes/digitaldreamscape/inc/performance.php",
+        "wp/wp-content/themes/digitaldreamscape/inc/seo.php"
     ]
 
     try:

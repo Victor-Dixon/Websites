@@ -3,6 +3,23 @@
  * Modern, elegant streaming hub design matching blog template
  */
 
+/* Text Rendering Fix - Ensure proper word spacing */
+.beautiful-streaming-main,
+.beautiful-streaming-main *,
+.beautiful-streaming-description,
+.beautiful-streaming-card-content,
+.beautiful-streaming-card-description {
+    word-spacing: normal !important;
+    letter-spacing: normal !important;
+    font-feature-settings: 'liga' 0, 'kern' 1 !important;
+    font-variant-ligatures: none !important;
+}
+
+.beautiful-streaming-title,
+.beautiful-streaming-badge {
+    word-spacing: normal !important;
+}
+
 /* Force dark background on body when streaming template is active */
 body.page-template-page-templates-page-streaming-beautiful-php,
 body.page-template-page-streaming-beautiful,

@@ -4,6 +4,23 @@
  * @since 2.0.0
  */
 
+/* Text Rendering Fix - Ensure proper word spacing */
+.beautiful-community-main,
+.beautiful-community-main *,
+.beautiful-community-description,
+.beautiful-community-card-content,
+.beautiful-community-card-description {
+    word-spacing: normal !important;
+    letter-spacing: normal !important;
+    font-feature-settings: 'liga' 0, 'kern' 1 !important;
+    font-variant-ligatures: none !important;
+}
+
+.beautiful-community-title,
+.beautiful-community-badge {
+    word-spacing: normal !important;
+}
+
 /* Force dark background on body when community template is active */
 body.page-template-page-templates-page-community-beautiful-php,
 body.page-template-page-community-beautiful,

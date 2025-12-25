@@ -16,6 +16,7 @@ Tags: blog, streaming, community, one-column, custom-menu, featured-images, thre
 @import url('assets/css/beautiful-streaming.css');
 @import url('assets/css/beautiful-community.css');
 @import url('assets/css/beautiful-single.css');
+@import url('assets/css/beautiful-about.css');
 
 /* ============================================
    RESET & BASE STYLES
@@ -113,10 +114,57 @@ body {
     font-size: var(--font-size-base);
     color: var(--text-color);
     line-height: var(--line-height-normal);
-    background-color: var(--white);
+    background-color: #0a0a0a; /* Dark theme default - matches blog/streaming/community */
     overflow-x: hidden;
     overflow-y: auto;
     min-height: 100vh;
+    /* Fix text rendering issues - ensure proper spacing */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    word-spacing: normal;
+    letter-spacing: normal;
+    font-feature-settings: normal;
+    font-variant-ligatures: normal;
+}
+
+/* Ensure all text elements render spaces correctly */
+body,
+body *,
+p,
+span,
+div,
+a,
+li,
+td,
+th,
+label,
+input,
+textarea,
+button {
+    word-spacing: normal !important;
+    letter-spacing: normal !important;
+    font-feature-settings: "liga" 0, "kern" 1 !important;
+    font-variant-ligatures: none !important;
+}
+
+/* Re-apply letter-spacing only to headings and specific elements that need it */
+h1, h2, h3, h4, h5, h6,
+.badge,
+.page-badge,
+.card-label,
+.nav-label {
+    letter-spacing: -0.02em; /* Only headings and badges can have custom letter-spacing */
+    word-spacing: normal !important;
+}
+
+/* Ensure navigation and links don't lose spaces */
+nav a,
+.menu a,
+.nav-menu a,
+.header a {
+    word-spacing: normal !important;
+    letter-spacing: normal !important;
 }
 
 /* Typography Hierarchy - Consistent heading styles */
@@ -132,7 +180,9 @@ h6 {
     color: var(--secondary-color);
     margin-top: var(--heading-margin-top);
     margin-bottom: var(--heading-margin-bottom);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.02em; /* Subtle negative tracking for headings only */
+    word-spacing: normal !important; /* Ensure word spacing is normal */
+    font-feature-settings: "liga" 0, "kern" 1; /* Disable ligatures, enable kerning */
 }
 
 h1 {
@@ -772,7 +822,7 @@ nav.main-navigation .current_page_item>a {
 .site-main {
     min-height: 60vh;
     padding: var(--spacing-8) 0;
-    background-color: var(--white);
+    background-color: #0a0a0a; /* Dark theme - matches blog/streaming/community */
 }
 
 .container {
@@ -786,19 +836,20 @@ nav.main-navigation .current_page_item>a {
     margin: 0 auto;
 }
 
-/* Ensure all pages have consistent background */
+/* Ensure all pages have consistent dark background */
 body {
-    background-color: var(--white);
+    background-color: #0a0a0a; /* Dark theme - matches blog/streaming/community */
 }
 
 /* Consistent page backgrounds for all templates */
+/* Dark theme for all page types */
 .page-template-default .site-main,
 .single .site-main,
 .archive .site-main,
 .blog .site-main,
 .search .site-main,
 .error404 .site-main {
-    background-color: var(--white);
+    background-color: #0a0a0a; /* Dark theme - matches blog/streaming/community */
     padding: var(--spacing-8) 0;
 }
 
@@ -1352,12 +1403,16 @@ body {
 .dreamscape-narrative p:not(.intro-text):not(.outro-text),
 .dreamscape-narrative .post-content p,
 .dreamscape-narrative .entry-content p,
-.post-content p {
+.post-content p,
+.page-content p,
+.entry-content p {
     margin-bottom: 2rem;
     font-size: 1.125rem;
     line-height: 1.9;
     color: #1e293b;
-    letter-spacing: 0.01em;
+    letter-spacing: normal !important; /* Fix text rendering - ensure normal spacing */
+    word-spacing: normal !important;
+    font-feature-settings: 'liga' 0, 'kern' 1 !important;
 }
 
 .dreamscape-narrative>p:first-of-type:not(.intro-text):not(.outro-text),
@@ -2772,15 +2827,22 @@ body {
         padding: var(--spacing-12) 0 var(--spacing-16);
     }
 
-    .hero-title {
-        font-size: clamp(var(--font-size-3xl), 8vw, var(--font-size-5xl));
-        margin-bottom: var(--spacing-6);
-    }
+.hero-title,
+.hero-title-line {
+    font-size: clamp(var(--font-size-3xl), 8vw, var(--font-size-5xl));
+    margin-bottom: var(--spacing-6);
+    word-spacing: normal !important;
+    letter-spacing: -0.02em; /* Headings can have slight negative tracking */
+    font-feature-settings: 'liga' 0, 'kern' 1 !important;
+}
 
-    .hero-subtitle {
-        font-size: clamp(var(--font-size-base), 3vw, var(--font-size-xl));
-        margin-bottom: var(--spacing-8);
-    }
+.hero-subtitle {
+    font-size: clamp(var(--font-size-base), 3vw, var(--font-size-xl));
+    margin-bottom: var(--spacing-8);
+    word-spacing: normal !important;
+    letter-spacing: normal !important;
+    font-feature-settings: 'liga' 0, 'kern' 1 !important;
+}
 
     .hero-cta {
         flex-direction: column;
@@ -2816,10 +2878,125 @@ body {
 }
 
 /* ============================================
+   PAGE TEMPLATE STYLES (About, etc.)
+   ============================================ */
+
+/* Page Content - Dark theme styling */
+.page-content,
+.entry-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 0;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: #e2e8f0; /* Light text for dark background */
+    word-spacing: normal !important;
+    letter-spacing: normal !important;
+    font-feature-settings: 'liga' 0, 'kern' 1 !important;
+}
+
+.page-content p,
+.entry-content p {
+    margin-bottom: 1.75rem;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: #e2e8f0; /* Light text for dark background */
+    word-spacing: normal !important;
+    letter-spacing: normal !important;
+}
+
+.page-content h2,
+.entry-content h2 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #ffffff; /* White headings for dark background */
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid rgba(99, 102, 241, 0.3);
+    word-spacing: normal !important;
+    letter-spacing: -0.02em;
+}
+
+.page-content h3,
+.entry-content h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #a78bfa; /* Purple accent for dark background */
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    word-spacing: normal !important;
+    letter-spacing: -0.01em;
+}
+
+.page-content ul,
+.page-content ol,
+.entry-content ul,
+.entry-content ol {
+    margin: 1.5rem 0;
+    padding-left: 2rem;
+    word-spacing: normal !important;
+    letter-spacing: normal !important;
+}
+
+.page-content li,
+.entry-content li {
+    margin-bottom: 0.75rem;
+    line-height: 1.7;
+    word-spacing: normal !important;
+    letter-spacing: normal !important;
+}
+
+.page-content a,
+.entry-content a {
+    color: #818cf8; /* Light indigo for dark background */
+    text-decoration: underline;
+    transition: color 0.2s ease;
+    word-spacing: normal !important;
+    letter-spacing: normal !important;
+}
+
+.page-content a:hover,
+.entry-content a:hover {
+    color: #a78bfa; /* Purple on hover */
+}
+
+.dreamscape-page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    padding-top: 3rem;
+    border-bottom: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.dreamscape-page-header .page-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: rgba(99, 102, 241, 0.2);
+    border: 1px solid rgba(99, 102, 241, 0.5);
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #a78bfa; /* Purple for dark background */
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    word-spacing: normal !important;
+}
+
+.dreamscape-page-header .page-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    color: #ffffff; /* White for dark background */
+    margin: 0;
+    word-spacing: normal !important;
+    letter-spacing: -0.02em;
+}
+
+/* ============================================
    HOMEPAGE / FRONT PAGE STYLES
    ============================================ */
 
-/* Hero Section */
+/* Hero Section - Dark theme compatible */
 .hero-section {
     position: relative;
     padding: 6rem 0 8rem;
@@ -2955,11 +3132,12 @@ body {
 /* Featured Section */
 .featured-section {
     padding: 5rem 0;
-    background: var(--white);
+    background: #0a0a0a; /* Dark theme - matches blog/streaming/community */
 }
 
 .section-title {
     font-size: clamp(2rem, 4vw, 3rem);
+    color: #ffffff; /* White text for dark background */
     font-weight: 800;
     margin-bottom: 3rem;
     text-align: center;
@@ -2980,20 +3158,22 @@ body {
 }
 
 .featured-card {
-    background: var(--white);
+    background: rgba(255, 255, 255, 0.05); /* Dark glass effect */
+    backdrop-filter: blur(10px);
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
-    border: 1px solid rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.3);
 }
 
 .featured-card:hover {
     transform: translateY(-8px);
-    box-shadow: var(--shadow-lg);
-    border-color: rgba(99, 102, 241, 0.3);
+    box-shadow: 0 12px 48px rgba(99, 102, 241, 0.3);
+    border-color: rgba(99, 102, 241, 0.5);
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .featured-card .card-image {
@@ -3025,7 +3205,7 @@ body {
 
 .featured-card .card-meta {
     font-size: 0.875rem;
-    color: #64748b;
+    color: #94a3b8; /* Lighter for dark background */
     font-family: 'Courier New', monospace;
     font-weight: 500;
 }
@@ -3038,10 +3218,10 @@ body {
 }
 
 .featured-card .card-title a {
-    color: var(--secondary-color);
+    color: #ffffff; /* White for dark background */
     text-decoration: none;
     transition: color 0.3s ease;
-    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #a78bfa 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -3055,10 +3235,29 @@ body {
 }
 
 .featured-card .card-excerpt {
-    color: #475569;
+    color: #cbd5e1; /* Light gray for dark background */
     line-height: 1.7;
     font-size: 1rem;
     flex: 1;
+    word-spacing: normal !important;
+    letter-spacing: normal !important;
+    font-feature-settings: 'liga' 0, 'kern' 1 !important;
+}
+
+.featured-card .card-content {
+    word-spacing: normal !important;
+    letter-spacing: normal !important;
+}
+
+.featured-card .card-title {
+    word-spacing: normal !important;
+    letter-spacing: -0.02em; /* Headings only */
+}
+
+.cta-text {
+    word-spacing: normal !important;
+    letter-spacing: normal !important;
+    font-feature-settings: 'liga' 0, 'kern' 1 !important;
 }
 
 .featured-card .card-link {

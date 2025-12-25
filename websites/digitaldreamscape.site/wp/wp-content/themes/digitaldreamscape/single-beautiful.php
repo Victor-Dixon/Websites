@@ -88,8 +88,57 @@ get_header(); ?>
                 
                 <!-- Post Content -->
                 <div class="beautiful-single-content">
-                    <?php the_content(); ?>
+                    <?php
+                    // Get and process content
+                    $content = get_the_content();
+                    $content = apply_filters('the_content', $content);
+                    
+                    // Extract headings from processed content for TOC
+                    preg_match_all('/<h([2-3])[^>]*>(.*?)<\/h[2-3]>/i', $content, $headings);
+                    
+                    // Add IDs to headings for TOC navigation
+                    if (!empty($headings[0])) {
+                        $heading_count = 0;
+                        foreach ($headings[0] as $index => $full_heading) {
+                            $heading_count++;
+                            $heading_id = 'heading-' . $heading_count;
+                            // Add ID to heading if it doesn't already have one
+                            if (strpos($full_heading, 'id=') === false) {
+                                $content = preg_replace(
+                                    '/' . preg_quote($full_heading, '/') . '/i',
+                                    preg_replace('/<h([2-3])([^>]*)>/i', '<h$1$2 id="' . esc_attr($heading_id) . '">', $full_heading),
+                                    $content,
+                                    1
+                                );
+                            }
+                        }
+                    }
+                    
+                    echo $content;
+                    ?>
                 </div>
+                
+                <!-- Table of Contents (for long posts, placed after content generation) -->
+                <?php
+                $word_count = str_word_count(strip_tags($content));
+                if ($word_count > 500 && !empty($headings[0])) :
+                    ?>
+                    <div class="beautiful-single-toc beautiful-single-toc-bottom">
+                        <div class="beautiful-single-toc-label">[TABLE OF CONTENTS]</div>
+                        <nav class="beautiful-single-toc-list">
+                            <?php
+                            $heading_count = 0;
+                            foreach ($headings[2] as $index => $heading_text) {
+                                $heading_count++;
+                                $heading_id = 'heading-' . $heading_count;
+                                $level = $headings[1][$index];
+                                $heading_text_clean = strip_tags($heading_text);
+                                echo '<a href="#' . esc_attr($heading_id) . '" class="beautiful-single-toc-link toc-level-' . esc_attr($level) . '">' . esc_html($heading_text_clean) . '</a>';
+                            }
+                            ?>
+                        </nav>
+                    </div>
+                <?php endif; ?>
                 
                 <!-- Episode Footer -->
                 <footer class="beautiful-single-footer">
@@ -137,6 +186,67 @@ get_header(); ?>
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Newsletter CTA -->
+                    <div class="beautiful-single-newsletter">
+                        <div class="beautiful-single-newsletter-card">
+                            <div class="beautiful-single-newsletter-icon">📧</div>
+                            <h3 class="beautiful-single-newsletter-title">Subscribe for the Next Episode</h3>
+                            <p class="beautiful-single-newsletter-text">Get notified when new episodes drop. Join the Digital Dreamscape narrative.</p>
+                            <form class="beautiful-single-newsletter-form" action="#" method="post">
+                                <input type="email" 
+                                       name="email" 
+                                       placeholder="Enter your email" 
+                                       required 
+                                       class="beautiful-single-newsletter-input">
+                                <button type="submit" class="beautiful-single-newsletter-button">
+                                    Subscribe →
+                                </button>
+                            </form>
+                            <p class="beautiful-single-newsletter-disclaimer">No spam. Unsubscribe anytime.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Related Posts -->
+                    <?php
+                    $related_posts = get_posts(array(
+                        'category__in' => wp_get_post_categories(get_the_ID()),
+                        'numberposts' => 3,
+                        'post__not_in' => array(get_the_ID()),
+                        'orderby' => 'date',
+                        'order' => 'DESC'
+                    ));
+                    
+                    if (!empty($related_posts)) :
+                        ?>
+                        <div class="beautiful-single-related">
+                            <div class="beautiful-single-related-label">[RELATED EPISODES]</div>
+                            <div class="beautiful-single-related-grid">
+                                <?php foreach ($related_posts as $related_post) : ?>
+                                    <article class="beautiful-single-related-card">
+                                        <?php if (has_post_thumbnail($related_post->ID)) : ?>
+                                            <a href="<?php echo get_permalink($related_post->ID); ?>" class="beautiful-single-related-image-link">
+                                                <?php echo get_the_post_thumbnail($related_post->ID, 'medium', array('class' => 'beautiful-single-related-image')); ?>
+                                            </a>
+                                        <?php endif; ?>
+                                        <div class="beautiful-single-related-content">
+                                            <time class="beautiful-single-related-date" datetime="<?php echo get_the_date('c', $related_post->ID); ?>">
+                                                <?php echo get_the_date('M j, Y', $related_post->ID); ?>
+                                            </time>
+                                            <h4 class="beautiful-single-related-title">
+                                                <a href="<?php echo get_permalink($related_post->ID); ?>" class="beautiful-single-related-link">
+                                                    <?php echo get_the_title($related_post->ID); ?>
+                                                </a>
+                                            </h4>
+                                            <p class="beautiful-single-related-excerpt">
+                                                <?php echo wp_trim_words(get_the_excerpt($related_post->ID), 20); ?>
+                                            </p>
+                                        </div>
+                                    </article>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
                     
                     <!-- Navigation -->
                     <nav class="beautiful-single-navigation">

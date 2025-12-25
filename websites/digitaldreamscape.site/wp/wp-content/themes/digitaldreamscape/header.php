@@ -60,6 +60,16 @@
                     ));
                     ?>
                 </nav>
+
+                <!-- CTA Buttons - Consistent across all pages -->
+                <div class="nav-cta-group">
+                    <a href="https://twitch.tv/digitaldreamscape" class="nav-cta nav-cta-primary" target="_blank" rel="noopener">
+                        Watch Live
+                    </a>
+                    <a href="<?php echo esc_url(home_url('/blog/')); ?>" class="nav-cta nav-cta-secondary">
+                        Read Episodes
+                    </a>
+                </div>
             </div>
         </div>
     </header>

@@ -3,6 +3,23 @@
  * Modern, elegant blog listing design
  */
 
+/* Text Rendering Fix - Ensure proper word spacing */
+.beautiful-blog-main,
+.beautiful-blog-main *,
+.beautiful-blog-description,
+.beautiful-blog-card-content,
+.beautiful-blog-card-excerpt {
+    word-spacing: normal !important;
+    letter-spacing: normal !important;
+    font-feature-settings: 'liga' 0, 'kern' 1 !important;
+    font-variant-ligatures: none !important;
+}
+
+.beautiful-blog-title,
+.beautiful-blog-badge {
+    word-spacing: normal !important;
+}
+
 /* Container */
 .beautiful-blog-main {
     padding: 4rem 0;
