@@ -14,6 +14,7 @@ sys.path.insert(0, str(project_root))
 
 try:
     from ops.deployment.simple_wordpress_deployer import SimpleWordPressDeployer, load_site_configs
+    from ops.deployment.wp_remote_utils import detect_wp_path
 except ImportError:
     try:
         sys.path.insert(0, str(project_root / "ops" / "deployment"))
@@ -36,8 +37,11 @@ def main():
         sys.exit(1)
     
     # Get WordPress path
-    remote_path = deployer.remote_path
-    wp_path = f"/home/u996867598/{remote_path}" if remote_path else f"/home/u996867598/domains/{site_domain}/public_html"
+    wp_path = detect_wp_path(deployer=deployer, site_domain=site_domain)
+    if not wp_path:
+        print("❌ Could not detect WordPress path on server.")
+        deployer.disconnect()
+        sys.exit(1)
     
     print(f"\n📂 WordPress path: {wp_path}")
     
