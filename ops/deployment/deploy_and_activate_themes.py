@@ -86,6 +86,12 @@ THEME_CONFIGS = {
         "theme_name": "digitaldreamscape",
         "theme_path": "websites/digitaldreamscape.site/wp/wp-content/themes/digitaldreamscape",
         "remote_path": "wp-content/themes/digitaldreamscape"
+    },
+    "ariajet.site": {
+        "site_key": "ariajet",
+        "theme_name": "ariajet",
+        "theme_path": "websites/ariajet.site/wp/wp-content/themes/ariajet",
+        "remote_path": "wp-content/themes/ariajet"
     }
 }
 

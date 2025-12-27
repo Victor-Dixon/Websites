@@ -187,3 +187,5 @@ require __DIR__ . '/wp-blog-header.php';
 if __name__ == "__main__":
     sys.exit(0 if fix_core_files() else 1)
 
+
+
