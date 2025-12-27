@@ -13,12 +13,16 @@ get_header();
 <main id="main-content" class="site-main">
     <div class="container">
 
-        <!-- Hero Section -->
+        <!-- Hero Section with Positioning Statement -->
         <section class="hero-section">
             <div class="hero-content">
-                <h1 class="hero-title"><?php esc_html_e('Welcome to FreeRideInvestor', 'freerideinvestor'); ?></h1>
-                <p class="hero-description"><?php esc_html_e('Your go-to platform for actionable trading insights, strategies, and community-driven growth.', 'freerideinvestor'); ?></p>
-                <a href="#tbow-tactics-section" class="cta-button"><?php esc_html_e('Explore Tbow Tactics', 'freerideinvestor'); ?></a>
+                <h1 class="hero-title"><?php esc_html_e('Stop Losing Money on Untested Trading Strategies', 'freerideinvestor'); ?></h1>
+                <p class="hero-description"><?php esc_html_e('For traders tired of generic advice and backtest-only bots that fail in live markets. We provide actionable TBOW tactics and proven strategies—validated through rigorous paper trading—that actually work in real market conditions.', 'freerideinvestor'); ?></p>
+                <div class="hero-cta-group">
+                    <a href="<?php echo esc_url(home_url('/contact/')); ?>" class="cta-button cta-primary"><?php esc_html_e('Get Started Free', 'freerideinvestor'); ?></a>
+                    <a href="#tbow-tactics-section" class="cta-button cta-secondary"><?php esc_html_e('See Our Tactics', 'freerideinvestor'); ?></a>
+                </div>
+                <p class="hero-subtext"><?php esc_html_e('Unlike theory-heavy courses or untested signal services—we focus on practical, tested methods.', 'freerideinvestor'); ?></p>
             </div>
         </section>
 

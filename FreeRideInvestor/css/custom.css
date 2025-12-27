@@ -1,1 +1,100 @@
+/**
+ * FreeRideInvestor Custom Styles
+ * BRAND-01 Positioning Statement Hero Enhancement
+ * Created: 2025-12-27
+ */
 
+/* Hero Section Enhancement */
+.hero-section .hero-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.hero-section .hero-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+}
+
+.hero-section .hero-description {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    opacity: 0.95;
+}
+
+/* CTA Button Group */
+.hero-cta-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.cta-button.cta-primary {
+    background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%);
+    color: #fff;
+    border: none;
+}
+
+.cta-button.cta-primary:hover {
+    background: linear-gradient(135deg, #00b894 0%, #00a884 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 212, 170, 0.3);
+}
+
+.cta-button.cta-secondary {
+    background: transparent;
+    color: #00d4aa;
+    border: 2px solid #00d4aa;
+}
+
+.cta-button.cta-secondary:hover {
+    background: rgba(0, 212, 170, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Hero Subtext */
+.hero-subtext {
+    font-size: 0.95rem;
+    opacity: 0.8;
+    font-style: italic;
+    margin-top: 0.5rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .hero-section .hero-title {
+        font-size: 1.75rem;
+    }
+    
+    .hero-section .hero-description {
+        font-size: 1.1rem;
+    }
+    
+    .hero-cta-group {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .cta-button {
+        width: 100%;
+        max-width: 280px;
+        text-align: center;
+    }
+}
