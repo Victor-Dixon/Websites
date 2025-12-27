@@ -85,65 +85,7 @@ function freerideinvestor_force_menu_styles() {
             border-bottom: 1px solid rgba(240, 246, 252, 0.1) !important;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
         }
-        
-        /* Force Navigation Container */
-        .main-nav,
-        nav.main-nav {
-            display: flex !important;
-            align-items: center !important;
-            gap: 20px !important;
-        }
-        
-        /* Force Navigation List */
-        .main-nav .nav-list,
-        .nav-list,
-        nav .nav-list {
-            list-style: none !important;
-            display: flex !important;
-            gap: 10px !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            align-items: center !important;
-        }
-        
-        /* Force Navigation Links */
-        .main-nav .nav-list li a,
-        .nav-list li a,
-        nav .nav-list li a,
-        .nav-menu li a {
-            padding: 12px 24px !important;
-            color: #f0f6fc !important;
-            background: rgba(240, 246, 252, 0.03) !important;
-            border: 1px solid transparent !important;
-            border-radius: 8px !important;
-            text-decoration: none !important;
-            font-weight: 600 !important;
-            transition: all 0.3s ease !important;
-            display: inline-block !important;
-        }
-        
-        .main-nav .nav-list li a:hover,
-        .nav-list li a:hover,
-        nav .nav-list li a:hover,
-        .nav-menu li a:hover {
-            background: rgba(240, 246, 252, 0.08) !important;
-            border-color: rgba(240, 246, 252, 0.1) !important;
-            color: #0066ff !important;
-            transform: translateY(-2px) !important;
-            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.2) !important;
-            text-decoration: none !important;
-        }
-        
-        .main-nav .nav-list li.current-menu-item > a,
-        .main-nav .nav-list li.current_page_item > a,
-        .nav-list li.current-menu-item > a,
-        .nav-menu li.current-menu-item > a {
-            background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%) !important;
-            color: white !important;
-            border-color: #0066ff !important;
-            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.4) !important;
-        }
-        
+
         /* Force Logo Styling */
         .site-logo a,
         .logo-link,
@@ -158,14 +100,52 @@ function freerideinvestor_force_menu_styles() {
             color: #0066ff !important;
             text-decoration: none !important;
         }
-        
-        /* Remove bullet points */
-        .main-nav .nav-list li::before,
-        .nav-list li::before {
-            content: none !important;
-            display: none !important;
+
+        /* Desktop Navigation - Only force flex on larger screens */
+        @media (min-width: 769px) {
+            .main-nav,
+            nav.main-nav {
+                display: flex !important;
+                align-items: center !important;
+                gap: 20px !important;
+            }
+            
+            .main-nav .nav-list,
+            .nav-list,
+            nav .nav-list {
+                list-style: none !important;
+                display: flex !important;
+                gap: 10px !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                align-items: center !important;
+            }
+            
+            .main-nav .nav-list li a,
+            .nav-list li a,
+            nav .nav-list li a,
+            .nav-menu li a {
+                padding: 12px 24px !important;
+                color: #f0f6fc !important;
+                background: rgba(240, 246, 252, 0.03) !important;
+                border: 1px solid transparent !important;
+                border-radius: 8px !important;
+                text-decoration: none !important;
+                font-weight: 600 !important;
+                transition: all 0.3s ease !important;
+                display: inline-block !important;
+            }
         }
         
+        /* Mobile Navigation Fixes */
+        @media (max-width: 768px) {
+            .main-nav .nav-list {
+                /* Let header.php CSS handle display:none/block */
+                flex-direction: column !important;
+                width: 100% !important;
+            }
+        }
+
         /* Body background */
         body {
             background: linear-gradient(135deg, #010409 0%, #0d1117 100%) !important;
@@ -175,6 +155,19 @@ function freerideinvestor_force_menu_styles() {
     wp_add_inline_style('main-css', $css);
 }
 add_action('wp_enqueue_scripts', 'freerideinvestor_force_menu_styles', 9999);
+
+/**
+ * Fix Duplicate Posts in Queries
+ */
+function freerideinvestor_distinct_query($where) {
+    return $where . " GROUP BY ID "; // Force distinct grouping by ID to avoid duplicates from joins
+}
+// Note: modifying GROUP BY is safer than DISTINCT for some DBs, but standard WP filter is posts_distinct
+function freerideinvestor_posts_distinct($distinct) {
+    return "DISTINCT";
+}
+add_filter('posts_distinct', 'freerideinvestor_posts_distinct');
+
 
 /**
  * Enqueue theme styles and scripts
@@ -285,7 +278,6 @@ require_once get_template_directory() . '/inc/meta-boxes/brand-core-meta-boxes.p
  */
 require_once get_template_directory() . '/inc/lead-magnet-handlers.php';
 
-<?php
 /**
  * Combined Analytics Integration (GA4 + Facebook Pixel)
  * Site: freerideinvestor.com
