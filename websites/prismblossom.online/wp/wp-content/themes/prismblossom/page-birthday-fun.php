@@ -5,7 +5,7 @@
  * 
  * Interactive birthday fun page with animated cat
  * 
- * @package SouthWestSecret
+ * @package PrismBlossom
  */
 
 get_header();
@@ -18,7 +18,7 @@ get_header();
             <span class="bubble-sub">FUN</span>
         </h1>
         <p class="section-description" style="color: #FFD700; text-shadow: 0 0 5px #FFD700;">Click or tap the birthday cat for some fun!</p>
-
+        
         <!-- Interactive Mini-Games Section -->
         <div class="mini-games-container" style="margin: 40px 0; padding: 30px; background: rgba(0, 0, 0, 0.8); border: 2px solid #FFD700; border-radius: 15px; box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);">
             <h2 style="color: #FFD700; text-shadow: 0 0 10px #FFD700; margin-bottom: 20px;">🎮 Mini Games</h2>
@@ -28,7 +28,7 @@ get_header();
                 <button id="birthday-song" style="background: rgba(0, 0, 0, 0.6); border: 2px solid #FFD700; color: #FFD700; padding: 15px 25px; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: bold; text-shadow: 0 0 5px #FFD700; box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); transition: all 0.3s ease;">🎵 Birthday Song</button>
             </div>
         </div>
-
+        
         <!-- Birthday Images Gallery -->
         <div class="birthday-gallery" style="margin: 40px 0; padding: 30px; background: rgba(0, 0, 0, 0.8); border: 2px solid #FFD700; border-radius: 15px; box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);">
             <h2 style="color: #FFD700; text-shadow: 0 0 10px #FFD700; margin-bottom: 20px;">📸 Birthday Memories</h2>
@@ -108,7 +108,7 @@ get_header();
                     </div>
                 </div>
             </div>
-
+            
             <!-- Confetti Container -->
             <div id="confetti-container" class="confetti-container"></div>
         </div>
@@ -129,39 +129,39 @@ get_header();
 </script>
 
 <style>
-    .birthday-fun-section {
-        padding: 120px 0 60px;
-        min-height: 100vh;
-        text-align: center;
-        background: #000000;
-    }
+.birthday-fun-section {
+    padding: 120px 0 60px;
+    min-height: 100vh;
+    text-align: center;
+    background: #000000;
+}
 
-    .cat-container {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 400px;
-        margin: 40px 0;
-    }
+.cat-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    margin: 40px 0;
+}
 
-    .birthday-cat {
-        cursor: pointer;
-        user-select: none;
-        transition: transform 0.2s ease;
-        position: relative;
-        z-index: 10;
-    }
+.birthday-cat {
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.2s ease;
+    position: relative;
+    z-index: 10;
+}
 
-    .birthday-cat:active {
-        transform: scale(0.95);
-    }
+.birthday-cat:active {
+    transform: scale(0.95);
+}
 
-    .birthday-cat.clicked {
-        animation: catBounce 0.5s ease;
-    }
+.birthday-cat.clicked {
+    animation: catBounce 0.5s ease;
+}
 
-    @keyframes catBounce {
+@keyframes catBounce {
 
         0%,
         100% {
@@ -171,75 +171,75 @@ get_header();
         50% {
             transform: translateY(-20px) scale(1.1);
         }
-    }
+}
 
-    .cat-body {
-        position: relative;
-    }
+.cat-body {
+    position: relative;
+}
 
-    .cat-head {
-        position: relative;
-        width: 120px;
-        height: 100px;
-        background: #ffa500;
-        border-radius: 50% 50% 45% 45%;
-        margin: 0 auto;
-    }
+.cat-head {
+    position: relative;
+    width: 120px;
+    height: 100px;
+    background: #ffa500;
+    border-radius: 50% 50% 45% 45%;
+    margin: 0 auto;
+}
 
-    .cat-ears {
-        position: absolute;
-        top: -20px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        padding: 0 15px;
-    }
+.cat-ears {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 15px;
+}
 
-    .ear {
-        width: 30px;
-        height: 30px;
-        background: #ffa500;
-        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-        position: relative;
-    }
+.ear {
+    width: 30px;
+    height: 30px;
+    background: #ffa500;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    position: relative;
+}
 
-    .ear::before {
-        content: '';
-        position: absolute;
-        top: 5px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 15px;
-        height: 15px;
-        background: #ff8c00;
-        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-    }
+.ear::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 15px;
+    height: 15px;
+    background: #ff8c00;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
 
-    .cat-face {
-        position: absolute;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-    }
+.cat-face {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
 
-    .cat-eyes {
-        display: flex;
-        gap: 20px;
-        margin-bottom: 10px;
-    }
+.cat-eyes {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 10px;
+}
 
-    .eye {
-        width: 20px;
-        height: 20px;
-        background: white;
-        border-radius: 50%;
-        position: relative;
-        animation: blink 3s infinite;
-    }
+.eye {
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    position: relative;
+    animation: blink 3s infinite;
+}
 
-    @keyframes blink {
+@keyframes blink {
 
         0%,
         90%,
@@ -250,157 +250,157 @@ get_header();
         95% {
             height: 2px;
         }
-    }
+}
 
-    .pupil {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 12px;
-        height: 12px;
-        background: #000;
-        border-radius: 50%;
-    }
+.pupil {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    background: #000;
+    border-radius: 50%;
+}
 
-    .cat-nose {
-        width: 12px;
-        height: 10px;
-        background: #ff69b4;
-        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-        margin: 0 auto 5px;
-    }
+.cat-nose {
+    width: 12px;
+    height: 10px;
+    background: #ff69b4;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    margin: 0 auto 5px;
+}
 
-    .cat-mouth {
-        display: flex;
-        justify-content: center;
-        gap: 5px;
-    }
+.cat-mouth {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
 
-    .mouth-left,
-    .mouth-right {
-        width: 15px;
-        height: 15px;
-        border: 2px solid #000;
-        border-top: none;
-        border-radius: 0 0 50% 50%;
-    }
+.mouth-left,
+.mouth-right {
+    width: 15px;
+    height: 15px;
+    border: 2px solid #000;
+    border-top: none;
+    border-radius: 0 0 50% 50%;
+}
 
-    .mouth-left {
-        border-right: none;
-        border-radius: 0 0 0 50%;
-    }
+.mouth-left {
+    border-right: none;
+    border-radius: 0 0 0 50%;
+}
 
-    .mouth-right {
-        border-left: none;
-        border-radius: 0 0 50% 0;
-    }
+.mouth-right {
+    border-left: none;
+    border-radius: 0 0 50% 0;
+}
 
-    .party-hat {
-        position: absolute;
-        top: -40px;
-        left: 50%;
-        transform: translateX(-50%);
-    }
+.party-hat {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+}
 
-    .hat-top {
-        width: 8px;
-        height: 30px;
-        background: #FFD700;
-        margin: 0 auto;
-        border-radius: 4px 4px 0 0;
-        box-shadow: 0 0 5px #FFD700;
-    }
+.hat-top {
+    width: 8px;
+    height: 30px;
+    background: #FFD700;
+    margin: 0 auto;
+    border-radius: 4px 4px 0 0;
+    box-shadow: 0 0 5px #FFD700;
+}
 
-    .hat-base {
-        width: 50px;
-        height: 15px;
-        background: #FFD700;
-        border-radius: 50%;
-        margin-top: -5px;
-        box-shadow: 0 0 5px #FFD700;
-    }
+.hat-base {
+    width: 50px;
+    height: 15px;
+    background: #FFD700;
+    border-radius: 50%;
+    margin-top: -5px;
+    box-shadow: 0 0 5px #FFD700;
+}
 
-    .cat-body-main {
-        width: 100px;
-        height: 80px;
-        background: #ffa500;
-        border-radius: 50% 50% 40% 40%;
-        margin: -10px auto 0;
-        position: relative;
-    }
+.cat-body-main {
+    width: 100px;
+    height: 80px;
+    background: #ffa500;
+    border-radius: 50% 50% 40% 40%;
+    margin: -10px auto 0;
+    position: relative;
+}
 
-    .cat-belly {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 60px;
-        height: 50px;
-        background: #ffd700;
-        border-radius: 50%;
-    }
+.cat-belly {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 50px;
+    background: #ffd700;
+    border-radius: 50%;
+}
 
-    .confetti-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        overflow: hidden;
-        z-index: 5;
-    }
+.confetti-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 5;
+}
 
-    .confetti {
-        position: absolute;
-        width: 10px;
-        height: 10px;
-        background: #FFD700;
-        box-shadow: 0 0 5px #FFD700;
-        animation: confettiFall linear forwards;
-    }
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #FFD700;
+    box-shadow: 0 0 5px #FFD700;
+    animation: confettiFall linear forwards;
+}
 
-    @keyframes confettiFall {
-        to {
-            transform: translateY(500px) rotate(360deg);
-            opacity: 0;
-        }
+@keyframes confettiFall {
+    to {
+        transform: translateY(500px) rotate(360deg);
+        opacity: 0;
     }
+}
 
-    .click-counter {
-        margin-top: 30px;
-        font-size: 1.2rem;
-        color: #FFD700;
-        text-shadow: 0 0 5px #FFD700;
-    }
+.click-counter {
+    margin-top: 30px;
+    font-size: 1.2rem;
+    color: #FFD700;
+    text-shadow: 0 0 5px #FFD700;
+}
 
-    .click-counter span {
-        color: #FFD700;
-        font-weight: bold;
-        font-size: 1.5rem;
-        text-shadow: 0 0 10px #FFD700;
-    }
+.click-counter span {
+    color: #FFD700;
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-shadow: 0 0 10px #FFD700;
+}
 
-    .fun-messages {
-        margin-top: 30px;
-        min-height: 50px;
-    }
+.fun-messages {
+    margin-top: 30px;
+    min-height: 50px;
+}
 
-    .fun-message {
-        background: rgba(0, 0, 0, 0.8);
-        border: 2px solid #FFD700;
-        border-radius: 10px;
-        padding: 15px;
-        margin: 10px auto;
-        max-width: 400px;
-        color: #FFD700;
-        text-shadow: 0 0 5px #FFD700;
-        box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-        animation: messagePop 0.5s ease;
-    }
+.fun-message {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #FFD700;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px auto;
+    max-width: 400px;
+    color: #FFD700;
+    text-shadow: 0 0 5px #FFD700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    animation: messagePop 0.5s ease;
+}
 
-    @keyframes messagePop {
+@keyframes messagePop {
         0% {
             transform: scale(0);
             opacity: 0;
@@ -440,128 +440,128 @@ get_header();
     #upload-btn:hover {
         transform: scale(1.05);
         box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
-    }
+}
 
-    @media (max-width: 768px) {
-        .cat-head {
-            width: 100px;
-            height: 85px;
-        }
-
-        .cat-body-main {
-            width: 85px;
-            height: 70px;
-        }
+@media (max-width: 768px) {
+    .cat-head {
+        width: 100px;
+        height: 85px;
     }
+    
+    .cat-body-main {
+        width: 85px;
+        height: 70px;
+    }
+}
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const cat = document.getElementById('birthday-cat');
-        const confettiContainer = document.getElementById('confetti-container');
-        const clickCountSpan = document.getElementById('click-count');
-        const funMessagesDiv = document.getElementById('fun-messages');
-        let clickCount = 0;
-
-        const funMessages = [
-            "🎉 Happy Birthday! 🎉",
-            "🎂 You're awesome! 🎂",
-            "🎈 Party time! 🎈",
-            "🎊 Let's celebrate! 🎊",
-            "🎁 You're amazing! 🎁",
-            "✨ Have a great day! ✨",
-            "🎪 Fun times ahead! 🎪",
-            "🎭 You're the best! 🎭"
-        ];
-
-        function createConfetti() {
-            const colors = ['#FFD700', '#FFA500', '#FFD700', '#FFA500', '#FFD700'];
-            const confettiCount = 50;
-
-            for (let i = 0; i < confettiCount; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.left = Math.random() * 100 + '%';
-                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.animationDuration = (Math.random() * 2 + 1) + 's';
-                confetti.style.animationDelay = Math.random() * 0.5 + 's';
-                confettiContainer.appendChild(confetti);
-
-                setTimeout(() => {
-                    confetti.remove();
-                }, 3000);
-            }
-        }
-
-        function playSound() {
-            // Create a simple beep sound using Web Audio API
-            const audioContext = new(window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-
-            oscillator.frequency.value = 800;
-            oscillator.type = 'sine';
-
-            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.1);
-        }
-
-        function showFunMessage() {
-            const message = funMessages[Math.floor(Math.random() * funMessages.length)];
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'fun-message';
-            messageDiv.textContent = message;
-            funMessagesDiv.appendChild(messageDiv);
-
+document.addEventListener('DOMContentLoaded', function() {
+    const cat = document.getElementById('birthday-cat');
+    const confettiContainer = document.getElementById('confetti-container');
+    const clickCountSpan = document.getElementById('click-count');
+    const funMessagesDiv = document.getElementById('fun-messages');
+    let clickCount = 0;
+    
+    const funMessages = [
+        "🎉 Happy Birthday! 🎉",
+        "🎂 You're awesome! 🎂",
+        "🎈 Party time! 🎈",
+        "🎊 Let's celebrate! 🎊",
+        "🎁 You're amazing! 🎁",
+        "✨ Have a great day! ✨",
+        "🎪 Fun times ahead! 🎪",
+        "🎭 You're the best! 🎭"
+    ];
+    
+    function createConfetti() {
+        const colors = ['#FFD700', '#FFA500', '#FFD700', '#FFA500', '#FFD700'];
+        const confettiCount = 50;
+        
+        for (let i = 0; i < confettiCount; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDuration = (Math.random() * 2 + 1) + 's';
+            confetti.style.animationDelay = Math.random() * 0.5 + 's';
+            confettiContainer.appendChild(confetti);
+            
             setTimeout(() => {
-                messageDiv.style.animation = 'messagePop 0.5s ease reverse';
-                setTimeout(() => messageDiv.remove(), 500);
-            }, 2000);
+                confetti.remove();
+            }, 3000);
         }
-
-        if (cat) {
-            cat.addEventListener('click', function() {
-                clickCount++;
-                if (clickCountSpan) {
-                    clickCountSpan.textContent = clickCount;
-                }
-
-                // Add bounce animation
-                cat.classList.add('clicked');
-                setTimeout(() => cat.classList.remove('clicked'), 500);
-
-                // Create confetti
-                createConfetti();
-
-                // Play sound
-                try {
-                    playSound();
-                } catch (e) {
-                    console.log('Sound not available');
-                }
-
-                // Show fun message
-                showFunMessage();
-            });
-
-            // Also support touch for mobile
-            cat.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                cat.click();
-            });
-        }
-
-        // Mini-Games Interactive Features
-        const confettiBurstBtn = document.getElementById('confetti-burst');
-        const goldenSparklesBtn = document.getElementById('golden-sparkles');
-        const birthdaySongBtn = document.getElementById('birthday-song');
-
+    }
+    
+    function playSound() {
+        // Create a simple beep sound using Web Audio API
+            const audioContext = new(window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.value = 800;
+        oscillator.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.1);
+    }
+    
+    function showFunMessage() {
+        const message = funMessages[Math.floor(Math.random() * funMessages.length)];
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'fun-message';
+        messageDiv.textContent = message;
+        funMessagesDiv.appendChild(messageDiv);
+        
+        setTimeout(() => {
+            messageDiv.style.animation = 'messagePop 0.5s ease reverse';
+            setTimeout(() => messageDiv.remove(), 500);
+        }, 2000);
+    }
+    
+    if (cat) {
+        cat.addEventListener('click', function() {
+            clickCount++;
+            if (clickCountSpan) {
+                clickCountSpan.textContent = clickCount;
+            }
+            
+            // Add bounce animation
+            cat.classList.add('clicked');
+            setTimeout(() => cat.classList.remove('clicked'), 500);
+            
+            // Create confetti
+            createConfetti();
+            
+            // Play sound
+            try {
+                playSound();
+            } catch (e) {
+                console.log('Sound not available');
+            }
+            
+            // Show fun message
+            showFunMessage();
+        });
+        
+        // Also support touch for mobile
+        cat.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            cat.click();
+        });
+    }
+    
+    // Mini-Games Interactive Features
+    const confettiBurstBtn = document.getElementById('confetti-burst');
+    const goldenSparklesBtn = document.getElementById('golden-sparkles');
+    const birthdaySongBtn = document.getElementById('birthday-song');
+    
         // Enhanced confetti burst function
         function createConfettiBurst() {
             if (!confettiContainer) {
@@ -602,11 +602,11 @@ get_header();
                 e.stopPropagation();
                 console.log('Confetti burst clicked!');
                 createConfettiBurst();
-                this.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                }, 100);
-            });
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 100);
+        });
         } else {
             console.error('Confetti burst button not found!');
         }
@@ -669,49 +669,49 @@ get_header();
                 e.stopPropagation();
                 console.log('Golden sparkles clicked!');
                 createGoldenSparkles();
-                this.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                }, 100);
-            });
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 100);
+        });
         } else {
             console.error('Golden sparkles button not found!');
-        }
-
-        if (birthdaySongBtn) {
-            birthdaySongBtn.addEventListener('click', function() {
-                // Play birthday song notes
-                const notes = [523.25, 587.33, 659.25, 698.46, 783.99]; // C, D, E, F, G
-                notes.forEach((freq, index) => {
-                    setTimeout(() => {
-                        try {
-                            const audioContext = new(window.AudioContext || window.webkitAudioContext)();
-                            const oscillator = audioContext.createOscillator();
-                            const gainNode = audioContext.createGain();
-
-                            oscillator.connect(gainNode);
-                            gainNode.connect(audioContext.destination);
-
-                            oscillator.frequency.value = freq;
-                            oscillator.type = 'sine';
-
-                            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-
-                            oscillator.start(audioContext.currentTime);
-                            oscillator.stop(audioContext.currentTime + 0.3);
-                        } catch (e) {
-                            console.log('Sound not available');
-                        }
-                    }, index * 200);
-                });
-                this.style.transform = 'scale(0.95)';
+    }
+    
+    if (birthdaySongBtn) {
+        birthdaySongBtn.addEventListener('click', function() {
+            // Play birthday song notes
+            const notes = [523.25, 587.33, 659.25, 698.46, 783.99]; // C, D, E, F, G
+            notes.forEach((freq, index) => {
                 setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                }, 100);
+                    try {
+                            const audioContext = new(window.AudioContext || window.webkitAudioContext)();
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        
+                        oscillator.frequency.value = freq;
+                        oscillator.type = 'sine';
+                        
+                        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                        
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + 0.3);
+                    } catch (e) {
+                        console.log('Sound not available');
+                    }
+                }, index * 200);
             });
-        }
-
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 100);
+        });
+    }
+    
         // Slideshow Gallery Functionality
         let galleryItems = [];
         let currentIndex = 0;
@@ -1042,7 +1042,7 @@ get_header();
                     uploadStatus.textContent = skipped > 0 ? 'No files were uploaded. Please check file sizes and types.' : 'No files were uploaded.';
                     uploadStatus.style.color = '#ff0000';
 
-                    setTimeout(() => {
+            setTimeout(() => {
                         uploadStatus.textContent = '';
                     }, 3000);
                 }
@@ -1124,7 +1124,7 @@ get_header();
 
         // Initialize gallery
         loadGallery();
-    });
+});
 </script>
 
 <?php get_footer(); ?>

@@ -3,15 +3,16 @@
     "site_url": "https://ariajet.site",
     "deployment_method": "rest_api",
     "rest_api": {
-      "username": "REPLACE_WITH_WORDPRESS_USERNAME",
-      "app_password": "REPLACE_WITH_APPLICATION_PASSWORD",
+      "username": "DadudeKC@Gmail.com",
+      "app_password": "KHtl XOwZ FNgJ WTzF HUqc mUvP",
       "site_url": "https://ariajet.site"
     },
     "sftp": {
-      "host": null,
-      "username": null,
-      "password": null,
-      "remote_path": "domains/ariajet.site/public_html"
+      "host": "157.173.214.121",
+      "username": "u996867598",
+      "password": "Falcons#1247",
+      "remote_path": "domains/ariajet.site/public_html",
+      "port": 65002
     },
     "seo_deployment": {
       "method": "functions.php",
@@ -27,14 +28,15 @@
     "deployment_method": "rest_api",
     "rest_api": {
       "username": "dadudeKC@Gmail.com",
-      "app_password": "REPLACE_WITH_APPLICATION_PASSWORD",
+      "app_password": "udje VjlR o4XL EI96 8y2L vH47",
       "site_url": "https://crosbyultimateevents.com"
     },
     "sftp": {
-      "host": null,
-      "username": null,
-      "password": null,
-      "remote_path": "domains/crosbyultimateevents.com/public_html"
+      "host": "157.173.214.121",
+      "username": "u996867598",
+      "password": "Falcons#1247",
+      "remote_path": "domains/crosbyultimateevents.com/public_html",
+      "port": 65002
     },
     "seo_deployment": {
       "method": "functions.php",
@@ -49,15 +51,16 @@
     "site_url": "https://houstonsipqueen.com",
     "deployment_method": "sftp",
     "rest_api": {
-      "username": "",
-      "app_password": "",
+      "username": "dadudeKC@Gmail.com",
+      "app_password": "TAUs Schk Sh67 lUbL y6Gh zJp8",
       "site_url": "https://houstonsipqueen.com"
     },
     "sftp": {
-      "host": "",
-      "username": "",
-      "password": "",
-      "remote_path": "domains/houstonsipqueen.com/public_html"
+      "host": "157.173.214.121",
+      "username": "u996867598",
+      "password": "Falcons#1247",
+      "remote_path": "domains/houstonsipqueen.com/public_html",
+      "port": 65002
     },
     "seo_deployment": {
       "method": "functions.php",
@@ -72,15 +75,16 @@
     "site_url": "https://digitaldreamscape.site",
     "deployment_method": "rest_api",
     "rest_api": {
-      "username": "",
-      "app_password": "",
+      "username": "DadudeKC@Gmail.com",
+      "app_password": "KHtl XOwZ FNgJ WTzF HUqc mUvP",
       "site_url": "https://digitaldreamscape.site"
     },
     "sftp": {
-      "host": "",
-      "username": "",
-      "password": "",
-      "remote_path": "domains/digitaldreamscape.site/public_html"
+      "host": "157.173.214.121",
+      "username": "u996867598",
+      "password": "Falcons#1247",
+      "remote_path": "domains/digitaldreamscape.site/public_html",
+      "port": 65002
     },
     "seo_deployment": {
       "method": "functions.php",
@@ -95,15 +99,16 @@
     "site_url": "https://freerideinvestor.com",
     "deployment_method": "rest_api",
     "rest_api": {
-      "username": "",
-      "app_password": "",
+      "username": "DadudeKC@Gmail.com",
+      "app_password": "KHtl XOwZ FNgJ WTzF HUqc mUvP",
       "site_url": "https://freerideinvestor.com"
     },
     "sftp": {
-      "host": "",
-      "username": "",
-      "password": "",
-      "remote_path": "domains/freerideinvestor.com/public_html"
+      "host": "157.173.214.121",
+      "username": "u996867598",
+      "password": "Falcons#1247",
+      "remote_path": "domains/freerideinvestor.com/public_html",
+      "port": 65002
     },
     "seo_deployment": {
       "method": "functions.php",
@@ -119,14 +124,15 @@
     "deployment_method": "rest_api",
     "rest_api": {
       "username": "carmyn",
-      "app_password": "REPLACE_WITH_APPLICATION_PASSWORD",
+      "app_password": "KHtl XOwZ FNgJ WTzF HUqc mUvP",
       "site_url": "https://prismblossom.online"
     },
     "sftp": {
-      "host": null,
-      "username": null,
-      "password": null,
-      "remote_path": "domains/prismblossom.online/public_html"
+      "host": "157.173.214.121",
+      "username": "u996867598",
+      "password": "Falcons#1247",
+      "remote_path": "domains/prismblossom.online/public_html",
+      "port": 65002
     },
     "seo_deployment": {
       "method": "functions.php",
@@ -142,14 +148,15 @@
     "deployment_method": "rest_api",
     "rest_api": {
       "username": "DadudeKC@Gmail.com",
-      "app_password": "REPLACE_WITH_APPLICATION_PASSWORD",
+      "app_password": "KHtl XOwZ FNgJ WTzF HUqc mUvP",
       "site_url": "https://southwestsecret.com"
     },
     "sftp": {
-      "host": null,
-      "username": null,
-      "password": null,
-      "remote_path": "domains/southwestsecret.com/public_html"
+      "host": "157.173.214.121",
+      "username": "u996867598",
+      "password": "Falcons#1247",
+      "remote_path": "domains/southwestsecret.com/public_html",
+      "port": 65002
     },
     "seo_deployment": {
       "method": "functions.php",
@@ -165,14 +172,15 @@
     "deployment_method": "rest_api",
     "rest_api": {
       "username": "DadudeKC@Gmail.com",
-      "app_password": "REPLACE_WITH_APPLICATION_PASSWORD",
+      "app_password": "KHtl XOwZ FNgJ WTzF HUqc mUvP",
       "site_url": "https://tradingrobotplug.com"
     },
     "sftp": {
-      "host": null,
-      "username": null,
-      "password": null,
-      "remote_path": "domains/tradingrobotplug.com/public_html"
+      "host": "157.173.214.121",
+      "username": "u996867598",
+      "password": "Falcons#1247",
+      "remote_path": "domains/tradingrobotplug.com/public_html",
+      "port": 65002
     },
     "seo_deployment": {
       "method": "functions.php",
@@ -188,14 +196,15 @@
     "deployment_method": "rest_api",
     "rest_api": {
       "username": "DadudeKC@Gmail.com",
-      "app_password": "REPLACE_WITH_APPLICATION_PASSWORD",
+      "app_password": "KHtl XOwZ FNgJ WTzF HUqc mUvP",
       "site_url": "https://weareswarm.online"
     },
     "sftp": {
-      "host": null,
-      "username": null,
-      "password": null,
-      "remote_path": "domains/weareswarm.online/public_html"
+      "host": "157.173.214.121",
+      "username": "u996867598",
+      "password": "Falcons#1247",
+      "remote_path": "domains/weareswarm.online/public_html",
+      "port": 65002
     },
     "seo_deployment": {
       "method": "functions.php",
@@ -211,14 +220,15 @@
     "deployment_method": "rest_api",
     "rest_api": {
       "username": "DadudeKC@Gmail.com",
-      "app_password": "REPLACE_WITH_APPLICATION_PASSWORD",
+      "app_password": "KHtl XOwZ FNgJ WTzF HUqc mUvP",
       "site_url": "https://weareswarm.site"
     },
     "sftp": {
-      "host": null,
-      "username": null,
-      "password": null,
-      "remote_path": "domains/weareswarm.site/public_html"
+      "host": "157.173.214.121",
+      "username": "u996867598",
+      "password": "Falcons#1247",
+      "remote_path": "domains/weareswarm.site/public_html",
+      "port": 65002
     },
     "seo_deployment": {
       "method": "functions.php",

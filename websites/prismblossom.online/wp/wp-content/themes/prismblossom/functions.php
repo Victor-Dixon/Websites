@@ -1,9 +1,9 @@
 <?php
 
 /**
- * SouthWest Secret Theme Functions
+ * PrismBlossom Theme Functions
  * 
- * @package SouthWestSecret
+ * @package PrismBlossom
  * @version 1.0.0
  */
 
@@ -18,7 +18,7 @@ function prismblossom_setup()
 
     // Register navigation menus
     register_nav_menus(array(
-        'primary' => __('Primary Menu', 'southwestsecret'),
+        'primary' => __('Primary Menu', 'prismblossom'),
     ));
 }
 add_action('after_setup_theme', 'prismblossom_setup');
@@ -26,23 +26,41 @@ add_action('after_setup_theme', 'prismblossom_setup');
 // Enqueue styles and scripts
 function prismblossom_scripts()
 {
-    // Main stylesheet
-    wp_enqueue_style('southwestsecret-style', get_template_directory_uri() . '/css/style.css', array(), '1.0.0');
+    // Main stylesheet (theme root style.css)
+    wp_enqueue_style('prismblossom-style', get_stylesheet_uri(), array(), '1.0.0');
 
     // Google Fonts with fallback
-    wp_enqueue_style('southwestsecret-fonts', 'https://fonts.googleapis.com/css2?family=Rubik+Doodle+Shadow&family=Permanent+Marker&family=Rubik+Bubbles&display=swap', array(), null);
+    wp_enqueue_style('prismblossom-fonts', 'https://fonts.googleapis.com/css2?family=Rubik+Doodle+Shadow&family=Permanent+Marker&family=Rubik+Bubbles&display=swap', array(), null);
 
     // jQuery (WordPress includes it, but ensure it's available)
     wp_enqueue_script('jquery');
 
     // Main JavaScript
-    wp_enqueue_script('southwestsecret-script', get_template_directory_uri() . '/js/script.js', array('jquery'), '1.0.0', true);
+    wp_enqueue_script('prismblossom-script', get_template_directory_uri() . '/js/script.js', array('jquery'), '1.0.0', true);
 
     // Localize script for AJAX
-    wp_localize_script('southwestsecret-script', 'prismblossomAjax', array(
+    wp_localize_script('prismblossom-script', 'prismblossomAjax', array(
         'ajaxurl' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('prismblossom_nonce')
     ));
+
+    // Add purple background to homepage
+    $purple_bg_css = "
+        html { background: #bf00ff !important; height: 100% !important; }
+        body { 
+            background: #bf00ff !important;
+            background: linear-gradient(135deg, #bf00ff 0%, #9d00ff 50%, #7d00ff 100%) !important;
+            background-attachment: fixed !important;
+            min-height: 100vh !important;
+        }
+        body.page-template-page-carmyn,
+        body.page-template-page-guestbook,
+        body.page-template-page-invitation,
+        body.page-template-page-birthday-fun {
+            background: inherit !important;
+        }
+    ";
+    wp_add_inline_style('southwestsecret-style', $purple_bg_css);
 
     // Add inline CSS for text rendering fixes - Enhanced to fix spacing issues
     $text_rendering_css = "
@@ -72,7 +90,7 @@ function prismblossom_scripts()
             font-display: swap;
         }
     ";
-    wp_add_inline_style('southwestsecret-style', $text_rendering_css);
+    wp_add_inline_style('prismblossom-style', $text_rendering_css);
 }
 add_action('wp_enqueue_scripts', 'prismblossom_scripts');
 
@@ -204,6 +222,54 @@ function prismblossom_add_artist_menu_items($items, $args)
 }
 add_filter('wp_nav_menu_items', 'prismblossom_add_artist_menu_items', 10, 2);
 
+// Remove unwanted pages from menus (even if they exist in WP)
+function prismblossom_filter_nav_menu_objects($sorted_menu_items, $args)
+{
+    if (!is_array($sorted_menu_items)) {
+        return $sorted_menu_items;
+    }
+
+    $blocked_slugs = array(
+        'agents',
+        'live-activity',
+        'capabilities',
+        'about',
+        'aria',
+    );
+
+    $filtered = array();
+    foreach ($sorted_menu_items as $item) {
+        $url = isset($item->url) ? (string) $item->url : '';
+
+        $path = (string) wp_parse_url($url, PHP_URL_PATH);
+        $path = trim($path, '/');
+
+        $last_segment = $path !== '' ? basename($path) : '';
+        if ($last_segment !== '' && in_array($last_segment, $blocked_slugs, true)) {
+            continue;
+        }
+
+        $filtered[] = $item;
+    }
+
+    return $filtered;
+}
+add_filter('wp_nav_menu_objects', 'prismblossom_filter_nav_menu_objects', 10, 2);
+
+// Block direct access to unwanted pages (redirect to home)
+function prismblossom_block_unwanted_pages()
+{
+    if (!is_page()) {
+        return;
+    }
+
+    if (is_page(array('agents', 'live-activity', 'capabilities', 'about', 'aria'))) {
+        wp_safe_redirect(home_url('/'), 301);
+        exit;
+    }
+}
+add_action('template_redirect', 'prismblossom_block_unwanted_pages');
+
 // Remove unwanted menu items from navigation - ENHANCED
 function prismblossom_remove_menu_items($items, $args)
 {
@@ -211,12 +277,20 @@ function prismblossom_remove_menu_items($items, $args)
     if (isset($args->theme_location) && $args->theme_location == 'primary') {
         // Items to remove (case-insensitive matching with variations)
         $items_to_remove = array(
-            'Capabilities', 'Capabilitie', 'Capability',
-            'Live Activity', 'Live Activity', 'LiveActivity',
-            'Agent', 'Agents', 'Agent', 
-            'Aria', 'Aria', 'aria'
+            'Capabilities',
+            'Capabilitie',
+            'Capability',
+            'Live Activity',
+            'Live Activity',
+            'LiveActivity',
+            'Agent',
+            'Agents',
+            'Agent',
+            'Aria',
+            'Aria',
+            'aria'
         );
-        
+
         foreach ($items_to_remove as $item_to_remove) {
             // More robust regex to match menu items with the text
             $patterns = array(
@@ -225,12 +299,12 @@ function prismblossom_remove_menu_items($items, $args)
                 '/<li[^>]*>.*?<a[^>]*>.*?' . preg_quote(ucfirst($item_to_remove), '/') . '.*?<\/a>.*?<\/li>/is',
                 '/<li[^>]*>.*?<a[^>]*>.*?' . preg_quote(strtolower($item_to_remove), '/') . '.*?<\/a>.*?<\/li>/is'
             );
-            
+
             foreach ($patterns as $pattern) {
                 $items = preg_replace($pattern, '', $items);
             }
         }
-        
+
         // Clean up any empty list items
         $items = preg_replace('/<li[^>]*>\s*<\/li>/is', '', $items);
     }
@@ -244,26 +318,28 @@ function prismblossom_filter_menu_objects($sorted_menu_items, $args)
     // Only filter primary menu
     if (isset($args->theme_location) && $args->theme_location == 'primary') {
         $items_to_remove = array('Capabilities', 'Capabilitie', 'Live Activity', 'Agent', 'Agents', 'Aria');
-        
+
         foreach ($sorted_menu_items as $key => $item) {
             $item_title_lower = strtolower(trim($item->title));
             $item_slug_lower = isset($item->post_name) ? strtolower(trim($item->post_name)) : '';
-            
+
             // Remove items by exact title match (case-insensitive)
             foreach ($items_to_remove as $remove_item) {
                 $remove_item_lower = strtolower(trim($remove_item));
-                
+
                 // Check title
                 if ($item_title_lower === $remove_item_lower || stripos($item_title_lower, $remove_item_lower) !== false) {
                     unset($sorted_menu_items[$key]);
                     break;
                 }
-                
+
                 // Check slug/post_name
                 if (!empty($item_slug_lower)) {
-                    if ($item_slug_lower === $remove_item_lower || 
+                    if (
+                        $item_slug_lower === $remove_item_lower ||
                         $item_slug_lower === str_replace(' ', '-', $remove_item_lower) ||
-                        stripos($item_slug_lower, $remove_item_lower) !== false) {
+                        stripos($item_slug_lower, $remove_item_lower) !== false
+                    ) {
                         unset($sorted_menu_items[$key]);
                         break;
                     }
@@ -290,21 +366,21 @@ function prismblossom_delete_unwanted_pages()
         'agents',
         'aria'
     );
-    
+
     foreach ($pages_to_delete as $page_slug) {
         $page = get_page_by_path($page_slug);
         if ($page) {
             // Force delete (bypass trash)
             wp_delete_post($page->ID, true);
         }
-        
+
         // Also try case variations
         $page = get_page_by_path(ucfirst($page_slug));
         if ($page) {
             wp_delete_post($page->ID, true);
         }
     }
-    
+
     // Also search all pages by title (not using 'title' parameter as it's not reliable)
     $titles_to_delete = array('Capabilities', 'Live Activity', 'Agent', 'Agents', 'Aria');
     $all_pages = get_pages(array(
@@ -312,25 +388,27 @@ function prismblossom_delete_unwanted_pages()
         'number' => -1,
         'post_type' => 'page'
     ));
-    
+
     foreach ($all_pages as $page) {
         $page_title_lower = strtolower(trim($page->post_title));
         $page_slug_lower = strtolower(trim($page->post_name));
-        
+
         // Check if title or slug matches unwanted pages
         foreach ($titles_to_delete as $unwanted_title) {
             $unwanted_title_lower = strtolower(trim($unwanted_title));
-            
-            if ($page_title_lower === $unwanted_title_lower || 
+
+            if (
+                $page_title_lower === $unwanted_title_lower ||
                 stripos($page_title_lower, $unwanted_title_lower) !== false ||
-                in_array($page_slug_lower, $page_slugs_to_delete)) {
-                
+                in_array($page_slug_lower, $pages_to_delete)
+            ) {
+
                 wp_delete_post($page->ID, true); // Force delete
                 break;
             }
         }
     }
-    
+
     // Clear menu cache
     wp_cache_delete('alloptions', 'options');
 }
@@ -340,9 +418,9 @@ function prismblossom_delete_unwanted_pages()
 function prismblossom_remove_unwanted_menu_items()
 {
     $menu_ids_to_check = array('primary', 'Primary Menu', 1); // Common menu locations/IDs
-    
+
     $items_to_remove = array('Capabilities', 'Capabilitie', 'Live Activity', 'Agent', 'Agents', 'Aria');
-    
+
     foreach ($menu_ids_to_check as $menu_id) {
         $menu = wp_get_nav_menu_object($menu_id);
         if (!$menu && is_numeric($menu_id)) {
@@ -351,19 +429,21 @@ function prismblossom_remove_unwanted_menu_items()
                 $menu = $menus[$menu_id - 1];
             }
         }
-        
+
         if ($menu) {
             $menu_items = wp_get_nav_menu_items($menu->term_id);
-            
+
             if ($menu_items) {
                 foreach ($menu_items as $menu_item) {
                     $title_lower = strtolower(trim($menu_item->title));
-                    
+
                     foreach ($items_to_remove as $unwanted_item) {
                         $unwanted_lower = strtolower(trim($unwanted_item));
-                        
-                        if ($title_lower === $unwanted_lower || 
-                            stripos($title_lower, $unwanted_lower) !== false) {
+
+                        if (
+                            $title_lower === $unwanted_lower ||
+                            stripos($title_lower, $unwanted_lower) !== false
+                        ) {
                             wp_delete_post($menu_item->ID, true); // Delete menu item
                             break;
                         }
@@ -372,21 +452,23 @@ function prismblossom_remove_unwanted_menu_items()
             }
         }
     }
-    
+
     // Also check all menus
     $all_menus = wp_get_nav_menus();
     foreach ($all_menus as $menu) {
         $menu_items = wp_get_nav_menu_items($menu->term_id);
-        
+
         if ($menu_items) {
             foreach ($menu_items as $menu_item) {
                 $title_lower = strtolower(trim($menu_item->title));
-                
+
                 foreach ($items_to_remove as $unwanted_item) {
                     $unwanted_lower = strtolower(trim($unwanted_item));
-                    
-                    if ($title_lower === $unwanted_lower || 
-                        stripos($title_lower, $unwanted_lower) !== false) {
+
+                    if (
+                        $title_lower === $unwanted_lower ||
+                        stripos($title_lower, $unwanted_lower) !== false
+                    ) {
                         wp_delete_post($menu_item->ID, true);
                         break;
                     }
@@ -509,7 +591,7 @@ function prismblossom_ajax_guestbook_submission()
         // Return the new entry data so it can be displayed immediately
         $entry_id = $wpdb->insert_id;
         $new_entry = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_name WHERE id = %d", $entry_id));
-        
+
         wp_send_json_success(array(
             'message' => 'Message submitted successfully',
             'entry' => array(
@@ -553,7 +635,7 @@ function prismblossom_guestbook_admin_page()
         $bulk_action = $_POST['bulk_action'];
         $entry_ids = array_map('intval', $_POST['entry_ids']);
         $deleted = 0;
-        
+
         foreach ($entry_ids as $entry_id) {
             if ($bulk_action === 'delete') {
                 $wpdb->delete($table_name, array('id' => $entry_id), array('%d'));
@@ -576,7 +658,7 @@ function prismblossom_guestbook_admin_page()
                 );
             }
         }
-        
+
         if ($bulk_action === 'delete') {
             echo '<div class="notice notice-success"><p>' . $deleted . ' message(s) deleted!</p></div>';
         } else {
@@ -623,7 +705,7 @@ function prismblossom_guestbook_admin_page()
 
         <form method="post" id="guestbook-bulk-form">
             <?php wp_nonce_field('guestbook_bulk_action'); ?>
-            
+
             <div class="tablenav top">
                 <div class="alignleft actions bulkactions">
                     <label for="bulk-action-selector" class="screen-reader-text">Select bulk action</label>
@@ -701,27 +783,27 @@ function prismblossom_guestbook_admin_page()
             color: #ff0000;
             font-weight: bold;
         }
-        
+
         .tablenav {
             margin: 6px 0 4px;
         }
-        
+
         .bulkactions {
             padding: 8px 0;
         }
     </style>
-    
+
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const selectAll = document.getElementById('cb-select-all');
-        const checkboxes = document.querySelectorAll('input[name="entry_ids[]"]');
-        
-        if (selectAll) {
-            selectAll.addEventListener('change', function() {
-                checkboxes.forEach(cb => cb.checked = this.checked);
-            });
-        }
-    });
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectAll = document.getElementById('cb-select-all');
+            const checkboxes = document.querySelectorAll('input[name="entry_ids[]"]');
+
+            if (selectAll) {
+                selectAll.addEventListener('change', function() {
+                    checkboxes.forEach(cb => cb.checked = this.checked);
+                });
+            }
+        });
     </script>
 <?php
 }
@@ -957,6 +1039,110 @@ function prismblossom_ajax_invitation_message_submission()
 }
 add_action('wp_ajax_prismblossom_submit_invitation_message', 'prismblossom_ajax_invitation_message_submission');
 add_action('wp_ajax_nopriv_prismblossom_submit_invitation_message', 'prismblossom_ajax_invitation_message_submission');
+
+// ============================================
+// CARMYN PAGE PROFILE FIELDS
+// ============================================
+
+function prismblossom_add_carmyn_meta_box()
+{
+    add_meta_box(
+        'prismblossom_carmyn_profile',
+        'Carmyn Profile',
+        'prismblossom_carmyn_meta_box_callback',
+        'page',
+        'normal',
+        'high'
+    );
+}
+add_action('add_meta_boxes', 'prismblossom_add_carmyn_meta_box');
+
+function prismblossom_carmyn_meta_box_callback($post)
+{
+    if (get_page_template_slug($post->ID) !== 'page-carmyn.php') {
+        echo '<p>This meta box is only available on the Carmyn page template.</p>';
+        return;
+    }
+
+    wp_nonce_field('prismblossom_save_carmyn_profile', 'prismblossom_carmyn_nonce');
+
+    $tagline = get_post_meta($post->ID, '_carmyn_tagline', true);
+    $highlights = get_post_meta($post->ID, '_carmyn_highlights', true);
+    $lofi_youtube_id = get_post_meta($post->ID, '_carmyn_lofi_youtube_id', true);
+
+    $tagline = $tagline ?: 'Family & friends';
+    $highlights = $highlights ?: 'Family, Memories, Music';
+    $lofi_youtube_id = $lofi_youtube_id ?: 'sF80I-TQiW0';
+?>
+    <table class="form-table">
+        <tr>
+            <th><label for="carmyn_tagline">Tagline</label></th>
+            <td>
+                <input type="text" id="carmyn_tagline" name="carmyn_tagline"
+                    value="<?php echo esc_attr($tagline); ?>"
+                    class="regular-text"
+                    placeholder="e.g., Family & friends">
+                <p class="description">Short line shown under the page title.</p>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="carmyn_highlights">Highlights (comma-separated)</label></th>
+            <td>
+                <input type="text" id="carmyn_highlights" name="carmyn_highlights"
+                    value="<?php echo esc_attr($highlights); ?>"
+                    class="regular-text"
+                    placeholder="e.g., Family, Memories, Music">
+                <p class="description">Displayed as badges on the page.</p>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="carmyn_lofi_youtube_id">Background Music YouTube Video ID</label></th>
+            <td>
+                <input type="text" id="carmyn_lofi_youtube_id" name="carmyn_lofi_youtube_id"
+                    value="<?php echo esc_attr($lofi_youtube_id); ?>"
+                    class="regular-text"
+                    placeholder="e.g., sF80I-TQiW0">
+                <p class="description">Used by the “Play Music” button. (Video ID only, not full URL.)</p>
+            </td>
+        </tr>
+    </table>
+<?php
+}
+
+function prismblossom_save_carmyn_meta($post_id)
+{
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    if (
+        !isset($_POST['prismblossom_carmyn_nonce']) ||
+        !wp_verify_nonce($_POST['prismblossom_carmyn_nonce'], 'prismblossom_save_carmyn_profile')
+    ) {
+        return;
+    }
+
+    if (!current_user_can('edit_page', $post_id)) {
+        return;
+    }
+
+    if (get_page_template_slug($post_id) !== 'page-carmyn.php') {
+        return;
+    }
+
+    if (isset($_POST['carmyn_tagline'])) {
+        update_post_meta($post_id, '_carmyn_tagline', sanitize_text_field($_POST['carmyn_tagline']));
+    }
+
+    if (isset($_POST['carmyn_highlights'])) {
+        update_post_meta($post_id, '_carmyn_highlights', sanitize_text_field($_POST['carmyn_highlights']));
+    }
+
+    if (isset($_POST['carmyn_lofi_youtube_id'])) {
+        update_post_meta($post_id, '_carmyn_lofi_youtube_id', sanitize_text_field($_POST['carmyn_lofi_youtube_id']));
+    }
+}
+add_action('save_post', 'prismblossom_save_carmyn_meta');
 
 // ============================================
 // FUTURE BLOG STRUCTURE (Not implemented yet)
