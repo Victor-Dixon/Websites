@@ -278,3 +278,5 @@ define('WP_DEBUG_DISPLAY', false);
 if __name__ == "__main__":
     sys.exit(0 if investigate_500() else 1)
 
+
+

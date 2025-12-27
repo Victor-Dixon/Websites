@@ -159,3 +159,5 @@ def fix_wp_config_syntax():
 if __name__ == "__main__":
     sys.exit(fix_wp_config_syntax())
 
+
+

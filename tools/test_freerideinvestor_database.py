@@ -105,3 +105,5 @@ if ($conn->connect_error) {{
 if __name__ == "__main__":
     sys.exit(test_database_connection())
 
+
+

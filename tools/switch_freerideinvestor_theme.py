@@ -95,3 +95,5 @@ def switch_to_default_theme():
 if __name__ == "__main__":
     sys.exit(switch_to_default_theme())
 
+
+
