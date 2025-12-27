@@ -1,5 +1,40 @@
 <?php
 /**
+ * Performance Profiler
+ * Logs execution milestones and query performance to debug.log
+ */
+function freerideinvestor_profiler_start() {
+    if (!defined('WP_DEBUG') || !WP_DEBUG) return;
+    
+    global $fri_start_time;
+    $fri_start_time = microtime(true);
+    error_log("[Profiler] Request started: " . $_SERVER['REQUEST_URI']);
+}
+add_action('init', 'freerideinvestor_profiler_start', 1);
+
+function freerideinvestor_profiler_end() {
+    if (!defined('WP_DEBUG') || !WP_DEBUG) return;
+    
+    global $fri_start_time;
+    $end_time = microtime(true);
+    $duration = round(($end_time - $fri_start_time) * 1000, 2);
+    $memory = round(memory_get_peak_usage() / 1024 / 1024, 2);
+    
+    error_log("[Profiler] Request finished: {$duration}ms | Memory: {$memory}MB");
+    
+    // Log slow queries if any
+    global $wpdb;
+    if (!empty($wpdb->queries)) {
+        foreach ($wpdb->queries as $q) {
+            if ($q[1] > 0.5) { // Log queries slower than 500ms
+                error_log("[Profiler] Slow Query ({$q[1]}s): " . $q[0]);
+            }
+        }
+    }
+}
+add_action('shutdown', 'freerideinvestor_profiler_end');
+
+/**
  * Add custom rewrite rules for blog pagination
  * 
  * This ensures /blog/page/2/ works correctly with page templates
