@@ -4,7 +4,14 @@
  * Logs execution milestones and query performance to debug.log
  */
 function freerideinvestor_profiler_start() {
-    if (!defined('WP_DEBUG') || !WP_DEBUG) return;
+    // Gate profiler: Only run if WP_DEBUG is on AND (?profile=1 is present OR user is admin)
+    $debug_mode = defined('WP_DEBUG') && WP_DEBUG;
+    $profile_param = isset($_GET['profile']) && $_GET['profile'] == '1';
+    
+    // Check admin status (might be unreliable at init:1 but good attempt)
+    $is_admin = function_exists('current_user_can') && current_user_can('manage_options');
+    
+    if (!$debug_mode || (!$profile_param && !$is_admin)) return;
     
     global $fri_start_time;
     $fri_start_time = microtime(true);
@@ -13,9 +20,9 @@ function freerideinvestor_profiler_start() {
 add_action('init', 'freerideinvestor_profiler_start', 1);
 
 function freerideinvestor_profiler_end() {
-    if (!defined('WP_DEBUG') || !WP_DEBUG) return;
-    
     global $fri_start_time;
+    if (empty($fri_start_time)) return;
+    
     $end_time = microtime(true);
     $duration = round(($end_time - $fri_start_time) * 1000, 2);
     $memory = round(memory_get_peak_usage() / 1024 / 1024, 2);
