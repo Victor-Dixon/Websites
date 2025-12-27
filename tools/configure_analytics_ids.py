@@ -283,3 +283,4 @@ if __name__ == "__main__":
         # Batch configuration using config file
         configure_analytics_batch(project_root=project_root)
 
+

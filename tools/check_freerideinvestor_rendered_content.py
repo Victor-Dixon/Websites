@@ -78,3 +78,5 @@ if __name__ == "__main__":
     check_rendered_html()
     check_wordpress_settings()
 
+
+

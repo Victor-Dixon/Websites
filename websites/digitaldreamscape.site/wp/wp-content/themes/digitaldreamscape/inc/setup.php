@@ -1,8 +1,24 @@
 <?php
 /**
- * Theme Setup
+ * Theme Setup Functions
+ * 
+ * Handles theme support, navigation menus, and widget areas
+ * 
+ * @package DigitalDreamscape
+ * @since 3.0.0
  */
-function digitaldreamscape_setup() {
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+/**
+ * Theme Setup
+ * 
+ * Register theme support for various WordPress features
+ */
+function digitaldreamscape_setup()
+{
     // Add theme support
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
@@ -32,7 +48,8 @@ add_action('after_setup_theme', 'digitaldreamscape_setup');
 /**
  * Register Widget Areas
  */
-function digitaldreamscape_widgets_init() {
+function digitaldreamscape_widgets_init()
+{
     register_sidebar(array(
         'name' => __('Sidebar', 'digitaldreamscape'),
         'id' => 'sidebar-1',
@@ -44,3 +61,4 @@ function digitaldreamscape_widgets_init() {
     ));
 }
 add_action('widgets_init', 'digitaldreamscape_widgets_init');
+

@@ -114,6 +114,11 @@ get_header(); ?>
                 <div class="lead-form-container">
                     <form class="consultation-form" action="<?php echo esc_url(home_url('/consultation')); ?>" method="post">
                         <?php wp_nonce_field('front_page_consultation', 'consultation_nonce'); ?>
+                        <!-- Honeypot spam protection (hidden from users) -->
+                        <div style="position: absolute; left: -9999px;" aria-hidden="true">
+                            <label for="website_url">Website URL (leave blank)</label>
+                            <input type="text" id="website_url" name="website_url" tabindex="-1" autocomplete="off">
+                        </div>
                         <div class="form-row">
                             <input type="text" name="name" placeholder="Your Name" required>
                             <input type="email" name="email" placeholder="Your Email" required>
