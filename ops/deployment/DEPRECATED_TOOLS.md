@@ -134,4 +134,3 @@ Multiple similar tools - could consolidate:
 3. ✅ Deleted deprecated tools (2025-12-23)
 4. ⏳ Consolidate theme deployment tools (future)
 5. ⏳ Consolidate post update tools (future)
-

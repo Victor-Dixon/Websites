@@ -220,26 +220,21 @@ get_header();
     <div class="stunning-blog-content">
         <?php
         // Get pagination correctly for page templates
-        // WordPress page templates use 'page' query var, not 'paged'
         $paged = 1;
-        if (get_query_var('page')) {
-            $paged = absint(get_query_var('page'));
-        } elseif (get_query_var('paged')) {
-            $paged = absint(get_query_var('paged'));
-        } elseif (isset($_GET['page'])) {
-            $paged = absint($_GET['page']);
+        if (isset($_GET['paged']) && is_numeric($_GET['paged'])) {
+            $paged = max(1, intval($_GET['paged']));
         }
         
-        // Ensure paged is at least 1
-        $paged = max(1, $paged);
-        
-        $blog_query = new WP_Query([
+        $blog_query_args = array(
             'post_type' => 'post',
             'posts_per_page' => 12,
             'paged' => $paged,
             'post_status' => 'publish',
             'ignore_sticky_posts' => true,
-        ]);
+            'no_found_rows' => false,
+        );
+        
+        $blog_query = new WP_Query($blog_query_args);
         
         if ($blog_query->have_posts()) : ?>
             <div class="stunning-posts-grid">
@@ -287,28 +282,43 @@ get_header();
             </div>
             
             <!-- Pagination -->
-            <?php if ($blog_query->max_num_pages > 1) : ?>
+            <?php 
+            if ($blog_query->max_num_pages > 1) : 
+                $page_url = trailingslashit(get_permalink());
+            ?>
                 <nav class="pagination" style="margin-top: 60px; text-align: center;">
-                    <?php
-                    $page_url = get_permalink();
-                    // Remove trailing slash and add pagination structure
-                    $page_url = trailingslashit($page_url);
-                    $pagination_args = [
-                        'total' => $blog_query->max_num_pages,
-                        'current' => $paged,
-                        'prev_text' => '« Previous',
-                        'next_text' => 'Next »',
-                        'type' => 'list',
-                        'base' => $page_url . '%_%',
-                        'format' => 'page/%#%/',
-                    ];
-                    
-                    // Generate pagination links
-                    $pagination_links = paginate_links($pagination_args);
-                    if ($pagination_links) {
-                        echo $pagination_links;
-                    }
-                    ?>
+                    <ul style="display: inline-flex; list-style: none; padding: 0; gap: 10px;">
+                        <?php
+                        // Previous link
+                        if ($paged > 1) {
+                            $prev_url = ($paged == 2) ? $page_url : add_query_arg('paged', $paged - 1, $page_url);
+                            echo '<li><a href="' . esc_url($prev_url) . '" style="display: inline-block; padding: 10px 16px; background: rgba(240, 246, 252, 0.03); border: 1px solid var(--fri-border); color: var(--fri-text-light); text-decoration: none; border-radius: 8px;">« Previous</a></li>';
+                        }
+                        
+                        // Page numbers
+                        for ($i = 1; $i <= $blog_query->max_num_pages; $i++) {
+                            if ($i == 1) {
+                                $link_url = $page_url;
+                            } else {
+                                $link_url = add_query_arg('paged', $i, $page_url);
+                            }
+                            
+                            $style = 'display: inline-block; padding: 10px 16px; background: rgba(240, 246, 252, 0.03); border: 1px solid var(--fri-border); color: var(--fri-text-light); text-decoration: none; border-radius: 8px;';
+                            if ($i == $paged) {
+                                $style = 'display: inline-block; padding: 10px 16px; background: var(--fri-primary); border: 1px solid var(--fri-primary); color: white; text-decoration: none; border-radius: 8px;';
+                                echo '<li><span style="' . $style . '">' . $i . '</span></li>';
+                            } else {
+                                echo '<li><a href="' . esc_url($link_url) . '" style="' . $style . '">' . $i . '</a></li>';
+                            }
+                        }
+                        
+                        // Next link
+                        if ($paged < $blog_query->max_num_pages) {
+                            $next_url = add_query_arg('paged', $paged + 1, $page_url);
+                            echo '<li><a href="' . esc_url($next_url) . '" style="display: inline-block; padding: 10px 16px; background: rgba(240, 246, 252, 0.03); border: 1px solid var(--fri-border); color: var(--fri-text-light); text-decoration: none; border-radius: 8px;">Next »</a></li>';
+                        }
+                        ?>
+                    </ul>
                     <style>
                     .pagination ul {
                         display: inline-flex;

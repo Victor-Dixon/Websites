@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Front Page Template
  * 
@@ -21,7 +22,7 @@ get_header(); ?>
                     <span class="hero-title-line">Stream & Create</span>
                 </h1>
                 <p class="hero-subtitle">
-                    Join the journey of building Digital Dreamscape in real-time. 
+                    Join the journey of building Digital Dreamscape in real-time.
                     Watch live streams, read updates, and be part of the community.
                 </p>
                 <div class="hero-cta">
@@ -42,49 +43,60 @@ get_header(); ?>
             <h2 class="section-title">Latest Updates</h2>
             <div class="featured-grid">
                 <?php
-                $featured_posts = new WP_Query(array(
-                    'posts_per_page' => 3,
-                    'post_status' => 'publish',
-                ));
+                // Safely query posts with error handling
+                try {
+                    $featured_posts = new WP_Query(array(
+                        'posts_per_page' => 3,
+                        'post_status' => 'publish',
+                        'ignore_sticky_posts' => true,
+                    ));
 
-                if ($featured_posts->have_posts()) :
-                    while ($featured_posts->have_posts()) : $featured_posts->the_post();
-                        ?>
-                        <article class="featured-card">
-                            <?php if (has_post_thumbnail()) : ?>
-                                <div class="card-image">
-                                    <a href="<?php the_permalink(); ?>">
-                                        <?php the_post_thumbnail('medium_large'); ?>
+                    if ($featured_posts && $featured_posts->have_posts()) :
+                        while ($featured_posts->have_posts()) : $featured_posts->the_post();
+                ?>
+                            <article class="featured-card">
+                                <?php if (has_post_thumbnail()) : ?>
+                                    <div class="card-image">
+                                        <a href="<?php the_permalink(); ?>">
+                                            <?php the_post_thumbnail('medium_large'); ?>
+                                        </a>
+                                    </div>
+                                <?php endif; ?>
+                                <div class="card-content">
+                                    <div class="card-meta">
+                                        <time datetime="<?php echo get_the_date('c'); ?>">
+                                            <?php echo get_the_date(); ?>
+                                        </time>
+                                    </div>
+                                    <h3 class="card-title">
+                                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                                    </h3>
+                                    <div class="card-excerpt">
+                                        <?php the_excerpt(); ?>
+                                    </div>
+                                    <a href="<?php the_permalink(); ?>" class="card-link">
+                                        Read More →
                                     </a>
                                 </div>
-                            <?php endif; ?>
-                            <div class="card-content">
-                                <div class="card-meta">
-                                    <time datetime="<?php echo get_the_date('c'); ?>">
-                                        <?php echo get_the_date(); ?>
-                                    </time>
-                                </div>
-                                <h3 class="card-title">
-                                    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                                </h3>
-                                <div class="card-excerpt">
-                                    <?php the_excerpt(); ?>
-                                </div>
-                                <a href="<?php the_permalink(); ?>" class="card-link">
-                                    Read More →
-                                </a>
-                            </div>
-                        </article>
+                            </article>
                         <?php
-                    endwhile;
-                    wp_reset_postdata();
-                else :
+                        endwhile;
+                        wp_reset_postdata();
+                    else :
+                        ?>
+                        <div class="no-posts">
+                            <p>No posts yet. Check back soon for updates!</p>
+                        </div>
+                    <?php
+                    endif;
+                } catch (Exception $e) {
+                    // Silently fail and show empty state
                     ?>
                     <div class="no-posts">
-                        <p>No posts yet. Check back soon for updates!</p>
+                        <p>Content loading. Check back soon for updates!</p>
                     </div>
-                    <?php
-                endif;
+                <?php
+                }
                 ?>
             </div>
         </div>
@@ -107,5 +119,3 @@ get_header(); ?>
 </main>
 
 <?php get_footer(); ?>
-
-

@@ -111,4 +111,3 @@ These tools work with:
 ✅ **Migrated to ops/deployment/** (2025-12-20)
 - All WordPress deployment tools now in canonical location
 - Tools in `tools/` maintained for backward compatibility
-
