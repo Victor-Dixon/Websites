@@ -17,18 +17,32 @@ if (!defined('WP_CLI') && php_sapi_name() !== 'cli') {
  * Create Positioning Statement for freerideinvestor.com
  */
 function create_freerideinvestor_positioning_statement() {
-    $post_id = wp_insert_post([
-        'post_title' => 'FreeRide Investor Positioning Statement',
-        'post_content' => 'For traders and investors who are tired of generic advice, we provide actionable TBOW tactics and proven strategies (unlike competitors because we focus on practical, tested methods that work in real markets).',
-        'post_status' => 'publish',
-        'post_type' => 'positioning_statement'
+    // Check if positioning statement already exists
+    $existing = get_posts([
+        'post_type' => 'positioning_statement',
+        'meta_key' => 'site_assignment',
+        'meta_value' => 'freerideinvestor.com',
+        'posts_per_page' => 1,
+        'post_status' => 'any'
     ]);
+    
+    if (!empty($existing)) {
+        $post_id = $existing[0]->ID;
+        WP_CLI::warning("Positioning statement already exists (ID: {$post_id}). Updating content...");
+    } else {
+        $post_id = wp_insert_post([
+            'post_title' => 'FreeRide Investor Positioning Statement',
+            'post_content' => 'For traders and investors who are tired of generic advice, TikTok trading theatrics, and emotional loops that destroy accounts, we provide disciplined, risk-first trading education and proven TBOW tactics unlike signal services (no context), theory-heavy courses (no execution), or lifestyle gurus (no substance) because we focus on removing downside pressure through systems, discipline, and execution over prediction, building financial freedom without hype.',
+            'post_status' => 'publish',
+            'post_type' => 'positioning_statement'
+        ]);
+    }
 
     if ($post_id && !is_wp_error($post_id)) {
         update_post_meta($post_id, 'target_audience', 'traders and investors tired of generic advice');
-        update_post_meta($post_id, 'pain_points', 'generic advice, theory-heavy courses, signal services');
-        update_post_meta($post_id, 'unique_value', 'actionable TBOW tactics and proven strategies');
-        update_post_meta($post_id, 'differentiation', 'focus on practical, tested methods that work in real markets');
+        update_post_meta($post_id, 'pain_points', 'generic advice, theory-heavy courses, signal services, emotional loops');
+        update_post_meta($post_id, 'unique_value', 'disciplined, risk-first trading education and proven TBOW tactics');
+        update_post_meta($post_id, 'differentiation', 'we focus on removing downside pressure through systems, discipline, and execution over prediction, building financial freedom without hype');
         update_post_meta($post_id, 'site_assignment', 'freerideinvestor.com');
         
         WP_CLI::success("Created positioning statement (ID: {$post_id})");

@@ -341,7 +341,11 @@ class SimpleWordPressDeployer:
                             pass
             
             # Upload file (use absolute path)
-            self.sftp.put(str(local_path), full_remote_path)
+            # Ensure local_path is absolute and exists
+            local_path_str = str(Path(local_path).resolve())
+            if not Path(local_path_str).exists():
+                raise FileNotFoundError(f"Local file does not exist: {local_path_str}")
+            self.sftp.put(local_path_str, full_remote_path)
             return True
         except paramiko.SSHException as e:
             print(f"❌ SFTP upload error for {self.site_key}")

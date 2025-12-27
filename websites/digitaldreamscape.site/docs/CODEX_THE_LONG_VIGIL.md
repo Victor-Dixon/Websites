@@ -280,3 +280,5 @@ But the Vigil itself stays behind you.
 *Living Document - Updated as lore evolves*  
 *See: [CANON_EVENTS.md](CANON_EVENTS.md) for timeline*
 
+
+

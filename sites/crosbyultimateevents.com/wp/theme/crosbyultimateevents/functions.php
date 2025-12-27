@@ -400,3 +400,30 @@ function crosbyultimateevents_fix_text_rendering($content) {
 add_filter('the_content', 'crosbyultimateevents_fix_text_rendering', 999);
 add_filter('the_title', 'crosbyultimateevents_fix_text_rendering', 999);
 add_filter('bloginfo', 'crosbyultimateevents_fix_text_rendering', 999);
+
+/**
+ * Event Inquiry Form Handler - Tier 1 Quick Win WEB-04
+ */
+add_action('admin_post_handle_event_inquiry', 'handle_event_inquiry');
+add_action('admin_post_nopriv_handle_event_inquiry', 'handle_event_inquiry');
+
+function handle_event_inquiry() {
+    // Verify nonce
+    if (!isset($_POST['event_inquiry_nonce']) || !wp_verify_nonce($_POST['event_inquiry_nonce'], 'event_inquiry_form')) {
+        wp_die('Security check failed');
+    }
+    
+    $email = sanitize_email($_POST['email']);
+    
+    if (!is_email($email)) {
+        wp_die('Invalid email address');
+    }
+    
+    // Process email (add to mailing list, send notification, etc.)
+    // Example: wp_mail($admin_email, 'New Event Inquiry', 'Email: ' . $email);
+    // TODO: Integrate with email marketing platform or CRM
+    
+    // Redirect to thank you page or consultation page
+    wp_redirect(home_url('/consultation?source=front_page&email=' . urlencode($email)));
+    exit;
+}
